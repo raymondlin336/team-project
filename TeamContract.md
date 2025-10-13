@@ -26,26 +26,33 @@ This contract sets out shared expectations and commitments for how our team will
 
 ---
 
-### [Other Categories of norms and expectations go here]
+### Cooperation & Teamwork
 
 * Team members are expected to ask for help when stuck, but only after making a reasonable effort to solve the problem themselves.
+
+* We need to be able to see effort in resolving issues and making contributions on their own. Expect help after that.
+
+* Support teammates, it is a group project so we will only do great if we work together.
 
 ---
 
 ## Decision Making
 
-* How will decisions about your team project be made? (Examples: By majority vote, by unanimous vote, etc.)
+* We will try to reach decisions via a unanimous vote of all memebers that are present at the time of the meeting. If members did not state their absense ahead of time, their vote would not be counted.
 
 ---
+
 ## Conflict resolution
 
 * Team members will try to resolve the conflict through discussion. If this fails, team members will involve a course administrator as a mediator.
 
+---
+
 ## Accountability
 
-* Reliability and accountability are also important aspects of teamwork. What are the responsibilities of each team member? (Example: completing their share of the work in a timely manner, seeking assistance from teammates/TAs/instructors when required, etc.)
+* Persistent non-participation or failure to meet expectations may result in lower peer evaluation scores.
 
----
+* All members agree to provide honest and fair peer evaluations.
 
 ---
 
@@ -56,3 +63,5 @@ Team Member Signatures:
 (type names here)
 
 Raymond Lin
+Henry Pickle
+Kevin Cheung
