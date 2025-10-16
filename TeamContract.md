@@ -69,3 +69,5 @@ Henry Pickle
 Kevin Cheung
 
 Farrell Sidadolog
+
+Sumaid Lakho
