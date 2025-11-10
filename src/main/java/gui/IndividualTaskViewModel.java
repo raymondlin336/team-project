@@ -5,7 +5,13 @@ public class IndividualTaskViewModel {
     public IndividualTaskViewModel(PlaceholderTask task) {
         this.task = task;
     }
-    public void updateName(String name){
+    public void updateTaskName(String name){
         task.updateName(name);
+    }
+    public String getTaskName(){
+        return task.name;
+    }
+    public Boolean getRepeat(){
+        return task.repeat;
     }
 }
