@@ -7,7 +7,7 @@ public class TaskController {
     }
     protected void print_log_message(String action){
         if (log_messages) {
-            System.out.println("Controlled called. Action: " + action);
+            System.out.println("Controller called. Action: " + action);
         }
     }
     public void cancel(){
