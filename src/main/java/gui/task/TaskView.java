@@ -74,7 +74,7 @@ public class TaskView {
         mainpanel.add(habitDescRow, gbc);
 
         // Row 3: frequency
-        habitRepeatCB = new JComboBox<>(new String[]{"once","every day", "every week", "every month"});
+        habitRepeatCB = new JComboBox<>(new String[]{"Once","Every day", "Every week", "Every month"});
         setSize(habitRepeatCB, 320, 36);
         habitRepeatCB.setBackground(new Color(255, 255, 255));
         habitRepeatRow = labeledRowJPanel("Frequency", habitRepeatCB);

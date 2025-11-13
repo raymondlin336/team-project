@@ -1,23 +1,26 @@
 package gui.edit_task;
 
-import placeholders.PlaceholderTask;
+import main.Habit;
 
 public class EditTaskViewModel{
-    private PlaceholderTask task;
-    public EditTaskViewModel(PlaceholderTask task) {
+    private Habit habit;
+    public EditTaskViewModel(Habit habit) {
         super();
-        this.task = task;
+        this.habit = habit;
     }
     public String getName(){
-        return task.name;
+        return habit.name;
     }
     public String getDesc(){
-        return task.description;
+        return habit.desc;
     }
     public String getRepeat(){
-        return task.repeat;
+        return habit.freq.toString();
     }
     public String getDueDate(){
-        return task.due_date;
+        return habit.deadline.toString();
+    }
+    public int getID(){
+        return habit.id;
     }
 }

@@ -27,7 +27,7 @@ public class EditTaskView extends TaskView {
         save = getSizedButton(100, 36, "Save", new Color(67, 182, 240));
         save.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                int habit_id = 1;
+                int habit_id = editTaskViewModel.getID();
                 String habit_name = habitNameTF.getText();
                 String habit_desc = habitDescTF.getText();
                 String habit_repeat = habitRepeatCB.getSelectedItem().toString();
@@ -41,7 +41,7 @@ public class EditTaskView extends TaskView {
         delete = getSizedButton(100, 36, "Delete", new Color(240, 102, 67));
         delete.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                int habit_id = 1;
+                int habit_id = editTaskViewModel.getID();
                 editTaskController.delete_habit(habit_id);
                 mainframe.dispose();
             }

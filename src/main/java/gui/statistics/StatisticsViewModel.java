@@ -1,23 +1,21 @@
 package gui.statistics;
 
-import placeholders.PlaceholderTask;
-
-import java.lang.reflect.Array;
+import main.Habit;
 import java.util.ArrayList;
 
 public class StatisticsViewModel {
-    private ArrayList<PlaceholderTask> tasks = new ArrayList<PlaceholderTask>();
-    public StatisticsViewModel(ArrayList<PlaceholderTask> tasks) {
-        for (PlaceholderTask task : tasks) {
-            if (!task.repeat.equals("once")) {
-                this.tasks.add(task);
+    private ArrayList<Habit> habits = new ArrayList<Habit>();
+    public StatisticsViewModel(ArrayList<Habit> habits) {
+        for (Habit habit : habits) {
+            if (!(habit.freq == Habit.Freq.Once)) {
+                this.habits.add(habit);
             }
         }
     }
     public int numOfTasks(){
-        return this.tasks.size();
+        return this.habits.size();
     }
-    public PlaceholderTask getTask(int i){
-        return this.tasks.get(i);
+    public Habit getTask(int i){
+        return this.habits.get(i);
     }
 }
