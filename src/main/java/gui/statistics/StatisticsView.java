@@ -5,6 +5,8 @@ import placeholders.PlaceholderTask;
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 
 public class StatisticsView {
     private String view_name;
@@ -54,15 +56,8 @@ public class StatisticsView {
         rowPanel.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
         rowPanel.setPreferredSize(new Dimension(row_width, row_height));
         rowPanel.setMaximumSize(new Dimension(row_width, row_height));
-        // Left side label
-        JLabel label = new JLabel(labelText);
-        label.setFont(label.getFont().deriveFont(Font.PLAIN, 16f));
-        label.setPreferredSize(new Dimension(120, 40));
-        rowPanel.add(label, BorderLayout.WEST);
-        // Scrollable right panel
-        JPanel blocksPanel = new JPanel();
-        blocksPanel.setLayout(new BoxLayout(blocksPanel, BoxLayout.X_AXIS));
-        // Create the scrollable squares
+
+        // Calculate completions
         int base = 1;
         if (repeat.equals("every day")) {
             base = 7;
@@ -74,14 +69,44 @@ public class StatisticsView {
         for (int completed: completed_array) {
             completed_perc.add((double)completed/base);
         }
-        System.out.println(completed_perc);
+
+        // Panel and texts to the left
+        int num_completed = 0;
+        for (int c: completed_array) {
+            num_completed += c;
+        }
+        String per_text = num_completed + " " + repeat.split(" ")[1] + "s";
+        JPanel leftLabelPanel = new JPanel();
+        leftLabelPanel.setLayout(new BoxLayout(leftLabelPanel, BoxLayout.Y_AXIS));
+        leftLabelPanel.setOpaque(false);
+        JLabel mainLabel = new JLabel(labelText);
+        mainLabel.setFont(mainLabel.getFont().deriveFont(Font.BOLD, 15f));
+        JLabel subLabel = new JLabel(per_text);
+        subLabel.setFont(subLabel.getFont().deriveFont(Font.PLAIN, 12f));
+        subLabel.setForeground(new Color(90, 90, 90)); // soft grey
+        mainLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
+        subLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
+        leftLabelPanel.add(mainLabel);
+        leftLabelPanel.add(subLabel);
+        leftLabelPanel.setPreferredSize(new Dimension(150, 50));
+        leftLabelPanel.setMaximumSize(new Dimension(150, 60));
+        rowPanel.add(leftLabelPanel, BorderLayout.WEST);
+
+        // Scrollable right panel
+        JPanel blocksPanel = new JPanel();
+        blocksPanel.setLayout(new BoxLayout(blocksPanel, BoxLayout.X_AXIS));
+
+        // Create graphics blocks
         SquareRowPanel block = new SquareRowPanel(completed_perc, block_width, block_height, gap, colour);
         blocksPanel.add(block);
         blocksPanel.add(Box.createRigidArea(new Dimension(4, 0)));
 
-        JScrollPane scrollPane = new JScrollPane(blocksPanel, JScrollPane.VERTICAL_SCROLLBAR_NEVER, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        // Create graphics scrolling
+        JScrollPane scrollPane = new JScrollPane(blocksPanel, JScrollPane.VERTICAL_SCROLLBAR_NEVER, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
         scrollPane.setBorder(null);
         scrollPane.setPreferredSize(new Dimension(550, 50));
+        scrollPane.getHorizontalScrollBar().setUI(new ColoredScrollBarUI(Color.getHSBColor((float)colour/360, (float)80/100, (float)60/100), Color.getHSBColor((float)colour/360, (float)10/100, (float)95/100)));
+        scrollPane.getHorizontalScrollBar().setPreferredSize(new Dimension(550, 12));
         rowPanel.add(scrollPane, BorderLayout.CENTER);
         return rowPanel;
     }
@@ -116,12 +141,33 @@ public class StatisticsView {
                 g.setColor(Color.getHSBColor((float)colour/360, (float)10/100, (float)95/100));
                 int filled_height = (int)((square_height) * (1 - pct));
                 g.fillRect(x, 0, square_width, filled_height);
-                // outline
-//                g.setColor(Color.BLACK);
-//                g.drawRect(x, 0, square_width, square_height);
-
                 x += square_width + gap;
             }
+        }
+    }
+    static class ColoredScrollBarUI extends javax.swing.plaf.basic.BasicScrollBarUI {
+        private final Color thumbColor;
+        private final Color trackColor;
+
+        public ColoredScrollBarUI(Color thumbColor, Color trackColor) {
+            this.thumbColor = thumbColor;
+            this.trackColor = trackColor;
+        }
+
+        @Override
+        protected void paintThumb(Graphics g, JComponent c, Rectangle r) {
+            Graphics2D g2 = (Graphics2D) g.create();
+            g2.setColor(thumbColor);
+            g2.fillRoundRect(r.x, r.y, r.width, r.height, 10, 10);
+            g2.dispose();
+        }
+
+        @Override
+        protected void paintTrack(Graphics g, JComponent c, Rectangle r) {
+            Graphics2D g2 = (Graphics2D) g.create();
+            g2.setColor(trackColor);
+            g2.fillRect(r.x, r.y, r.width, r.height);
+            g2.dispose();
         }
     }
     public void setVisible(){
