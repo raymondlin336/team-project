@@ -1,5 +1,7 @@
 package gui.task;
 
+import gui.home.HomeViewComponents;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -27,7 +29,8 @@ public class TaskView {
     }
 
     protected void addCancelButton(){
-        cancel = getSizedButton(100, 36, "Cancel", new Color(255, 255, 255));
+        cancel = new HomeViewComponents.PillButton("Cancel");
+        cancel.setBorderPainted(false);
         cancel.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 taskController.cancel();

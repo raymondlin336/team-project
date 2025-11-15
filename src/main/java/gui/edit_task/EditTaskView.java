@@ -1,4 +1,5 @@
 package gui.edit_task;
+import gui.home.HomeViewComponents;
 import gui.task.TaskView;
 
 import javax.swing.*;
@@ -24,7 +25,8 @@ public class EditTaskView extends TaskView {
     }
 
     private void addSaveButton(){
-        save = getSizedButton(100, 36, "Save", new Color(67, 182, 240));
+        save = new HomeViewComponents.PillButton("Save");
+        save.setBorderPainted(false);
         save.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 int habit_id = editTaskViewModel.getID();
@@ -38,7 +40,8 @@ public class EditTaskView extends TaskView {
     }
 
     private void addDeleteButton(){
-        delete = getSizedButton(100, 36, "Delete", new Color(240, 102, 67));
+        delete = new HomeViewComponents.PillButton("Delete");
+        delete.setBorderPainted(false);
         delete.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 int habit_id = editTaskViewModel.getID();

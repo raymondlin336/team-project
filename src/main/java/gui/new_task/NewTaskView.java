@@ -1,4 +1,5 @@
 package gui.new_task;
+import gui.home.HomeViewComponents;
 import gui.task.TaskView;
 
 import javax.swing.*;
@@ -11,7 +12,7 @@ public class NewTaskView extends TaskView {
     private JButton add;
 
     public NewTaskView(NewTaskController newTaskController) {
-        super("New Task",   newTaskController);
+        super("New Task", newTaskController);
         this.newTaskController = newTaskController;
         createUI(800, 600, view_name);
         addAddButton();
@@ -19,7 +20,8 @@ public class NewTaskView extends TaskView {
     }
 
     private void addAddButton(){
-        add = getSizedButton(100, 36, "Save", new Color(67, 182, 240));
+        add = new HomeViewComponents.PillButton("Add");
+        add.setBorderPainted(false);
         add.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 String habit_name = habitNameTF.getText();
