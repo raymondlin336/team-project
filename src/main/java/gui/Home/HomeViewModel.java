@@ -8,9 +8,9 @@ import java.util.ArrayList;
 public class HomeViewModel {
     /// Assume ViewModel accepts arrays of tasks
 
-    public ArrayList<Habit> dailyHabits;
-    public ArrayList<Habit> weeklyHabits;
-    public ArrayList<Habit> monthlyHabits;
+    public ArrayList<Habit> dailyHabits  = new ArrayList<>();
+    public ArrayList<Habit> weeklyHabits = new ArrayList<>();
+    public ArrayList<Habit> monthlyHabits = new ArrayList<>();
 
     public HomeViewModel(ArrayList<Habit> habits) {
         for (Habit habit : habits) {
