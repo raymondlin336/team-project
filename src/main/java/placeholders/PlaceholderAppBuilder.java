@@ -1,5 +1,7 @@
 package placeholders;
 
+import gui.Home.HomeView;
+import gui.Home.HomeViewModel;
 import gui.edit_task.EditTaskController;
 import gui.edit_task.EditTaskView;
 import gui.edit_task.EditTaskViewModel;
@@ -31,6 +33,9 @@ public class PlaceholderAppBuilder {
         ArrayList<Habit> habits = new ArrayList<>(List.of(habit1, habit2, habit3, habit4));
         StatisticsViewModel vm = new StatisticsViewModel(habits);
         StatisticsView stat = new StatisticsView("Statistics", vm);
-        stat.setVisible();
+
+        HomeViewModel test = new HomeViewModel(habits);
+        HomeView homeTest = new HomeView(test);
+        homeTest.show();
     }
 }
