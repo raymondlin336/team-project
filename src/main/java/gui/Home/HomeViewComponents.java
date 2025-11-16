@@ -61,7 +61,7 @@ public final class HomeViewComponents {
 
         @Override
         public Insets getBorderInsets(Component c) {
-            return new Insets(8, 12, 8, 12);
+            return new Insets(16, 24, 16, 24); /// Default, no border
         }
 
         @Override
@@ -77,9 +77,10 @@ public final class HomeViewComponents {
         public PillButton(String text) {
             super(text);
             setContentAreaFilled(false);
+            setBorderPainted(false);
             setFocusPainted(false);
             setOpaque(false);
-            setBorder(new RoundedBorder(20));
+            setBorder(new RoundedBorder(68));
         }
 
         @Override
@@ -108,7 +109,7 @@ public final class HomeViewComponents {
     public static class CircleButton extends JButton {
         public CircleButton(String text) {
             super(text);
-            setMargin(new Insets(2, 2, 2, 2));
+            setMargin(new Insets(7, 8, 10, 10));
             setContentAreaFilled(false);
             setFocusPainted(false);
             setOpaque(false);

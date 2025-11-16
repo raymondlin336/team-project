@@ -1,5 +1,6 @@
 package gui.Home;
 
+import gui.new_task.NewTaskController;
 import main.Habit;
 
 import javax.swing.*;
@@ -19,6 +20,8 @@ public class HomeView {
 
     private HomeViewModel homeViewModel;
 
+    private HomeViewController HomeViewController;
+
     private JFrame mainFrame;
 
     // Header – frequency selector
@@ -28,13 +31,16 @@ public class HomeView {
 
     // Container where task rows are rendered
     private JPanel tasksContainer;
+    // Scroll pane that wraps the tasksContainer
+    private JScrollPane tasksScrollPane;
 
     // "Add task" button at the bottom of the card (exposed for controller)
     private JButton addTaskButton;
 
-    public HomeView(HomeViewModel homeViewModel) {
+    public HomeView(HomeViewModel homeViewModel, HomeViewController controller) {
         // Assign viewmodel
         this.homeViewModel = homeViewModel;
+        this.HomeViewController = controller;
         this.mainFrame = new JFrame("Habits");
         createUIComponents(900, 600);
     }
@@ -56,7 +62,6 @@ public class HomeView {
         // Background
         JPanel background = new JPanel(new GridBagLayout());
         background.setBorder(new EmptyBorder(30, 30, 30, 30));
-        background.setBackground(new Color(0xF6F6F6));
         mainFrame.setContentPane(background);
 
         // Rounded JPanel containing all the elements in HomeView
@@ -86,7 +91,18 @@ public class HomeView {
         tasksContainer = new JPanel();
         tasksContainer.setOpaque(false);
         tasksContainer.setLayout(new BoxLayout(tasksContainer, BoxLayout.Y_AXIS));
-        card.add(tasksContainer, BorderLayout.CENTER);
+
+        // Wrap the tasks container in a scroll pane
+        tasksScrollPane = new JScrollPane(tasksContainer);
+        tasksScrollPane.setBorder(null); // no border so it blends with the card
+        tasksScrollPane.setOpaque(false);
+        tasksScrollPane.getViewport().setOpaque(false);
+
+        // Only vertical scroll, no horizontal
+        tasksScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        tasksScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+
+        card.add(tasksScrollPane, BorderLayout.CENTER);
 
         // "Add task" pill button at the bottom
         JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
@@ -151,11 +167,9 @@ public class HomeView {
 
         JButton statChip = createChipButton("Stat");
         JButton setChip = createChipButton("Set");
-        JButton accChip = createChipButton("Acc");
 
         panel.add(statChip);
         panel.add(setChip);
-        panel.add(accChip);
 
         return panel;
     }
@@ -163,7 +177,8 @@ public class HomeView {
     private JToggleButton createSegmentButton(String text) {
         JToggleButton button = new JToggleButton(text);
         button.setFont(button.getFont().deriveFont(Font.PLAIN, 13f));
-        button.setBorder(new RoundedBorder(18));
+        button.setBorder(new RoundedBorder(8));
+        button.setBorderPainted(false);
         button.setContentAreaFilled(false);
         button.setFocusPainted(false);
         button.setOpaque(false);
@@ -171,10 +186,11 @@ public class HomeView {
         return button;
     }
 
+    ///  The three
     private JButton createChipButton(String text) {
         JButton button = new JButton(text);
         button.setFont(button.getFont().deriveFont(Font.PLAIN, 12f));
-        button.setBorder(new RoundedBorder(18));
+        button.setBorder(new RoundedBorder(8));
         button.setContentAreaFilled(false);
         button.setFocusPainted(false);
         button.setOpaque(false);
@@ -195,7 +211,7 @@ public class HomeView {
         }
 
         // Always show at least one row, padding with empties
-        int minRows = 1;
+        int minRows = 10;
         int currentRows = safeList.size();
         for (int i = currentRows; i < minRows; i++) {
             tasksContainer.add(createEmptyTaskRow());
@@ -203,64 +219,108 @@ public class HomeView {
 
         tasksContainer.revalidate();
         tasksContainer.repaint();
+
+        // Reset scroll to top whenever tasks are refreshed
+        if (tasksScrollPane != null) {
+            SwingUtilities.invokeLater(() ->
+                    tasksScrollPane.getVerticalScrollBar().setValue(0)
+            );
+        }
     }
 
     private JPanel createTaskRow(Habit habit) {
-        String label = habit != null ? habit.toString() : "";
+        String habitLabel = habit.name;
+        String desc = habit.desc;
 
-        JPanel row = new JPanel(new BorderLayout(12, 0));
+        ///  Container for entire row
+        JPanel row = new JPanel();
+        row.setLayout(new BoxLayout(row, BoxLayout.X_AXIS));
         row.setOpaque(false);
         row.setBorder(new EmptyBorder(6, 0, 6, 0));
+        row.setMaximumSize(new Dimension(520, 72)); // fixed height, flexible width
+        row.setPreferredSize(new Dimension(520, 72));
 
-        JTextField textField = new JTextField(label);
-        textField.setEditable(false);
-        textField.setBorder(new RoundedBorder(18));
-        textField.setBackground(Color.WHITE);
-        textField.setOpaque(true);
-        textField.setMargin(new Insets(4, 12, 4, 12));
-        textField.setPreferredSize(new Dimension(420, 32));
+        ///  Text: Habit Name
+        JLabel label = new JLabel(habitLabel);
+        label.setBorder(new RoundedBorder(8));
+        label.setBackground(Color.WHITE);
+        label.setOpaque(true);
+        label.setPreferredSize(new Dimension(160, 42));
+        label.setMaximumSize(label.getPreferredSize()); // stops vertical stretching
+        label.setHorizontalAlignment(SwingConstants.CENTER);
 
-        row.add(textField, BorderLayout.CENTER);
+        ///  Text: Description
+        JLabel description = new JLabel(desc);
+        description.setBorder(new RoundedBorder(8));
+        description.setBackground(Color.WHITE);
+        description.setOpaque(true);
+        description.setPreferredSize(new Dimension(300, 42));
+        description.setMaximumSize(label.getPreferredSize()); // stops vertical stretching
+        description.setHorizontalAlignment(SwingConstants.CENTER);
+
+        ///  The Buttons
+        JButton checklistButton = createChecklistButton(habit);
+        JButton menuButton = new CircleButton("...");
 
         JPanel actions = new JPanel(new FlowLayout(FlowLayout.RIGHT, 8, 0));
         actions.setOpaque(false);
-
-        JButton checklistButton = new CircleButton("[ ]");
-        JButton menuButton = new CircleButton("...");
-
         actions.add(checklistButton);
         actions.add(menuButton);
+        actions.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        row.add(actions, BorderLayout.EAST);
+        row.add(label);
+        row.add(Box.createHorizontalStrut(12));  // spacing
+        row.add(description);
+        row.add(Box.createHorizontalStrut(12));
+        row.add(actions);
 
         return row;
     }
 
+
+
     private JPanel createEmptyTaskRow() {
-        JPanel row = new JPanel(new BorderLayout(12, 0));
+        ///  Container for entire row
+        JPanel row = new JPanel();
+        row.setLayout(new BoxLayout(row, BoxLayout.X_AXIS));
         row.setOpaque(false);
         row.setBorder(new EmptyBorder(6, 0, 6, 0));
+        row.setMaximumSize(new Dimension(520, 72)); // fixed height, flexible width
+        row.setPreferredSize(new Dimension(520, 72));
 
-        JTextField textField = new JTextField();
-        textField.setEditable(false);
-        textField.setBorder(new RoundedBorder(18));
-        textField.setBackground(Color.WHITE);
-        textField.setOpaque(true);
-        textField.setMargin(new Insets(4, 12, 4, 12));
-        textField.setPreferredSize(new Dimension(420, 32));
+        ///  Text: Habit Name
+        JLabel label = new JLabel();
+        label.setBorder(new RoundedBorder(8));
+        label.setBackground(Color.WHITE);
+        label.setOpaque(true);
+        label.setPreferredSize(new Dimension(160, 42));
+        label.setMaximumSize(label.getPreferredSize()); // stops vertical stretching
+        label.setHorizontalAlignment(SwingConstants.CENTER);
 
-        row.add(textField, BorderLayout.CENTER);
+        ///  Text: Description
+        JLabel description = new JLabel();
+        description.setBorder(new RoundedBorder(8));
+        description.setBackground(Color.WHITE);
+        description.setOpaque(true);
+        description.setPreferredSize(new Dimension(300, 42));
+        description.setMaximumSize(label.getPreferredSize()); // stops vertical stretching
+        description.setHorizontalAlignment(SwingConstants.CENTER);
+
+        ///  The Buttons
+        JButton checklistButton = new CircleButton("[  ]");
+        JButton menuButton = new CircleButton("...");
 
         JPanel actions = new JPanel(new FlowLayout(FlowLayout.RIGHT, 8, 0));
         actions.setOpaque(false);
-
-        JButton checklistButton = new CircleButton("[ ]");
-        JButton menuButton = new CircleButton("...");
-
         actions.add(checklistButton);
         actions.add(menuButton);
+        actions.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        row.add(actions, BorderLayout.EAST);
+        row.add(label);
+        row.add(Box.createHorizontalStrut(12));  // spacing
+        row.add(description);
+        row.add(Box.createHorizontalStrut(12));
+        row.add(actions);
 
         return row;
     }
@@ -284,4 +344,52 @@ public class HomeView {
             button.setOpaque(true);
         }
     }
+
+    /**
+     * Creates the circular checklist button for a habit.
+     * The button has two states: [ ] (not done) and [✓] (done).
+     */
+    private CircleButton createChecklistButton(Habit habit) {
+        // Initial state: assume NOT done; change if you have a real field
+        boolean done = false;  // e.g. habit.isDoneToday() if you have that
+
+        CircleButton checkButton = new CircleButton(done ? "[✓]" : "[  ]");
+        checkButton.setFocusPainted(false);
+
+        // Store the current done state on the button itself
+        checkButton.putClientProperty("done", done);
+
+        checkButton.addActionListener(e -> {
+            // Read current state
+            boolean currentlyDone = (Boolean) checkButton.getClientProperty("done");
+            boolean nowDone = !currentlyDone;
+
+            // Update stored state
+            checkButton.putClientProperty("done", nowDone);
+
+            // Update the text shown on the button
+            checkButton.setText(nowDone ? "[✓]" : "[  ]");
+
+            // Tell the controller so it can update the Habit model
+            if (nowDone) {
+                // task just became DONE
+                if (this.HomeViewController != null) {
+                    this.HomeViewController.markTaskDone(true, habit);
+                }
+            } else {
+                // task just became NOT DONE
+                if (this.HomeViewController != null) {
+                    this.HomeViewController.markTaskNotDone(false, habit);
+                }
+            }
+
+            // Make sure UI refreshes
+            checkButton.revalidate();
+            checkButton.repaint();
+        });
+
+        return checkButton;
+    }
+
 }
+
