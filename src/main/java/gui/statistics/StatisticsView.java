@@ -1,20 +1,25 @@
 package gui.statistics;
 
+import gui.home.HomeViewComponents;
 import main.Habit;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 public class StatisticsView {
     private String view_name;
+    private StatisticsController statisticsController;
     private StatisticsViewModel statisticsViewModel;
     private JFrame mainframe;
     private JPanel mainpanel;
 
-    public StatisticsView(String view_name, StatisticsViewModel statisticsViewModel) {
+    public StatisticsView(String view_name, StatisticsViewModel statisticsViewModel, StatisticsController statisticsController) {
         this.view_name = view_name;
         this.statisticsViewModel = statisticsViewModel;
+        this.statisticsController = statisticsController;
         createUI(800, 600);
     }
 
@@ -27,17 +32,50 @@ public class StatisticsView {
         mainpanel.setLayout(new BoxLayout(mainpanel, BoxLayout.Y_AXIS));
         mainpanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
+        addButtonsRow();
         for (int i = 0; i < this.statisticsViewModel.numOfTasks(); i++) {
             Habit habit = this.statisticsViewModel.getTask(i);
-            addRow(habit.name, habit.completion, habit.freq, habit.colour);
+            addStatsRow(habit.name, habit.completion, habit.freq, habit.colour);
         }
 
         mainframe.add(mainpanel);
         mainframe.setLocationRelativeTo(null);
     }
+    private void addButtonsRow(){
+        JPanel rowPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 0));
+        rowPanel.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
+        rowPanel.setPreferredSize(new Dimension(700, 70));
+        rowPanel.setMaximumSize(new Dimension(700, 70));
 
-    private void addRow(String labelText, ArrayList<Integer> completion, Habit.Freq repeat, int colour) {
-        JPanel rowPanel = addHabitRow(labelText, completion, repeat, 700, 70, 40, 40, 5, colour);
+        JButton homeButton = configureMenuButton("Home", 65, 40);
+        JButton settingsButton = configureMenuButton("Settings", 80, 40);
+
+        rowPanel.add(homeButton);
+        rowPanel.add(settingsButton);
+
+        mainpanel.add(rowPanel);
+    }
+
+    private JButton configureMenuButton(String text, int width, int height) {
+        JButton button = new HomeViewComponents.PillButton(text);
+        button.setPreferredSize(new Dimension(width, height));
+        button.setBorderPainted(false);
+        button.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                if (text.equals("Home")) {
+                    statisticsController.goHome();
+                }
+                else {
+                    statisticsController.goSettings();
+                }
+                mainframe.dispose();
+            }
+        });
+        return button;
+    }
+
+    private void addStatsRow(String labelText, ArrayList<Integer> completion, Habit.Freq repeat, int colour) {
+        JPanel rowPanel = configureStatsRow(labelText, completion, repeat, 700, 70, 40, 40, 5, colour);
 
         JPanel wrapper = new JPanel();
         wrapper.setLayout(new BoxLayout(wrapper, BoxLayout.X_AXIS));
@@ -49,7 +87,7 @@ public class StatisticsView {
         mainpanel.add(Box.createVerticalStrut(10));
     }
 
-    private JPanel addHabitRow(String labelText, ArrayList<Integer> completed_array, Habit.Freq repeat, int row_width, int row_height, int block_width, int block_height, int gap, int colour) {
+    private JPanel configureStatsRow(String labelText, ArrayList<Integer> completed_array, Habit.Freq repeat, int row_width, int row_height, int block_width, int block_height, int gap, int colour) {
         JPanel rowPanel = new JPanel(new BorderLayout());
         rowPanel.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
         rowPanel.setPreferredSize(new Dimension(row_width, row_height));

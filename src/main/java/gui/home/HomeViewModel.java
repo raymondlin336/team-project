@@ -1,7 +1,6 @@
-package gui.Home;
+package gui.home;
 
 import main.Habit;
-import placeholders.PlaceholderTask;
 
 import java.util.ArrayList;
 

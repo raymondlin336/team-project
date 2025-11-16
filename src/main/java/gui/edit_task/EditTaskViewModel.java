@@ -11,9 +11,7 @@ public class EditTaskViewModel{
     public String getName(){
         return habit.name;
     }
-    public String getDesc(){
-        return habit.desc;
-    }
+    public String getDesc() { return habit.desc; }
     public String getRepeat(){
         return habit.freq.toString();
     }

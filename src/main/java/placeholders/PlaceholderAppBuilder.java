@@ -1,13 +1,11 @@
 package placeholders;
 
-import gui.Home.HomeView;
-import gui.Home.HomeViewController;
-import gui.Home.HomeViewModel;
 import gui.edit_task.EditTaskController;
 import gui.edit_task.EditTaskView;
 import gui.edit_task.EditTaskViewModel;
-import gui.new_task.NewTaskController;
-import gui.new_task.NewTaskView;
+import gui.home.HomeView;
+import gui.home.HomeViewModel;
+import gui.statistics.StatisticsController;
 import gui.statistics.StatisticsView;
 import gui.statistics.StatisticsViewModel;
 import main.Habit;
@@ -31,13 +29,13 @@ public class PlaceholderAppBuilder {
 //        NewTaskView newTaskView = new NewTaskView(newTaskController);
 //        newTaskView.setVisible();
         // Statistics
-        ArrayList<Habit> habits = new ArrayList<>(List.of(habit1, habit2, habit3, habit4));
         StatisticsViewModel vm = new StatisticsViewModel(habits);
-        StatisticsView stat = new StatisticsView("Statistics", vm);
-
-        HomeViewController controller = new HomeViewController(true);
-        HomeViewModel test = new HomeViewModel(habits);
-        HomeView homeTest = new HomeView(test, controller);
-        homeTest.show();
+        StatisticsController ct = new StatisticsController();
+        StatisticsView stat = new StatisticsView("Statistics", vm, ct);
+        stat.setVisible();
+        // Homepage
+//        HomeViewModel test = new HomeViewModel(habits);
+//        HomeView homeTest = new HomeView(test);
+//        homeTest.show();
     }
 }

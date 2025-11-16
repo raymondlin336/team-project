@@ -1,4 +1,4 @@
-package gui.Home;
+package gui.home;
 
 import gui.new_task.NewTaskController;
 import main.Habit;
@@ -6,14 +6,13 @@ import main.Habit;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.awt.geom.RoundRectangle2D;
 import java.util.Collections;
 import java.util.List;
 
-import gui.Home.HomeViewComponents.RoundedPanel;
-import gui.Home.HomeViewComponents.RoundedBorder;
-import gui.Home.HomeViewComponents.PillButton;
-import gui.Home.HomeViewComponents.CircleButton;
+import gui.home.HomeViewComponents.RoundedPanel;
+import gui.home.HomeViewComponents.RoundedBorder;
+import gui.home.HomeViewComponents.PillButton;
+import gui.home.HomeViewComponents.CircleButton;
 
 
 public class HomeView {
