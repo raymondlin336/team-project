@@ -1,4 +1,4 @@
-package gui.Home;
+package gui.home;
 
 import gui.task.TaskController;
 import main.Habit;
