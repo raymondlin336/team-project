@@ -2,10 +2,11 @@ import java.util.ArrayList;
 
 public class Habit {
     public ArrayList<Task> tasks = new ArrayList<>();
+    public int id;
 
-    public Habit(String name, String desc, Freq freq, Date date) {
+    public Habit(String name, String desc, Freq freq, Date date, int id) {
         Super();
-        Task task = new Task(name, desc, freq, date);
+        Task task = new Task(name, desc, freq, date, 0);
         this.tasks.append(task);
     }
 

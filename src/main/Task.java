@@ -61,8 +61,9 @@ public class Task {
     public Freq freq;
     public Date deadline;
     public bool completed;
+    public int id;
 
-    public Task(String name, String desc, Freq freq, Date deadline) {
+    public Task(String name, String desc, Freq freq, Date deadline, int id) {
         this.name = name;
         this.desc = desc;
         this.freq = freq;

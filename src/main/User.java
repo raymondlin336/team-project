@@ -1,9 +1,11 @@
 public class User {
     public ArrayList<Habit> habits;
+    public int id;
 
-    public User() {
+    public User(int id) {
         Super();
         this.habits = new ArrayList();
+        this.id = id;
     }
 
     public void add_habit(Habit h) {
