@@ -14,6 +14,7 @@ import gui.home.HomeViewComponents.RoundedBorder;
 import gui.home.HomeViewComponents.PillButton;
 import gui.home.HomeViewComponents.CircleButton;
 
+/// Skibidi
 
 public class HomeView {
 
