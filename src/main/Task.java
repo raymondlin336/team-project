@@ -16,38 +16,42 @@ public class Date {
         this.year = y;
     }
 
-    public void increase_date(Freq freq) {
+    public Date increase_date(Freq freq) {
         switch (freq) {
             case Once:
+                return null;
                 break;
             case Daily:
-                this.increase_date_number(1);
+                return this.increase_date_number(1);
                 break;
             case Weekly:
-                this.increase_date_number(7);
+                return this.increase_date_number(7);
                 break;
             case Monthly:
-                if (this.month++ == 12) {
-                    this.month = 0;
-                    this.year++;
+                Date d = this.clone();
+                if (d.month++ == 12) {
+                    d.month = 0;
+                    d.year++;
                 }
-                this.day = Math.max(days_in_months.get(this.month), day);
+                d.day = Math.max(days_in_months.get(d.month), day);
             default:
                 break;
         }
     }
 
-    public void increase_date_number(int num) {
-        this.day += num;
-        int month_days = days_in_months.get(this.month);
-        if (this.day > month_days) {
-            this.day = this.day % month_days;
-            this.month++;
-            if (this.month == 12) {
-                this.month = 0;
-                this.year++;
+    public Date increase_date_number(int num) {
+        Date d = this.clone();
+        d.day += num;
+        int month_days = days_in_months.get(d.month);
+        if (d.day > month_days) {
+            d.day = d.day % month_days;
+            d.month++;
+            if (d.month == 12) {
+                d.month = 0;
+                d.year++;
             }
         }
+        return d;
     }
 }
 
@@ -56,15 +60,20 @@ public class Task {
     public String desc;
     public Freq freq;
     public Date deadline;
+    public bool completed;
 
     public Task(String name, String desc, Freq freq, Date deadline) {
         this.name = name;
         this.desc = desc;
         this.freq = freq;
         this.deadline = deadline;
+        this.completed = false;
     }
 
-    public void update_deadline() {
-        this.deadline.increase_date(this.freq);
+    public Task update_deadline() {
+        Task x = this.clone();
+        x.deadline = x.deadline.increase_date(this.freq);
+        x.completed = false;
+        return x;
     }
 }
