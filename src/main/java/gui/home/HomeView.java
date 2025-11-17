@@ -20,7 +20,7 @@ public class HomeView {
 
     private HomeViewModel homeViewModel;
 
-    private HomeViewController HomeViewController;
+    private gui.home.HomeViewController HomeViewController;
 
     private JFrame mainFrame;
 
@@ -37,7 +37,7 @@ public class HomeView {
     // "Add task" button at the bottom of the card (exposed for controller)
     private JButton addTaskButton;
 
-    public HomeView(HomeViewModel homeViewModel, HomeViewController controller) {
+    public HomeView(HomeViewModel homeViewModel, gui.home.HomeViewController controller) {
         // Assign viewmodel
         this.homeViewModel = homeViewModel;
         this.HomeViewController = controller;
