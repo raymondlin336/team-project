@@ -19,6 +19,7 @@ public class PlaceholderAppBuilder {
         Habit habit2 = new Habit(1, "Workout", "Run for 30 mins", Habit.Freq.Every_day, new Habit.Date(10, 11, 2025), new ArrayList<>(List.of(5, 7, 2, 3, 0, 2, 1, 0, 0, 7, 2, 3, 7, 5, 1, 2)));
         Habit habit3 = new Habit(2, "Basketball with friends", "Sumaid, Henry, and Kevin", Habit.Freq.Every_month, new Habit.Date(10, 30, 2025), new ArrayList<>(List.of(0, 1)));
         Habit habit4 = new Habit(3, "Doctor's", "Appointment at 4pm", Habit.Freq.Once, new Habit.Date(10, 21, 2025), new ArrayList<>());
+        ArrayList<Habit> habits = new ArrayList<>(List.of(habit1, habit2, habit3, habit4));
         // Editing a task
 //        EditTaskController editTaskController = new EditTaskController(true);
 //        EditTaskViewModel editTaskViewModel = new EditTaskViewModel(habit1);
