@@ -1,6 +1,5 @@
 package gui.home;
 
-import gui.new_task.NewTaskController;
 import main.Habit;
 
 import javax.swing.*;
@@ -23,6 +22,9 @@ public class HomeView {
     private gui.home.HomeViewController HomeViewController;
 
     private JFrame mainFrame;
+
+    // *** NEW: root panel that contains everything ***
+    private JPanel mainPanel;
 
     // Header – frequency selector
     private JToggleButton dailyTab;
@@ -59,10 +61,10 @@ public class HomeView {
         mainFrame.setSize(width, height);
         mainFrame.setLocationRelativeTo(null);
 
-        // Background
-        JPanel background = new JPanel(new GridBagLayout());
-        background.setBorder(new EmptyBorder(30, 30, 30, 30));
-        mainFrame.setContentPane(background);
+        // Background/root panel – now stored in field mainPanel
+        mainPanel = new JPanel(new GridBagLayout());
+        mainPanel.setBorder(new EmptyBorder(30, 30, 30, 30));
+        mainFrame.setContentPane(mainPanel);
 
         // Rounded JPanel containing all the elements in HomeView
         JPanel card = new RoundedPanel(24);
@@ -76,7 +78,7 @@ public class HomeView {
         gbc.weightx = 1.0;
         gbc.weighty = 1.0;
         gbc.fill = GridBagConstraints.BOTH;
-        background.add(card, gbc);
+        mainPanel.add(card, gbc);
 
         // Header: frequency tabs on the left, small chips on the right ──
         JPanel header = new JPanel(new BorderLayout());
@@ -111,6 +113,9 @@ public class HomeView {
         addTaskButton = new PillButton("Add task");
         addTaskButton.setPreferredSize(new Dimension(420, 36));
         addTaskButton.setFocusPainted(false);
+        addTaskButton.addActionListener(e -> {
+            HomeViewController.showAddTaskWindow();
+        });
 
         bottomPanel.add(addTaskButton);
         card.add(bottomPanel, BorderLayout.SOUTH);
@@ -277,8 +282,6 @@ public class HomeView {
         return row;
     }
 
-
-
     private JPanel createEmptyTaskRow() {
         ///  Container for entire row
         JPanel row = new JPanel();
@@ -338,7 +341,8 @@ public class HomeView {
             button.setForeground(Color.WHITE);
             button.setBackground(Color.BLACK);
             button.setOpaque(true);
-        } else {
+        }
+        else {
             button.setForeground(Color.DARK_GRAY);
             button.setBackground(Color.WHITE);
             button.setOpaque(true);
@@ -391,5 +395,9 @@ public class HomeView {
         return checkButton;
     }
 
-}
+    // *** Changed: now returns the root panel containing EVERYTHING ***
+    public JPanel getPanel(){
+        return mainPanel;
+    }
 
+}

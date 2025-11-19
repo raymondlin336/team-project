@@ -212,4 +212,7 @@ public class StatisticsView {
     public void setVisible(){
         mainframe.setVisible(true);
     }
+    public JPanel getPanel(){
+        return mainpanel;
+    }
 }
