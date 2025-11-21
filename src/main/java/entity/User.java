@@ -1,15 +1,18 @@
+package entity;
+
+import java.util.ArrayList;
+
 public class User {
     public ArrayList<Habit> habits;
     public int id;
 
     public User(int id) {
-        Super();
-        this.habits = new ArrayList();
+        this.habits = new ArrayList<Habit>();
         this.id = id;
     }
 
     public void add_habit(Habit h) {
-        this.habits.append(h);
+        this.habits.add(h);
     }
 
     public void remove_habit(Habit h) {
