@@ -22,4 +22,16 @@ public class Habit {
     public Task get_next() {
         return this.tasks.get(this.tasks.size() - 1);
     }
+
+    public void change_freq(Freq freq) {
+        this.get_next().freq = freq;
+    }
+
+    public void change_name(String name) {
+        this.get_next().name = name;
+    }
+
+    public void change_desc(String desc) {
+        this.get_next().desc = desc;
+    }
 }
