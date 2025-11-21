@@ -34,6 +34,7 @@ public class TaskView {
         cancel.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 taskController.cancel();
+                taskController.showHomeWindow();
                 mainframe.dispose();
             }
         });
@@ -143,7 +144,12 @@ public class TaskView {
 
         return row;
     }
+
     public void setVisible(){
         mainframe.setVisible(true);
+    }
+
+    public JPanel getPanel(){
+        return mainpanel;
     }
 }

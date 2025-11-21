@@ -18,6 +18,7 @@ public class NewTaskController extends TaskController {
         else if (frequency == "Every month"){
             freq = Habit.Freq.Every_month;
         }
+        showHomeWindow();
         print_log_message("adding habit {ID: [unassigned] name: [" + name + "] description: [" + description + "] frequency: [" + freq + "]}");
     }
 }

@@ -18,9 +18,11 @@ public class EditTaskController extends TaskController {
         else if (frequency == "Every month"){
             freq = Habit.Freq.Every_month;
         }
+        showHomeWindow();
         print_log_message("updating habit info for habit {ID: " + habit_id + " name: [" + name + "] description: [" + description + "] frequency: [" + freq + "]}");
     }
     public void delete_habit(int habit_id){
+        showHomeWindow();
         print_log_message("deleting habit {ID: " + habit_id + "} and closing the window");
     }
 }

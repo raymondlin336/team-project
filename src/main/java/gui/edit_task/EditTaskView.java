@@ -34,6 +34,7 @@ public class EditTaskView extends TaskView {
                 String habit_desc = habitDescTF.getText();
                 String habit_repeat = habitRepeatCB.getSelectedItem().toString();
                 editTaskController.save_habit_info(habit_id, habit_name, habit_desc, habit_repeat);
+                mainframe.dispose();
             }
         });
         buttonsRow.add(save);

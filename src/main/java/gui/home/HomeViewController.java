@@ -1,9 +1,13 @@
-package gui.Home;
+package gui.home;
 
+import gui.ScreenManager;
 import gui.task.TaskController;
 import main.Habit;
 
+import javax.script.ScriptEngine;
+
 public class HomeViewController extends TaskController {
+    private ScreenManager screenManager;
     public HomeViewController(Boolean log_messages) {
         super(log_messages);
     }
@@ -29,5 +33,22 @@ public class HomeViewController extends TaskController {
             /// Mark done
         }
 
+    }
+
+
+    public void addScreenManager(ScreenManager screenManager){
+        this.screenManager = screenManager;
+    }
+
+    public void showEditTaskWindow(){
+        screenManager.showEditTaskView(); // Needs to be implemented somewhere!
+    }
+
+    public void showStatisticsWindow(){
+        screenManager.showStatisticsView(); // Needs to be implemented somewhere!
+    }
+
+    public void showAddTaskWindow(){
+        screenManager.showAddTaskView();
     }
 }

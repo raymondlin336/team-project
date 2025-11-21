@@ -28,8 +28,10 @@ public class NewTaskView extends TaskView {
                 String habit_desc = habitDescTF.getText();
                 String habit_repeat = habitRepeatCB.getSelectedItem().toString();
                 newTaskController.add_habit(habit_name, habit_desc, habit_repeat);
+                mainframe.dispose();
             }
         });
         buttonsRow.add(add);
     }
+
 }
