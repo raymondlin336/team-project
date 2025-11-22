@@ -1,6 +1,6 @@
 package gui.home;
 
-import main.Habit;
+import entity.Habit;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -234,8 +234,8 @@ public class HomeView {
     }
 
     private JPanel createTaskRow(Habit habit) {
-        String habitLabel = habit.name;
-        String desc = habit.desc;
+        String habitLabel = habit.get_next().name;
+        String desc = habit.get_next().desc;
 
         ///  Container for entire row
         JPanel row = new JPanel();

@@ -1,13 +1,14 @@
 package gui.statistics;
 
-import main.Habit;
+import entity.Freq;
+import entity.Habit;
 import java.util.ArrayList;
 
 public class StatisticsViewModel {
     private ArrayList<Habit> habits = new ArrayList<Habit>();
     public StatisticsViewModel(ArrayList<Habit> habits) {
         for (Habit habit : habits) {
-            if (!(habit.freq == Habit.Freq.Once)) {
+            if (!(habit.get_next().freq == Freq.Once)) {
                 this.habits.add(habit);
             }
         }

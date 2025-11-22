@@ -17,10 +17,16 @@ import gui.statistics.StatisticsController;
 import gui.statistics.StatisticsView;
 import gui.statistics.StatisticsViewModel;
 
+import java.util.ArrayList;
+
 public class PlaceHolderAppBuilder3 {
     public static void main(String[] args){
-        Habit habit1 = new Habit();
-        create_and_attach_tasks(habit1, "Groceries", "Get milk, toast, eggs", Freq.Weekly, new Date(11, 2, 2025), 0, true, 10);
+        ArrayList<Habit> habits = new ArrayList<Habit>();
+
+        Habit habit1 = new Habit(0);
+        create_and_attach_tasks(habit1, "Groceries", "Get milk, toast, eggs", Freq.Daily, new Date(11, 2, 2025), 0, true, 10);
+
+        habits.add(habit1);
 
         // Editing a task
         EditTaskController editTaskController = new EditTaskController(true);
@@ -40,14 +46,14 @@ public class PlaceHolderAppBuilder3 {
         HomeViewModel test = new HomeViewModel(habits);
         HomeViewController homeViewController = new HomeViewController(true);
         HomeView homeView = new HomeView(test, homeViewController);
-
+//
         // ScreenManager
         ScreenManager manager = new ScreenManager(editTaskView, newTaskView, homeView, satisticsView);
         homeViewController.addScreenManager(manager);
         editTaskController.addScreenManager(manager);
         newTaskController.addScreenManager(manager);
         statisticsController.addScreenManager(manager);
-        manager.showHomeView();
+        manager.showEditTaskView();
     }
     public static void create_and_attach_tasks(Habit habit, String name, String desc, Freq freq, Date date, int id, Boolean completed, int total){
         for (int i = 0; i < total; i++) {

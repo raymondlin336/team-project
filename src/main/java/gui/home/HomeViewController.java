@@ -1,8 +1,9 @@
 package gui.home;
 
+import entity.Freq;
 import gui.ScreenManager;
 import gui.task.TaskController;
-import main.Habit;
+import entity.Habit;
 
 import javax.script.ScriptEngine;
 
@@ -13,11 +14,11 @@ public class HomeViewController extends TaskController {
     }
     public void markTaskDone(Boolean task_done, Habit habit) {
         /// Mark task done for the day/week/month
-        if (habit.freq == Habit.Freq.Every_day) {
+        if (habit.get_next().freq == Freq.Daily) {
             /// Mark
-        } else if (habit.freq == Habit.Freq.Every_week) {
+        } else if (habit.get_next().freq == Freq.Weekly) {
             /// Mark done
-        } else if (habit.freq == Habit.Freq.Every_month) {
+        } else if (habit.get_next().freq == Freq.Monthly) {
             /// Mark done
         }
 
@@ -25,11 +26,11 @@ public class HomeViewController extends TaskController {
 
     public void markTaskNotDone(Boolean task_done, Habit habit) {
         /// Mark task not done for the day/week/month
-        if (habit.freq == Habit.Freq.Every_day) {
+        if (habit.get_next().freq == Freq.Daily) {
             /// Mark
-        } else if (habit.freq == Habit.Freq.Every_week) {
+        } else if (habit.get_next().freq == Freq.Weekly) {
             /// Mark done
-        } else if (habit.freq == Habit.Freq.Every_month) {
+        } else if (habit.get_next().freq == Freq.Monthly) {
             /// Mark done
         }
 
