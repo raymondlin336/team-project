@@ -118,7 +118,7 @@ public class StatisticsView {
                 num_completed += 1;
             }
         }
-        String per_text = num_completed + " " + repeat;
+        String per_text = num_completed + " " + Freq.getType(repeat);
         if (num_completed > 1){
             per_text += "s";
         }
