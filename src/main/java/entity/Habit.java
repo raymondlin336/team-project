@@ -7,7 +7,7 @@ public class Habit {
     public int id;
 
     public Habit(String name, String desc, Freq freq, Date date, int id) {
-        Task task = new Task(name, desc, freq, date, 0);
+        Task task = new Task(name, desc, freq, date, 0, false);
         this.tasks.add(task);
     }
 
@@ -33,5 +33,17 @@ public class Habit {
 
     public void change_desc(String desc) {
         this.get_next().desc = desc;
+    }
+
+    public Boolean[] get_completion_data() {
+        ArrayList<Boolean> arr = new ArrayList<>();
+        for (Task task : this.tasks) {
+            arr.add(task.completed);
+        }
+        return (Boolean[]) arr.toArray();
+    }
+
+    public void add_task(Task t) {
+        this.tasks.add(t);
     }
 }
