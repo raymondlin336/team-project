@@ -22,4 +22,9 @@ public class TaskController {
     public void showHomeWindow(){
         screenManager.showHomeView();
     }
+
+    ///  Method to access ScreenManager
+    public ScreenManager getScreenManager(){
+        return screenManager;
+    }
 }

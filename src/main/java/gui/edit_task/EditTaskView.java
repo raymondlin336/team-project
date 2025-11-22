@@ -24,6 +24,8 @@ public class EditTaskView extends TaskView {
         showHabitInfo();
     }
 
+
+
     private void addSaveButton(){
         save = new HomeViewComponents.PillButton("Save");
         save.setBorderPainted(false);
@@ -58,5 +60,10 @@ public class EditTaskView extends TaskView {
         habitDescTF.setText(editTaskViewModel.getDesc());
         habitRepeatCB.setSelectedItem(editTaskViewModel.getRepeat());
         habitDueLB.setText(editTaskViewModel.getDueDate());
+    }
+
+    ///  get method for controller
+    public EditTaskController getEditTaskController() {
+        return editTaskController;
     }
 }

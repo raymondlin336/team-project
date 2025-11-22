@@ -71,7 +71,7 @@ public class PlaceHolderAppBuilder3 {
         editTaskController.addScreenManager(manager);
         newTaskController.addScreenManager(manager);
         statisticsController.addScreenManager(manager);
-        manager.showStatisticsView();
+        manager.showHomeView();
     }
     public static void create_and_attach_tasks(Habit habit, String name, String desc, Freq freq, Date date, Boolean completed, int total){
         for (int i = 0; i < total; i++) {

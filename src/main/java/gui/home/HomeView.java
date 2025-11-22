@@ -173,6 +173,10 @@ public class HomeView {
         JButton statChip = createChipButton("Stat");
         JButton setChip = createChipButton("Set");
 
+        statChip.addActionListener(e -> {
+            HomeViewController.showStatisticsWindow();
+        });
+
         panel.add(statChip);
         panel.add(setChip);
 
@@ -191,14 +195,13 @@ public class HomeView {
         return button;
     }
 
-    ///  The three
+    ///  The two buttons
     private JButton createChipButton(String text) {
         JButton button = new JButton(text);
         button.setFont(button.getFont().deriveFont(Font.PLAIN, 12f));
         button.setBorder(new RoundedBorder(8));
-        button.setContentAreaFilled(false);
+        button.setBackground(Color.WHITE);
         button.setFocusPainted(false);
-        button.setOpaque(false);
         button.setMargin(new Insets(4, 12, 4, 12));
         return button;
     }
@@ -265,7 +268,12 @@ public class HomeView {
 
         ///  The Buttons
         JButton checklistButton = createChecklistButton(habit);
+
         JButton menuButton = new CircleButton("...");
+        menuButton.addActionListener(e -> {
+            HomeViewController.showEditTaskWindow(habit);
+        });
+
 
         JPanel actions = new JPanel(new FlowLayout(FlowLayout.RIGHT, 8, 0));
         actions.setOpaque(false);
