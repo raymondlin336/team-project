@@ -8,7 +8,7 @@ public class Task {
     public boolean completed;
     public int id;
 
-    public Task(String name, String desc, Freq freq, Date deadline, int id) {
+    public Task(String name, String desc, Freq freq, Date deadline, int id, Boolean completed) {
         this.name = name;
         this.desc = desc;
         this.freq = freq;
