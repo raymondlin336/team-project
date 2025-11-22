@@ -24,9 +24,18 @@ public class PlaceHolderAppBuilder3 {
         ArrayList<Habit> habits = new ArrayList<Habit>();
 
         Habit habit1 = new Habit(0);
-        create_and_attach_tasks(habit1, "Groceries", "Get milk, toast, eggs", Freq.Daily, new Date(11, 2, 2025), 0, true, 10);
+        create_and_attach_tasks(habit1, "Groceries", "Get milk, toast, eggs", Freq.Weekly, new Date(11, 2, 2025), 0, true, 5);
+        create_and_attach_tasks(habit1, "Groceries", "Get milk, toast, eggs", Freq.Weekly, new Date(11, 2, 2025), 0, false, 2);
+        create_and_attach_tasks(habit1, "Groceries", "Get milk, toast, eggs", Freq.Weekly, new Date(11, 2, 2025), 0, true, 2);
+        Habit habit2 = new Habit(1);
+        create_and_attach_tasks(habit2, "Workout", "Run for 30 mins", Freq.Daily, new Date(11, 2, 2025), 0, true, 12);
+        create_and_attach_tasks(habit2, "Workout", "Run for 30 mins", Freq.Daily, new Date(11, 2, 2025), 0, false, 3);
+        create_and_attach_tasks(habit2, "Workout", "Run for 30 mins", Freq.Daily, new Date(11, 2, 2025), 0, true, 7);
+        create_and_attach_tasks(habit2, "Workout", "Run for 30 mins", Freq.Daily, new Date(11, 2, 2025), 0, false, 4);
+        create_and_attach_tasks(habit2, "Workout", "Run for 30 mins", Freq.Daily, new Date(11, 2, 2025), 0, true, 8);
 
         habits.add(habit1);
+        habits.add(habit2);
 
         // Editing a task
         EditTaskController editTaskController = new EditTaskController(true);
@@ -53,7 +62,7 @@ public class PlaceHolderAppBuilder3 {
         editTaskController.addScreenManager(manager);
         newTaskController.addScreenManager(manager);
         statisticsController.addScreenManager(manager);
-        manager.showEditTaskView();
+        manager.showStatisticsView();
     }
     public static void create_and_attach_tasks(Habit habit, String name, String desc, Freq freq, Date date, int id, Boolean completed, int total){
         for (int i = 0; i < total; i++) {

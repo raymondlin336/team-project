@@ -105,10 +105,9 @@ public class StatisticsView {
         ArrayList<Double> completed_perc = new ArrayList<>();
         for (int i = 0; i < completed_array.length; i += base) {
             int completed = 0;
-            for  (int j = i; j < Math.min(j + base, completed_array.length); j += 1) {
+            for  (int j = i; j < Math.min(i + base, completed_array.length); j += 1) {
                 completed += completed_array[j] ? 1 : 0;
             }
-            System.out.println(completed);
             completed_perc.add((double)completed/base);
         }
 
