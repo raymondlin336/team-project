@@ -22,4 +22,12 @@ public class User {
     public ArrayList<Habit> get_habits() {
         return this.habits;
     }
+
+    public User copy() {
+        User u = new User(this.id);
+        for (Habit h : this.habits) {
+            u.habits.add(h.copy());
+        }
+        return u;
+    }
 }

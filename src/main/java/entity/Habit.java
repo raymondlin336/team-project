@@ -21,6 +21,19 @@ public class Habit {
         this.colour = random.nextInt(30) * 12;
     }
 
+    public Habit(int id, int colour) {
+        this.id = id;
+        this.colour = colour;
+    }
+
+    public Habit copy() {
+        Habit h = new Habit(this.id, this.colour);
+        for (Task t : this.tasks) {
+            h.tasks.add(t.copy());
+        }
+        return h;
+    }
+
     public void complete_most_recent() {
         this.tasks.get(this.tasks.size() - 1).completed = true;
         Task t = this.tasks.get(this.tasks.size() - 1).update_deadline();

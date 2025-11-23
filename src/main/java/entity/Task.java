@@ -18,14 +18,13 @@ public class Task {
 
     public Task update_deadline() {
         Task x;
-        try {
-            x = (Task) this.clone();
-            x.deadline = x.deadline.increase_date(this.freq);
-            x.completed = false;
-            return x;
-        } catch (CloneNotSupportedException e) {
-            e.printStackTrace();
-            return null;
-        }
+        x = (Task) this.copy();
+        x.deadline = x.deadline.increase_date(this.freq);
+        x.completed = false;
+        return x;
+    }
+
+    public Task copy() {
+        return new Task(this.name, this.desc, this.freq, this.deadline.copy(), this.id, this.completed);
     }
 }

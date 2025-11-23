@@ -22,21 +22,20 @@ public class Date {
                 return this.increase_date_number(7);
             case Monthly:
                 Date d;
-                try {
-                    d = (Date) this.clone();
-                    if (d.month++ == 12) {
-                        d.month = 0;
-                        d.year++;
-                    }
-                    d.day = Math.max(days_in_months[d.month], day);
-                    return d;
-                } catch (CloneNotSupportedException e) {
-                    e.printStackTrace();
-                    return null;
+                d = (Date) this.copy();
+                if (d.month++ == 12) {
+                    d.month = 0;
+                    d.year++;
                 }
+                d.day = Math.max(days_in_months[d.month], day);
+                return d;
             default:
                 return null;
         }
+    }
+
+    public Date copy() {
+        return new Date(this.day, this.month, this.day);
     }
 
     public Date increase_date_number(int num) {
@@ -61,7 +60,7 @@ public class Date {
     }
 
     @Override
-    public String toString(){
+    public String toString() {
         return month + "/" + day + "/" + year;
     }
 }
