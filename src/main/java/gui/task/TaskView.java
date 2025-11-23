@@ -30,6 +30,7 @@ public class TaskView {
 
     protected void addCancelButton(){
         cancel = new HomeViewComponents.PillButton("Cancel");
+        cancel.setPreferredSize(new Dimension(100, 40));
         cancel.setBorderPainted(false);
         cancel.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -71,7 +72,7 @@ public class TaskView {
         gbc.gridy = 0;
         mainpanel.add(habitNameRow, gbc);
 
-        // Row 2: habit name
+        // Row 2: habit description
         habitDescTF = getSizedTextField(320, 36, new Color(255, 255, 255));
         habitDescRow = labeledRowJPanel("Description", habitDescTF);
         gbc.gridy = 1;

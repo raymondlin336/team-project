@@ -49,10 +49,9 @@ public class StatisticsView {
         rowPanel.setMaximumSize(new Dimension(700, 70));
 
         JButton homeButton = configureMenuButton("Home", 65, 40);
-        JButton settingsButton = configureMenuButton("Settings", 80, 40);
+        homeButton.setPreferredSize(new Dimension(100, 40));
 
         rowPanel.add(homeButton);
-        rowPanel.add(settingsButton);
 
         mainpanel.add(rowPanel);
     }

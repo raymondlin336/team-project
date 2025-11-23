@@ -1,10 +1,9 @@
-package placeholders;
+package gui;
 
+import entity.Date;
+import entity.Freq;
 import entity.Habit;
 import entity.Task;
-import entity.Freq;
-import entity.Date;
-import gui.ScreenManager;
 import gui.edit_task.EditTaskController;
 import gui.edit_task.EditTaskView;
 import gui.edit_task.EditTaskViewModel;
@@ -16,12 +15,49 @@ import gui.new_task.NewTaskView;
 import gui.statistics.StatisticsController;
 import gui.statistics.StatisticsView;
 import gui.statistics.StatisticsViewModel;
-
+import org.junit.Test;
 import java.util.ArrayList;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class PlaceHolderAppBuilder3 {
-    public static void main(String[] args){
-        ArrayList<Habit> habits = new ArrayList<Habit>();
+public class UIBuilderTests {
+
+    @Test
+    public void UIBuilderTest() {
+        System.out.println("UIBuilderTest");
+        ArrayList<Habit> habits = createTestHabits();
+
+        EditTaskController editTaskController = new EditTaskController(true);
+        EditTaskViewModel editTaskViewModel = new EditTaskViewModel(habits.get(0));
+        EditTaskView editTaskView = new EditTaskView(editTaskViewModel, editTaskController);
+
+        NewTaskController newTaskController = new NewTaskController(true);
+        NewTaskView newTaskView = new NewTaskView(newTaskController);
+
+        StatisticsViewModel vm = new StatisticsViewModel(habits);
+        StatisticsController statisticsController = new StatisticsController();
+        StatisticsView statisticsView = new StatisticsView("Statistics", vm, statisticsController);
+
+        HomeViewModel test = new HomeViewModel(habits);
+        HomeViewController homeViewController = new HomeViewController(true);
+        HomeView homeView = new HomeView(test, homeViewController);
+
+        ScreenManager manager = new ScreenManager(editTaskView, newTaskView, homeView, statisticsView);
+        homeViewController.addScreenManager(manager);
+        editTaskController.addScreenManager(manager);
+        newTaskController.addScreenManager(manager);
+        statisticsController.addScreenManager(manager);
+
+        manager.showHomeView();
+
+        try {
+            Thread.sleep(600_000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private ArrayList<Habit> createTestHabits() {
+        ArrayList<Habit> habits = new ArrayList<>();
 
         Habit habit1 = new Habit(0);
         create_and_attach_tasks(habit1, "Groceries", "Get milk, toast, eggs", Freq.Weekly, new Date(29, 11, 2025), true, 5);
@@ -39,46 +75,23 @@ public class PlaceHolderAppBuilder3 {
         create_and_attach_tasks(habit3, "Basketball with friends", "Sumaid, Henry, and Kevin", Freq.Monthly, new Date(8, 12, 2025), true, 2);
         Habit habit4 = new Habit(3);
         create_and_attach_tasks(habit4, "Doctor's", "Appointment at 4pm", Freq.Once, new Date(10, 12, 2025), false, 1);
-
+        Habit habit5 = new Habit(4);
+        create_and_attach_tasks(habit5, "Read before bed", "Try to do 30 pages a day!", Freq.Daily, new Date(1, 12, 2025), false, 3);
+        create_and_attach_tasks(habit5, "Read before bed", "Try to do 30 pages a day!", Freq.Daily, new Date(1, 12, 2025), true, 7);
+        create_and_attach_tasks(habit5, "Read before bed", "Try to do 30 pages a day!", Freq.Daily, new Date(1, 12, 2025), false, 4);
 
         habits.add(habit1);
         habits.add(habit2);
         habits.add(habit3);
         habits.add(habit4);
-
-        // Editing a task
-        EditTaskController editTaskController = new EditTaskController(true);
-        EditTaskViewModel editTaskViewModel = new EditTaskViewModel(habit1);
-        EditTaskView editTaskView = new EditTaskView(editTaskViewModel, editTaskController);
-
-        // Adding a task
-        NewTaskController newTaskController = new NewTaskController(true);
-        NewTaskView newTaskView = new NewTaskView(newTaskController);
-
-        // Statistics
-        StatisticsViewModel vm = new StatisticsViewModel(habits);
-        StatisticsController statisticsController = new StatisticsController();
-        StatisticsView satisticsView = new StatisticsView("Statistics", vm, statisticsController);
-
-        // Homepage
-        HomeViewModel test = new HomeViewModel(habits);
-        HomeViewController homeViewController = new HomeViewController(true);
-        HomeView homeView = new HomeView(test, homeViewController);
-//
-        // ScreenManager
-        ScreenManager manager = new ScreenManager(editTaskView, newTaskView, homeView, satisticsView);
-        homeViewController.addScreenManager(manager);
-        editTaskController.addScreenManager(manager);
-        newTaskController.addScreenManager(manager);
-        statisticsController.addScreenManager(manager);
-        manager.showHomeView();
+        habits.add(habit5);
+        return habits;
     }
+
     public static void create_and_attach_tasks(Habit habit, String name, String desc, Freq freq, Date date, Boolean completed, int total){
         for (int i = 0; i < total; i++) {
             Task task = new  Task(name, desc, freq, date, i, completed);
             habit.add_task(task);
         }
     }
-
-
 }
