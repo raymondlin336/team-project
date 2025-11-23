@@ -44,6 +44,7 @@ public class EditTaskView extends TaskView {
 
     private void addDeleteButton(){
         delete = new HomeViewComponents.PillButton("Delete");
+        delete.setPreferredSize(new Dimension(100, 40));
         delete.setBorderPainted(false);
         delete.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {

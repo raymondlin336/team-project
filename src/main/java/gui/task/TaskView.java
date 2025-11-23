@@ -30,6 +30,7 @@ public class TaskView {
 
     protected void addCancelButton(){
         cancel = new HomeViewComponents.PillButton("Cancel");
+        cancel.setPreferredSize(new Dimension(100, 40));
         cancel.setBorderPainted(false);
         cancel.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
