@@ -1,14 +1,24 @@
 package entity;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 public class Habit {
     public ArrayList<Task> tasks = new ArrayList<>();
     public int id;
+    public int colour;
+
+    public Habit(int id) {
+        this.id = id;
+        Random random = new Random();
+        this.colour = random.nextInt(30) * 12;
+    }
 
     public Habit(String name, String desc, Freq freq, Date date, int id) {
         Task task = new Task(name, desc, freq, date, 0, false);
         this.tasks.add(task);
+        Random random = new Random();
+        this.colour = random.nextInt(30) * 12;
     }
 
     public void complete_most_recent() {
@@ -40,7 +50,7 @@ public class Habit {
         for (Task task : this.tasks) {
             arr.add(task.completed);
         }
-        return (Boolean[]) arr.toArray();
+        return arr.toArray(new Boolean[0]);
     }
 
     public void add_task(Task t) {

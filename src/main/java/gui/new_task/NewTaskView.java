@@ -21,6 +21,7 @@ public class NewTaskView extends TaskView {
 
     private void addAddButton(){
         add = new HomeViewComponents.PillButton("Add");
+        add.setPreferredSize(new Dimension(100, 40));
         add.setBorderPainted(false);
         add.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
