@@ -59,9 +59,4 @@ public class Date {
             return null;
         }
     }
-
-    @Override
-    public String toString(){
-        return month + "/" + day + "/" + year;
-    }
 }

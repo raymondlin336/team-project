@@ -1,23 +1,22 @@
 package gui.edit_task;
 
 import gui.task.TaskController;
-import entity.Habit;
-import entity.Freq;
+import main.Habit;
 
 public class EditTaskController extends TaskController {
     public EditTaskController(Boolean log_messages) {
         super(log_messages);
     }
     public void save_habit_info(int habit_id, String name, String description, String frequency){
-        Freq freq = Freq.Once;
-        if (frequency == "Daily"){
-            freq = Freq.Daily;
+        Habit.Freq freq = Habit.Freq.Once;
+        if (frequency == "Every day"){
+            freq = Habit.Freq.Every_day;
         }
-        else if (frequency == "Weekly"){
-            freq = Freq.Weekly;
+        else if (frequency == "Every week"){
+            freq = Habit.Freq.Every_day;
         }
-        else if (frequency == "Monthly"){
-            freq = Freq.Monthly;
+        else if (frequency == "Every month"){
+            freq = Habit.Freq.Every_month;
         }
         showHomeWindow();
         print_log_message("updating habit info for habit {ID: " + habit_id + " name: [" + name + "] description: [" + description + "] frequency: [" + freq + "]}");
