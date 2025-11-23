@@ -1,7 +1,6 @@
 package gui.home;
 
-import entity.Freq;
-import entity.Habit;
+import main.Habit;
 
 import java.util.ArrayList;
 
@@ -14,11 +13,11 @@ public class HomeViewModel {
 
     public HomeViewModel(ArrayList<Habit> habits) {
         for (Habit habit : habits) {
-            if (habit.get_next().freq == Freq.Daily) {
+            if (habit.freq == Habit.Freq.Every_day) {
                 this.dailyHabits.add(habit);
-            } else if (habit.get_next().freq == Freq.Weekly) {
+            } else if (habit.freq == Habit.Freq.Every_week) {
                 this.weeklyHabits.add(habit);
-            } else if (habit.get_next().freq == Freq.Monthly) {
+            } else if (habit.freq == Habit.Freq.Every_month) {
                 this.monthlyHabits.add(habit);
             }
         }

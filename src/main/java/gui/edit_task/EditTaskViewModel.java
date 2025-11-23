@@ -1,6 +1,6 @@
 package gui.edit_task;
 
-import entity.Habit;
+import main.Habit;
 
 public class EditTaskViewModel{
     private Habit habit;
@@ -9,14 +9,14 @@ public class EditTaskViewModel{
         this.habit = habit;
     }
     public String getName(){
-        return habit.get_next().name;
+        return habit.name;
     }
-    public String getDesc() { return habit.get_next().desc; }
+    public String getDesc() { return habit.desc; }
     public String getRepeat(){
-        return habit.get_next().freq.toString();
+        return habit.freq.toString();
     }
     public String getDueDate(){
-        return habit.get_next().deadline.toString();
+        return habit.deadline.toString();
     }
     public int getID(){
         return habit.id;
