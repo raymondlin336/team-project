@@ -30,7 +30,6 @@ public class TaskView {
 
     protected void addCancelButton(){
         cancel = new HomeViewComponents.PillButton("Cancel");
-        cancel.setPreferredSize(new Dimension(100, 40));
         cancel.setBorderPainted(false);
         cancel.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -72,14 +71,14 @@ public class TaskView {
         gbc.gridy = 0;
         mainpanel.add(habitNameRow, gbc);
 
-        // Row 2: habit description
+        // Row 2: habit name
         habitDescTF = getSizedTextField(320, 36, new Color(255, 255, 255));
         habitDescRow = labeledRowJPanel("Description", habitDescTF);
         gbc.gridy = 1;
         mainpanel.add(habitDescRow, gbc);
 
         // Row 3: frequency
-        habitRepeatCB = new JComboBox<>(new String[]{"Once","Daily", "Weekly", "Monthly"});
+        habitRepeatCB = new JComboBox<>(new String[]{"Once","Every day", "Every week", "Every month"});
         setSize(habitRepeatCB, 320, 36);
         habitRepeatCB.setBackground(new Color(255, 255, 255));
         habitRepeatRow = labeledRowJPanel("Frequency", habitRepeatCB);

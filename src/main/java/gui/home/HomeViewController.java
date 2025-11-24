@@ -1,9 +1,8 @@
 package gui.home;
 
-import entity.Freq;
 import gui.ScreenManager;
 import gui.task.TaskController;
-import entity.Habit;
+import main.Habit;
 
 import javax.script.ScriptEngine;
 
@@ -14,11 +13,11 @@ public class HomeViewController extends TaskController {
     }
     public void markTaskDone(Boolean task_done, Habit habit) {
         /// Mark task done for the day/week/month
-        if (habit.get_next().freq == Freq.Daily) {
+        if (habit.freq == Habit.Freq.Every_day) {
             /// Mark
-        } else if (habit.get_next().freq == Freq.Weekly) {
+        } else if (habit.freq == Habit.Freq.Every_week) {
             /// Mark done
-        } else if (habit.get_next().freq == Freq.Monthly) {
+        } else if (habit.freq == Habit.Freq.Every_month) {
             /// Mark done
         }
 
@@ -26,11 +25,11 @@ public class HomeViewController extends TaskController {
 
     public void markTaskNotDone(Boolean task_done, Habit habit) {
         /// Mark task not done for the day/week/month
-        if (habit.get_next().freq == Freq.Daily) {
+        if (habit.freq == Habit.Freq.Every_day) {
             /// Mark
-        } else if (habit.get_next().freq == Freq.Weekly) {
+        } else if (habit.freq == Habit.Freq.Every_week) {
             /// Mark done
-        } else if (habit.get_next().freq == Freq.Monthly) {
+        } else if (habit.freq == Habit.Freq.Every_month) {
             /// Mark done
         }
 
@@ -41,8 +40,8 @@ public class HomeViewController extends TaskController {
         this.screenManager = screenManager;
     }
 
-    public void showEditTaskWindow(Habit habit){
-        screenManager.showEditTaskView(habit); // Needs to be implemented somewhere!
+    public void showEditTaskWindow(){
+        screenManager.showEditTaskView(); // Needs to be implemented somewhere!
     }
 
     public void showStatisticsWindow(){
