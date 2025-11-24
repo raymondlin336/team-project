@@ -6,7 +6,6 @@ import gui.task.TaskController;
 import entity.Habit;
 
 public class EditTaskController extends TaskController {
-    private ScreenManager screenManager;
     public EditTaskController(Boolean log_messages) {
         super(log_messages);
     }
