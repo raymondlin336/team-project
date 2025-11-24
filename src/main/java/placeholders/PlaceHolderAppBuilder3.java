@@ -1,7 +1,10 @@
 package placeholders;
 
+import data_access.quotes.ZenQuotesApiDataAccess;
 import entity.Habit;
+import entity.JSONIO;
 import entity.Task;
+import entity.User;
 import entity.Freq;
 import entity.Date;
 import gui.ScreenManager;
@@ -13,20 +16,32 @@ import gui.home.HomeViewController;
 import gui.home.HomeViewModel;
 import gui.new_task.NewTaskController;
 import gui.new_task.NewTaskView;
+import gui.splash_quote.SplashQuoteController;
+import gui.splash_quote.SplashQuotePresenter;
+import gui.splash_quote.SplashQuoteView;
+import gui.splash_quote.SplashQuoteViewModel;
 import gui.statistics.StatisticsController;
 import gui.statistics.StatisticsView;
 import gui.statistics.StatisticsViewModel;
+import use_case.quote.data_access_interface.QuoteDataAccessInterface;
+import use_case.quote.input.GetDailyQuoteInputBoundary;
+import use_case.quote.interactor.GetDailyQuoteInteractor;
+import use_case.quote.output.GetDailyQuoteOutputBoundary;
 
+import java.awt.*;
 import java.util.ArrayList;
 
 public class PlaceHolderAppBuilder3 {
-    public static void main(String[] args){
+    public static void main(String[] args) {
         ArrayList<Habit> habits = new ArrayList<Habit>();
 
         Habit habit1 = new Habit(0);
-        create_and_attach_tasks(habit1, "Groceries", "Get milk, toast, eggs", Freq.Weekly, new Date(29, 11, 2025), true, 5);
-        create_and_attach_tasks(habit1, "Groceries", "Get milk, toast, eggs", Freq.Weekly, new Date(29, 11, 2025), false, 2);
-        create_and_attach_tasks(habit1, "Groceries", "Get milk, toast, eggs", Freq.Weekly, new Date(29, 11, 2025), true, 2);
+        create_and_attach_tasks(habit1, "Groceries", "Get milk, toast, eggs", Freq.Weekly, new Date(29, 11, 2025), true,
+                5);
+        create_and_attach_tasks(habit1, "Groceries", "Get milk, toast, eggs", Freq.Weekly, new Date(29, 11, 2025),
+                false, 2);
+        create_and_attach_tasks(habit1, "Groceries", "Get milk, toast, eggs", Freq.Weekly, new Date(29, 11, 2025), true,
+                2);
         Habit habit2 = new Habit(1);
         create_and_attach_tasks(habit2, "Workout", "Run for 30 mins", Freq.Daily, new Date(4, 12, 2025), true, 33);
         create_and_attach_tasks(habit2, "Workout", "Run for 30 mins", Freq.Daily, new Date(4, 12, 2025), false, 8);
@@ -34,12 +49,14 @@ public class PlaceHolderAppBuilder3 {
         create_and_attach_tasks(habit2, "Workout", "Run for 30 mins", Freq.Daily, new Date(4, 12, 2025), false, 4);
         create_and_attach_tasks(habit2, "Workout", "Run for 30 mins", Freq.Daily, new Date(4, 12, 2025), true, 28);
         Habit habit3 = new Habit(2);
-        create_and_attach_tasks(habit3, "Basketball with friends", "Sumaid, Henry, and Kevin", Freq.Monthly, new Date(8, 12, 2025), true, 1);
-        create_and_attach_tasks(habit3, "Basketball with friends", "Sumaid, Henry, and Kevin", Freq.Monthly, new Date(8, 12, 2025), false, 1);
-        create_and_attach_tasks(habit3, "Basketball with friends", "Sumaid, Henry, and Kevin", Freq.Monthly, new Date(8, 12, 2025), true, 2);
+        create_and_attach_tasks(habit3, "Basketball with friends", "Sumaid, Henry, and Kevin", Freq.Monthly,
+                new Date(8, 12, 2025), true, 1);
+        create_and_attach_tasks(habit3, "Basketball with friends", "Sumaid, Henry, and Kevin", Freq.Monthly,
+                new Date(8, 12, 2025), false, 1);
+        create_and_attach_tasks(habit3, "Basketball with friends", "Sumaid, Henry, and Kevin", Freq.Monthly,
+                new Date(8, 12, 2025), true, 2);
         Habit habit4 = new Habit(3);
         create_and_attach_tasks(habit4, "Doctor's", "Appointment at 4pm", Freq.Once, new Date(10, 12, 2025), false, 1);
-
 
         habits.add(habit1);
         habits.add(habit2);
@@ -64,7 +81,7 @@ public class PlaceHolderAppBuilder3 {
         HomeViewModel test = new HomeViewModel(habits);
         HomeViewController homeViewController = new HomeViewController(true);
         HomeView homeView = new HomeView(test, homeViewController);
-//
+        //
         // ScreenManager
         ScreenManager manager = new ScreenManager(editTaskView, newTaskView, homeView, satisticsView);
         homeViewController.addScreenManager(manager);
@@ -72,13 +89,25 @@ public class PlaceHolderAppBuilder3 {
         newTaskController.addScreenManager(manager);
         statisticsController.addScreenManager(manager);
         manager.showHomeView();
+
+        // Quote Splash Screen
+        SplashQuoteViewModel qscreen = new SplashQuoteViewModel();
+        QuoteDataAccessInterface gateway = new ZenQuotesApiDataAccess();
+        GetDailyQuoteOutputBoundary presenter = new SplashQuotePresenter(qscreen);
+        GetDailyQuoteInputBoundary interactor = new GetDailyQuoteInteractor(gateway, presenter);
+        SplashQuoteController controller = new SplashQuoteController(interactor);
+
+        SplashQuoteView splash = new SplashQuoteView(qscreen, controller);
+        splash.setVisible(true);
+
     }
-    public static void create_and_attach_tasks(Habit habit, String name, String desc, Freq freq, Date date, Boolean completed, int total){
+
+    public static void create_and_attach_tasks(Habit habit, String name, String desc, Freq freq, Date date,
+            Boolean completed, int total) {
         for (int i = 0; i < total; i++) {
-            Task task = new  Task(name, desc, freq, date, i, completed);
+            Task task = new Task(name, desc, freq, date, i, completed);
             habit.add_task(task);
         }
     }
-
 
 }

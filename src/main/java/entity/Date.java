@@ -1,5 +1,7 @@
 package entity;
 
+import org.json.JSONObject;
+
 public class Date {
     public int month;
     public int day;
@@ -22,21 +24,20 @@ public class Date {
                 return this.increase_date_number(7);
             case Monthly:
                 Date d;
-                try {
-                    d = (Date) this.clone();
-                    if (d.month++ == 12) {
-                        d.month = 0;
-                        d.year++;
-                    }
-                    d.day = Math.max(days_in_months[d.month], day);
-                    return d;
-                } catch (CloneNotSupportedException e) {
-                    e.printStackTrace();
-                    return null;
+                d = (Date) this.copy();
+                if (d.month++ == 12) {
+                    d.month = 0;
+                    d.year++;
                 }
+                d.day = Math.max(days_in_months[d.month], day);
+                return d;
             default:
                 return null;
         }
+    }
+
+    public Date copy() {
+        return new Date(this.day, this.month, this.day);
     }
 
     public Date increase_date_number(int num) {
@@ -60,8 +61,20 @@ public class Date {
         }
     }
 
+    public JSONObject toJSON() {
+        JSONObject j = new JSONObject();
+        j.put("day", this.day);
+        j.put("month", this.month);
+        j.put("year", this.year);
+        return j;
+    }
+
+    public static Date fromJSON(JSONObject json) {
+        return new Date(json.getInt("year"), json.getInt("month"), json.getInt("year"));
+    }
+
     @Override
-    public String toString(){
+    public String toString() {
         return month + "/" + day + "/" + year;
     }
 }

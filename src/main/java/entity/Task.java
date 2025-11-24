@@ -1,5 +1,7 @@
 package entity;
 
+import org.json.JSONObject;
+
 public class Task {
     public String name;
     public String desc;
@@ -18,14 +20,29 @@ public class Task {
 
     public Task update_deadline() {
         Task x;
-        try {
-            x = (Task) this.clone();
-            x.deadline = x.deadline.increase_date(this.freq);
-            x.completed = false;
-            return x;
-        } catch (CloneNotSupportedException e) {
-            e.printStackTrace();
-            return null;
-        }
+        x = (Task) this.copy();
+        x.deadline = x.deadline.increase_date(this.freq);
+        x.completed = false;
+        return x;
+    }
+
+    public Task copy() {
+        return new Task(this.name, this.desc, this.freq, this.deadline.copy(), this.id, this.completed);
+    }
+
+    public JSONObject toJSON() {
+        JSONObject json = new JSONObject();
+        json.put("name", this.name);
+        json.put("desc", this.desc);
+        json.put("id", this.id);
+        json.put("freq", Freq.getType(this.freq));
+        json.put("deadline", this.deadline.toJSON());
+        json.put("completed", this.completed);
+        return json;
+    }
+
+    public static Task fromJSON(JSONObject json) {
+        return new Task(json.getString("name"), json.getString("desc"), Freq.fromString(json.getString("freq")),
+                Date.fromJSON(json.getJSONObject("deadline")), json.getInt("id"), json.getBoolean("completed"));
     }
 }

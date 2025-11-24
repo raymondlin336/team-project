@@ -3,6 +3,9 @@ package entity;
 import java.util.ArrayList;
 import java.util.Random;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 public class Habit {
     public ArrayList<Task> tasks = new ArrayList<>();
     public int id;
@@ -19,6 +22,19 @@ public class Habit {
         this.tasks.add(task);
         Random random = new Random();
         this.colour = random.nextInt(30) * 12;
+    }
+
+    public Habit(int id, int colour) {
+        this.id = id;
+        this.colour = colour;
+    }
+
+    public Habit copy() {
+        Habit h = new Habit(this.id, this.colour);
+        for (Task t : this.tasks) {
+            h.tasks.add(t.copy());
+        }
+        return h;
     }
 
     public void complete_most_recent() {
@@ -55,5 +71,25 @@ public class Habit {
 
     public void add_task(Task t) {
         this.tasks.add(t);
+    }
+
+    public JSONObject toJSON() {
+        JSONObject json = new JSONObject();
+        JSONArray arr = new JSONArray();
+        for (Task t : this.tasks) {
+            arr.put(t.toJSON());
+        }
+        json.put("tasks", arr);
+        json.put("id", id);
+        json.put("colour", colour);
+        return json;
+    }
+
+    public static Habit fromJSON(JSONObject json) {
+        Habit h = new Habit(json.getInt("id"), json.getInt("colour"));
+        for (Object t : json.getJSONArray("tasks")) {
+            h.tasks.add(Task.fromJSON((JSONObject) t));
+        }
+        return h;
     }
 }
