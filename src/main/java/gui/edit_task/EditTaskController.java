@@ -1,10 +1,12 @@
 package gui.edit_task;
 
 import entity.Freq;
+import gui.ScreenManager;
 import gui.task.TaskController;
 import entity.Habit;
 
 public class EditTaskController extends TaskController {
+    private ScreenManager screenManager;
     public EditTaskController(Boolean log_messages) {
         super(log_messages);
     }
@@ -25,5 +27,11 @@ public class EditTaskController extends TaskController {
     public void delete_habit(int habit_id){
         showHomeWindow();
         print_log_message("deleting habit {ID: " + habit_id + "} and closing the window");
+    }
+    public void addScreenManager(ScreenManager screenManager){
+        this.screenManager = screenManager;
+    }
+    public ScreenManager getScreenManager(){
+        return this.screenManager;
     }
 }
