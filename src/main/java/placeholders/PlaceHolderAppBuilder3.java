@@ -1,5 +1,6 @@
 package placeholders;
 
+import data_access.quotes.ZenQuotesApiDataAccess;
 import entity.Habit;
 import entity.Task;
 import entity.Freq;
@@ -13,10 +14,19 @@ import gui.home.HomeViewController;
 import gui.home.HomeViewModel;
 import gui.new_task.NewTaskController;
 import gui.new_task.NewTaskView;
+import gui.splash_quote.SplashQuoteController;
+import gui.splash_quote.SplashQuotePresenter;
+import gui.splash_quote.SplashQuoteView;
+import gui.splash_quote.SplashQuoteViewModel;
 import gui.statistics.StatisticsController;
 import gui.statistics.StatisticsView;
 import gui.statistics.StatisticsViewModel;
+import use_case.quote.data_access_interface.QuoteDataAccessInterface;
+import use_case.quote.input.GetDailyQuoteInputBoundary;
+import use_case.quote.interactor.GetDailyQuoteInteractor;
+import use_case.quote.output.GetDailyQuoteOutputBoundary;
 
+import java.awt.*;
 import java.util.ArrayList;
 
 public class PlaceHolderAppBuilder3 {
@@ -64,7 +74,7 @@ public class PlaceHolderAppBuilder3 {
         HomeViewModel test = new HomeViewModel(habits);
         HomeViewController homeViewController = new HomeViewController(true);
         HomeView homeView = new HomeView(test, homeViewController);
-//
+
         // ScreenManager
         ScreenManager manager = new ScreenManager(editTaskView, newTaskView, homeView, satisticsView);
         homeViewController.addScreenManager(manager);
@@ -72,6 +82,18 @@ public class PlaceHolderAppBuilder3 {
         newTaskController.addScreenManager(manager);
         statisticsController.addScreenManager(manager);
         manager.showHomeView();
+
+        // Quote Splash Screen
+        SplashQuoteViewModel qscreen = new SplashQuoteViewModel();
+        QuoteDataAccessInterface gateway = new ZenQuotesApiDataAccess();
+        GetDailyQuoteOutputBoundary presenter = new SplashQuotePresenter(qscreen);
+        GetDailyQuoteInputBoundary interactor =
+                new GetDailyQuoteInteractor(gateway, presenter);
+        SplashQuoteController controller = new SplashQuoteController(interactor);
+
+        SplashQuoteView splash = new SplashQuoteView(qscreen, controller);
+        splash.setVisible(true);
+
     }
     public static void create_and_attach_tasks(Habit habit, String name, String desc, Freq freq, Date date, Boolean completed, int total){
         for (int i = 0; i < total; i++) {
