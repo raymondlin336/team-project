@@ -1,7 +1,8 @@
 package gui.statistics;
 
+import entity.Freq;
 import gui.home.HomeViewComponents;
-import main.Habit;
+import entity.Habit;
 
 import javax.swing.*;
 import java.awt.*;
@@ -35,7 +36,7 @@ public class StatisticsView {
         addButtonsRow();
         for (int i = 0; i < this.statisticsViewModel.numOfTasks(); i++) {
             Habit habit = this.statisticsViewModel.getTask(i);
-            addStatsRow(habit.name, habit.completion, habit.freq, habit.colour);
+            addStatsRow(habit.get_next().name, habit.get_completion_data(), habit.get_next().freq, habit.colour);
         }
 
         mainframe.add(mainpanel);
@@ -48,10 +49,9 @@ public class StatisticsView {
         rowPanel.setMaximumSize(new Dimension(700, 70));
 
         JButton homeButton = configureMenuButton("Home", 65, 40);
-        JButton settingsButton = configureMenuButton("Settings", 80, 40);
+        homeButton.setPreferredSize(new Dimension(100, 40));
 
         rowPanel.add(homeButton);
-        rowPanel.add(settingsButton);
 
         mainpanel.add(rowPanel);
     }
@@ -74,7 +74,7 @@ public class StatisticsView {
         return button;
     }
 
-    private void addStatsRow(String labelText, ArrayList<Integer> completion, Habit.Freq repeat, int colour) {
+    private void addStatsRow(String labelText, Boolean[] completion, Freq repeat, int colour) {
         JPanel rowPanel = configureStatsRow(labelText, completion, repeat, 700, 70, 40, 40, 5, colour);
 
         JPanel wrapper = new JPanel();
@@ -87,7 +87,7 @@ public class StatisticsView {
         mainpanel.add(Box.createVerticalStrut(10));
     }
 
-    private JPanel configureStatsRow(String labelText, ArrayList<Integer> completed_array, Habit.Freq repeat, int row_width, int row_height, int block_width, int block_height, int gap, int colour) {
+    private JPanel configureStatsRow(String labelText, Boolean[] completed_array, Freq repeat, int row_width, int row_height, int block_width, int block_height, int gap, int colour) {
         JPanel rowPanel = new JPanel(new BorderLayout());
         rowPanel.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
         rowPanel.setPreferredSize(new Dimension(row_width, row_height));
@@ -95,23 +95,29 @@ public class StatisticsView {
 
         // Calculate completions
         int base = 1;
-        if (repeat == Habit.Freq.Every_day) {
+        if (repeat == Freq.Daily) {
             base = 7;
         }
-        if (repeat == Habit.Freq.Every_month) {
+        if (repeat == Freq.Monthly) {
             block_width = Math.round((float)((block_width + gap) * 4.35));
         }
         ArrayList<Double> completed_perc = new ArrayList<>();
-        for (int completed: completed_array) {
+        for (int i = 0; i < completed_array.length; i += base) {
+            int completed = 0;
+            for  (int j = i; j < Math.min(i + base, completed_array.length); j += 1) {
+                completed += completed_array[j] ? 1 : 0;
+            }
             completed_perc.add((double)completed/base);
         }
 
         // Panel and texts to the left
         int num_completed = 0;
-        for (int c: completed_array) {
-            num_completed += c;
+        for (Boolean c: completed_array) {
+            if (c == true) {
+                num_completed += 1;
+            }
         }
-        String per_text = num_completed + " " + repeat.toString().substring(6);
+        String per_text = num_completed + " " + Freq.getType(repeat);
         if (num_completed > 1){
             per_text += "s";
         }

@@ -59,4 +59,8 @@ public class EditTaskView extends TaskView {
         habitRepeatCB.setSelectedItem(editTaskViewModel.getRepeat());
         habitDueLB.setText(editTaskViewModel.getDueDate());
     }
+
+    public EditTaskController getEditTaskController() {
+        return editTaskController;
+    }
 }

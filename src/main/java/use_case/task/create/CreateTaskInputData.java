@@ -1,6 +1,7 @@
 package use_case.task.create;
 
-import entity.Task;
+import entity.*;
+import entity.Freq;
 
 /**
  * Input data required to add a task.
@@ -8,9 +9,9 @@ import entity.Task;
 public class CreateTaskInputData {
     private final String name;
     private final int repeatCount;
-    private final Task.Frequency frequency;
+    private final Freq frequency;
 
-    public CreateTaskInputData(String name, int repeatCount, Task.Frequency frequency) {
+    public CreateTaskInputData(String name, int repeatCount, Freq frequency) {
         this.name = name;
         this.repeatCount = repeatCount;
         this.frequency = frequency;
@@ -24,7 +25,7 @@ public class CreateTaskInputData {
         return repeatCount;
     }
 
-    public Task.Frequency getFrequency() {
+    public Freq getFrequency() {
         return frequency;
     }
 }
