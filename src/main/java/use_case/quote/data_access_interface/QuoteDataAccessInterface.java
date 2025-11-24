@@ -1,4 +1,4 @@
-package use_case.quote.data_access;
+package use_case.quote.data_access_interface;
 
 import entity.Quote;
 

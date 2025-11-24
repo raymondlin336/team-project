@@ -1,8 +1,8 @@
 package use_case.quote.interactor;
 
 import entity.Quote;
-import use_case.quote.data_access.QuoteDataAccessInterface;
-import use_case.quote.data_access.QuoteRetrievalException;
+import use_case.quote.data_access_interface.QuoteDataAccessInterface;
+import use_case.quote.data_access_interface.QuoteRetrievalException;
 import use_case.quote.input.GetDailyQuoteInputBoundary;
 import use_case.quote.input.GetDailyQuoteInputData;
 import use_case.quote.output.GetDailyQuoteOutputBoundary;

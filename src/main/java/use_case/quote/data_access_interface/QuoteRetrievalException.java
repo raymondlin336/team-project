@@ -1,4 +1,4 @@
-package use_case.quote.data_access;
+package use_case.quote.data_access_interface;
 
 public class QuoteRetrievalException extends Exception {
     public QuoteRetrievalException(String message, Throwable cause) {
