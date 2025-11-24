@@ -1,5 +1,7 @@
 package entity;
 
+import org.json.JSONObject;
+
 public class Date {
     public int month;
     public int day;
@@ -57,6 +59,18 @@ public class Date {
             e.printStackTrace();
             return null;
         }
+    }
+
+    public JSONObject toJSON() {
+        JSONObject j = new JSONObject();
+        j.put("day", this.day);
+        j.put("month", this.month);
+        j.put("year", this.year);
+        return j;
+    }
+
+    public static Date fromJSON(JSONObject json) {
+        return new Date(json.getInt("year"), json.getInt("month"), json.getInt("year"));
     }
 
     @Override

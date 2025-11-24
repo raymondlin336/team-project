@@ -1,4 +1,5 @@
 package gui.new_task;
+
 import gui.home.HomeViewComponents;
 import gui.task.TaskView;
 
@@ -19,7 +20,7 @@ public class NewTaskView extends TaskView {
         addCancelButton();
     }
 
-    private void addAddButton(){
+    private void addAddButton() {
         add = new HomeViewComponents.PillButton("Add");
         add.setPreferredSize(new Dimension(100, 40));
         add.setBorderPainted(false);

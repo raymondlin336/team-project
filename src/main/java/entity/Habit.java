@@ -3,6 +3,9 @@ package entity;
 import java.util.ArrayList;
 import java.util.Random;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 public class Habit {
     public ArrayList<Task> tasks = new ArrayList<>();
     public int id;
@@ -68,5 +71,25 @@ public class Habit {
 
     public void add_task(Task t) {
         this.tasks.add(t);
+    }
+
+    public JSONObject toJSON() {
+        JSONObject json = new JSONObject();
+        JSONArray arr = new JSONArray();
+        for (Task t : this.tasks) {
+            arr.put(t.toJSON());
+        }
+        json.put("tasks", arr);
+        json.put("id", id);
+        json.put("colour", colour);
+        return json;
+    }
+
+    public static Habit fromJSON(JSONObject json) {
+        Habit h = new Habit(json.getInt("id"), json.getInt("colour"));
+        for (Object t : json.getJSONArray("tasks")) {
+            h.tasks.add(Task.fromJSON((JSONObject) t));
+        }
+        return h;
     }
 }

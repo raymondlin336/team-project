@@ -2,6 +2,9 @@ package entity;
 
 import java.util.ArrayList;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 public class User {
     public ArrayList<Habit> habits;
     public int id;
@@ -27,6 +30,25 @@ public class User {
         User u = new User(this.id);
         for (Habit h : this.habits) {
             u.habits.add(h.copy());
+        }
+        return u;
+    }
+
+    public JSONObject toJSON() {
+        JSONObject json = new JSONObject();
+        JSONArray arr = new JSONArray();
+        for (Habit h : this.habits) {
+            arr.put(h.toJSON());
+        }
+        json.put("id", this.id);
+        json.put("habits", arr);
+        return json;
+    }
+
+    public static User fromJSON(JSONObject json) {
+        User u = new User(json.getInt("id"));
+        for (Object h : json.getJSONArray("habits")) {
+            u.habits.add(Habit.fromJSON((JSONObject) h));
         }
         return u;
     }
