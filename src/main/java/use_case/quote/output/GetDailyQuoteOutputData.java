@@ -1,4 +1,4 @@
-package use_case.quote;
+package use_case.quote.output;
 
 public class GetDailyQuoteOutputData {
     private final String text;

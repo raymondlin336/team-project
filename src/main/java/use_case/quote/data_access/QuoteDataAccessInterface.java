@@ -1,4 +1,6 @@
 package use_case.quote.data_access;
 
-public class QuoteDataAccessInterface {
+public interface QuoteDataAccessInterface {
+    Quote fetchQuote() throws QuoteRetrievalException;
 }
+
