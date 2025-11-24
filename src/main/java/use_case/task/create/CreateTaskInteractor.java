@@ -1,5 +1,6 @@
 package use_case.task.create;
 
+import entity.Date;
 import entity.Task;
 import use_case.task.TaskDataAccessInterface;
 
@@ -30,10 +31,10 @@ public class CreateTaskInteractor implements CreateTaskInputBoundary {
         }
 
         Task task = new Task(
-                -1,
                 inputData.getName().trim(),
-                inputData.getRepeatCount(),
-                inputData.getFrequency());
+                "",
+                inputData.getFrequency(),
+                new Date(0, 0, 0), -1, false);
 
         Task persisted = taskDataAccessObject.save(task);
         presenter.prepareSuccessView(new CreateTaskOutputData(persisted));
