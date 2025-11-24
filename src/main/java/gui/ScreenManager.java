@@ -32,7 +32,7 @@ public class ScreenManager {
         this.statisticsView = statisticsView;
     }
 
-    public void showEditTaskView(Habit habit1){
+    public void showEditTaskView(Habit habit1) {
         ///  Create new edit view based on passed habit
         EditTaskController newEditController = new EditTaskController(true);
         EditTaskViewModel newEditViewModel = new EditTaskViewModel(habit1);
@@ -41,6 +41,7 @@ public class ScreenManager {
         newEditController.addScreenManager(
                 editTaskView.getEditTaskController().getScreenManager()
         );
+    }
 
     public void showAddTaskView(){
         mainFrame.setContentPane(newTaskView.getPanel());
@@ -54,7 +55,7 @@ public class ScreenManager {
         mainFrame.setVisible(true);
         mainFrame.revalidate();
         mainFrame.repaint();
-    }
+    };
 
     public void showStatisticsView(){
         mainFrame.setContentPane(statisticsView.getPanel());
