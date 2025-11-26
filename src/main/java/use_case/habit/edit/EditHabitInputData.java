@@ -1,20 +1,16 @@
 package use_case.habit.edit;
 
-
-import main.Habit;
-
+import entity.Freq;
 
 /**
  * Input data provided by the controller to edit an existing habit.
  */
 public class EditHabitInputData {
 
-
     private final int habitId;
     private final String name;
     private final String description;
-    private final Habit.Freq frequency;
-
+    private final Freq frequency;
 
     /**
      * Constructs the input data required to edit a habit.
@@ -27,30 +23,26 @@ public class EditHabitInputData {
     public EditHabitInputData(int habitId,
                               String name,
                               String description,
-                              Habit.Freq frequency) {
+                              Freq frequency) {
         this.habitId = habitId;
         this.name = name;
         this.description = description;
         this.frequency = frequency;
     }
 
-
     public int getHabitId() {
         return habitId;
     }
-
 
     public String getName() {
         return name;
     }
 
-
     public String getDescription() {
         return description;
     }
 
-
-    public Habit.Freq getFrequency() {
+    public Freq getFrequency() {
         return frequency;
     }
 }
