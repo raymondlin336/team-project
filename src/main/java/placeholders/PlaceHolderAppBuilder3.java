@@ -32,82 +32,96 @@ import java.awt.*;
 import java.util.ArrayList;
 
 public class PlaceHolderAppBuilder3 {
-    public static void main(String[] args) {
-        ArrayList<Habit> habits = new ArrayList<Habit>();
+        public static void main(String[] args) {
+                ArrayList<Habit> habits = new ArrayList<Habit>();
 
-        Habit habit1 = new Habit(0);
-        create_and_attach_tasks(habit1, "Groceries", "Get milk, toast, eggs", Freq.Weekly, new Date(29, 11, 2025), true,
-                5);
-        create_and_attach_tasks(habit1, "Groceries", "Get milk, toast, eggs", Freq.Weekly, new Date(29, 11, 2025),
-                false, 2);
-        create_and_attach_tasks(habit1, "Groceries", "Get milk, toast, eggs", Freq.Weekly, new Date(29, 11, 2025), true,
-                2);
-        Habit habit2 = new Habit(1);
-        create_and_attach_tasks(habit2, "Workout", "Run for 30 mins", Freq.Daily, new Date(4, 12, 2025), true, 33);
-        create_and_attach_tasks(habit2, "Workout", "Run for 30 mins", Freq.Daily, new Date(4, 12, 2025), false, 8);
-        create_and_attach_tasks(habit2, "Workout", "Run for 30 mins", Freq.Daily, new Date(4, 12, 2025), true, 7);
-        create_and_attach_tasks(habit2, "Workout", "Run for 30 mins", Freq.Daily, new Date(4, 12, 2025), false, 4);
-        create_and_attach_tasks(habit2, "Workout", "Run for 30 mins", Freq.Daily, new Date(4, 12, 2025), true, 28);
-        Habit habit3 = new Habit(2);
-        create_and_attach_tasks(habit3, "Basketball with friends", "Sumaid, Henry, and Kevin", Freq.Monthly,
-                new Date(8, 12, 2025), true, 1);
-        create_and_attach_tasks(habit3, "Basketball with friends", "Sumaid, Henry, and Kevin", Freq.Monthly,
-                new Date(8, 12, 2025), false, 1);
-        create_and_attach_tasks(habit3, "Basketball with friends", "Sumaid, Henry, and Kevin", Freq.Monthly,
-                new Date(8, 12, 2025), true, 2);
-        Habit habit4 = new Habit(3);
-        create_and_attach_tasks(habit4, "Doctor's", "Appointment at 4pm", Freq.Once, new Date(10, 12, 2025), false, 1);
+                Habit habit1 = new Habit(0);
+                create_and_attach_tasks(habit1, "Groceries", "Get milk, toast, eggs", Freq.Weekly,
+                                new Date(29, 11, 2025), true,
+                                5);
+                create_and_attach_tasks(habit1, "Groceries", "Get milk, toast, eggs", Freq.Weekly,
+                                new Date(29, 11, 2025),
+                                false, 2);
+                create_and_attach_tasks(habit1, "Groceries", "Get milk, toast, eggs", Freq.Weekly,
+                                new Date(29, 11, 2025), true,
+                                2);
+                Habit habit2 = new Habit(1);
+                create_and_attach_tasks(habit2, "Workout", "Run for 30 mins", Freq.Daily, new Date(4, 12, 2025), true,
+                                33);
+                create_and_attach_tasks(habit2, "Workout", "Run for 30 mins", Freq.Daily, new Date(4, 12, 2025), false,
+                                8);
+                create_and_attach_tasks(habit2, "Workout", "Run for 30 mins", Freq.Daily, new Date(4, 12, 2025), true,
+                                7);
+                create_and_attach_tasks(habit2, "Workout", "Run for 30 mins", Freq.Daily, new Date(4, 12, 2025), false,
+                                4);
+                create_and_attach_tasks(habit2, "Workout", "Run for 30 mins", Freq.Daily, new Date(4, 12, 2025), true,
+                                28);
+                Habit habit3 = new Habit(2);
+                create_and_attach_tasks(habit3, "Basketball with friends", "Sumaid, Henry, and Kevin", Freq.Monthly,
+                                new Date(8, 12, 2025), true, 1);
+                create_and_attach_tasks(habit3, "Basketball with friends", "Sumaid, Henry, and Kevin", Freq.Monthly,
+                                new Date(8, 12, 2025), false, 1);
+                create_and_attach_tasks(habit3, "Basketball with friends", "Sumaid, Henry, and Kevin", Freq.Monthly,
+                                new Date(8, 12, 2025), true, 2);
+                Habit habit4 = new Habit(3);
+                create_and_attach_tasks(habit4, "Doctor's", "Appointment at 4pm", Freq.Once, new Date(10, 12, 2025),
+                                false, 1);
 
-        habits.add(habit1);
-        habits.add(habit2);
-        habits.add(habit3);
-        habits.add(habit4);
+                habits.add(habit1);
+                habits.add(habit2);
+                habits.add(habit3);
+                habits.add(habit4);
 
-        // Editing a task
-        EditTaskController editTaskController = new EditTaskController(true);
-        EditTaskViewModel editTaskViewModel = new EditTaskViewModel(habit1);
-        EditTaskView editTaskView = new EditTaskView(editTaskViewModel, editTaskController);
+                JSONIO json = new JSONIO("data.json");
+                User user = new User(0);
+                user.habits = habits;
+                json.saveUser(user);
 
-        // Adding a task
-        NewTaskController newTaskController = new NewTaskController(true);
-        NewTaskView newTaskView = new NewTaskView(newTaskController);
+                // Editing a task
+                EditTaskController editTaskController = new EditTaskController(true);
+                EditTaskViewModel editTaskViewModel = new EditTaskViewModel(habit1);
+                EditTaskView editTaskView = new EditTaskView(editTaskViewModel, editTaskController);
 
-        // Statistics
-        StatisticsViewModel vm = new StatisticsViewModel(habits);
-        StatisticsController statisticsController = new StatisticsController();
-        StatisticsView satisticsView = new StatisticsView("Statistics", vm, statisticsController);
+                // Adding a task
+                NewTaskController newTaskController = new NewTaskController(true);
+                NewTaskView newTaskView = new NewTaskView(newTaskController);
 
-        // Homepage
-        HomeViewModel test = new HomeViewModel(habits);
-        HomeViewController homeViewController = new HomeViewController(true);
-        HomeView homeView = new HomeView(test, homeViewController);
-        //
-        // ScreenManager
-        ScreenManager manager = new ScreenManager(editTaskView, newTaskView, homeView, satisticsView);
-        homeViewController.addScreenManager(manager);
-        editTaskController.addScreenManager(manager);
-        newTaskController.addScreenManager(manager);
-        statisticsController.addScreenManager(manager);
-        manager.showHomeView();
+                // Statistics
+                StatisticsViewModel vm = new StatisticsViewModel(habits);
+                StatisticsController statisticsController = new StatisticsController();
+                StatisticsView satisticsView = new StatisticsView("Statistics", vm, statisticsController);
 
-        // Quote Splash Screen
-        SplashQuoteViewModel qscreen = new SplashQuoteViewModel();
-        QuoteDataAccessInterface gateway = new ZenQuotesApiDataAccess();
-        GetDailyQuoteOutputBoundary presenter = new SplashQuotePresenter(qscreen);
-        GetDailyQuoteInputBoundary interactor = new GetDailyQuoteInteractor(gateway, presenter);
-        SplashQuoteController controller = new SplashQuoteController(interactor);
+                // Homepage
+                HomeViewModel test = new HomeViewModel(habits);
+                HomeViewController homeViewController = new HomeViewController(true);
+                HomeView homeView = new HomeView(test, homeViewController);
+                //
+                // ScreenManager
+                ScreenManager manager = new ScreenManager(editTaskView, newTaskView, homeView, satisticsView);
+                homeViewController.addScreenManager(manager);
+                editTaskController.addScreenManager(manager);
+                newTaskController.addScreenManager(manager);
+                statisticsController.addScreenManager(manager);
+                manager.showHomeView();
 
-        SplashQuoteView splash = new SplashQuoteView(qscreen, controller);
-        splash.setVisible(true);
+                // Quote Splash Screen
+                SplashQuoteViewModel qscreen = new SplashQuoteViewModel();
+                QuoteDataAccessInterface gateway = new ZenQuotesApiDataAccess();
+                GetDailyQuoteOutputBoundary presenter = new SplashQuotePresenter(qscreen);
+                GetDailyQuoteInputBoundary interactor = new GetDailyQuoteInteractor(gateway, presenter);
+                SplashQuoteController controller = new SplashQuoteController(interactor);
 
-    }
+                SplashQuoteView splash = new SplashQuoteView(qscreen, controller);
+                splash.setVisible(true);
 
-    public static void create_and_attach_tasks(Habit habit, String name, String desc, Freq freq, Date date,
-            Boolean completed, int total) {
-        for (int i = 0; i < total; i++) {
-            Task task = new Task(name, desc, freq, date, i, completed);
-            habit.add_task(task);
         }
-    }
+
+        public static void create_and_attach_tasks(Habit habit, String name, String desc, Freq freq, Date date,
+                        Boolean completed, int total) {
+                for (int i = 0; i < total; i++) {
+                        Task task = new Task(name, desc, freq, date, i, completed);
+                        habit.add_task(task);
+                }
+        }
 
 }

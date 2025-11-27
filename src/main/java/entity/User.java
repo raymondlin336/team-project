@@ -52,4 +52,15 @@ public class User {
         }
         return u;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        User u = (User) o;
+        for (int i = 0; i < u.habits.size(); i++) {
+            if (!u.habits.get(i).equals(this.habits.get(i))) {
+                return false;
+            }
+        }
+        return (u.id == this.id);
+    }
 }

@@ -92,4 +92,15 @@ public class Habit {
         }
         return h;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        Habit h = (Habit) o;
+        for (int i = 0; i < h.tasks.size(); i++) {
+            if (!h.tasks.get(i).equals(this.tasks.get(i))) {
+                return false;
+            }
+        }
+        return (h.id == this.id) && (h.colour == this.colour);
+    }
 }

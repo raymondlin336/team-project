@@ -45,4 +45,11 @@ public class Task {
         return new Task(json.getString("name"), json.getString("desc"), Freq.fromString(json.getString("freq")),
                 Date.fromJSON(json.getJSONObject("deadline")), json.getInt("id"), json.getBoolean("completed"));
     }
+
+    @Override
+    public boolean equals(Object o) {
+        Task t = (Task) o;
+        return (t.completed == this.completed) && (t.deadline == this.deadline) && (t.desc == this.desc)
+                && (t.freq == this.freq) && (t.id == this.id) && (t.name == this.name);
+    }
 }

@@ -1,10 +1,8 @@
 package entity;
 
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 
 import org.json.JSONObject;
@@ -22,7 +20,6 @@ public class JSONIO {
             JSONObject json = new JSONObject(jsonString);
             return User.fromJSON(json);
         } catch (IOException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
             return null;
         }
@@ -35,7 +32,6 @@ public class JSONIO {
             Files.writeString(Path.of(this.filename), string,
                     StandardOpenOption.CREATE);
         } catch (IOException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
             return;
         }
