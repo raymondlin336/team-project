@@ -1,4 +1,4 @@
-package entity;
+package data_access.habits;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -8,6 +8,8 @@ import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 
 import org.json.JSONObject;
+
+import entity.User;
 
 public class JSONIO {
     public String filename;
