@@ -1,8 +1,10 @@
 package use_case.habit.create;
 
+import entity.Date;
 import entity.Habit;
 import use_case.habit.HabitDataAccessInterface;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -29,12 +31,16 @@ public class CreateHabitInteractor implements CreateHabitInputBoundary {
             return;
         }
 
+        // Get today's date for the first task's due date
+        LocalDate now = LocalDate.now();
+        Date today = new Date(now.getMonthValue(), now.getDayOfMonth(), now.getYear());
+
         int newId = habitDataAccessObject.getNextId();
         Habit habit = new Habit(
                 inputData.getName().trim(),
                 inputData.getDescription(),
                 inputData.getFrequency(),
-                inputData.getStartDate(),
+                today,
                 newId
         );
 
@@ -53,9 +59,6 @@ public class CreateHabitInteractor implements CreateHabitInputBoundary {
         }
         if (inputData.getFrequency() == null) {
             errors.add("Frequency is required.");
-        }
-        if (inputData.getStartDate() == null) {
-            errors.add("Start date is required.");
         }
         return errors;
     }

@@ -1,6 +1,5 @@
 package use_case.habit.create;
 
-import entity.Date;
 import entity.Freq;
 
 /**
@@ -10,13 +9,11 @@ public class CreateHabitInputData {
     private final String name;
     private final String description;
     private final Freq frequency;
-    private final Date startDate;
 
-    public CreateHabitInputData(String name, String description, Freq frequency, Date startDate) {
+    public CreateHabitInputData(String name, String description, Freq frequency) {
         this.name = name;
         this.description = description;
         this.frequency = frequency;
-        this.startDate = startDate;
     }
 
     public String getName() {
@@ -29,9 +26,5 @@ public class CreateHabitInputData {
 
     public Freq getFrequency() {
         return frequency;
-    }
-
-    public Date getStartDate() {
-        return startDate;
     }
 }
