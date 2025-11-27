@@ -1,9 +1,6 @@
 package gui;
 
-import entity.Habit;
-import gui.edit_task.EditTaskController;
 import gui.edit_task.EditTaskView;
-import gui.edit_task.EditTaskViewModel;
 import gui.home.HomeView;
 import gui.new_task.NewTaskView;
 import gui.statistics.StatisticsView;
@@ -32,18 +29,8 @@ public class ScreenManager {
         this.statisticsView = statisticsView;
     }
 
-    public void showEditTaskView(Habit habit1){
-        ///  Create new edit view based on passed habit
-        EditTaskController newEditController = new EditTaskController(true);
-        EditTaskViewModel newEditViewModel = new EditTaskViewModel(habit1);
-        EditTaskView newEditTaskView = new EditTaskView(newEditViewModel, newEditController);
-
-        newEditController.addScreenManager(
-                editTaskView.getEditTaskController().getScreenManager()
-        );
-
-
-        mainFrame.setContentPane(newEditTaskView.getPanel());
+    public void showEditTaskView(){
+        mainFrame.setContentPane(editTaskView.getPanel());
         mainFrame.setVisible(true);
         mainFrame.revalidate();
         mainFrame.repaint();

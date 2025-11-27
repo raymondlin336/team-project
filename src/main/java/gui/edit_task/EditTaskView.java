@@ -24,8 +24,6 @@ public class EditTaskView extends TaskView {
         showHabitInfo();
     }
 
-
-
     private void addSaveButton(){
         save = new HomeViewComponents.PillButton("Save");
         save.setBorderPainted(false);
@@ -44,7 +42,6 @@ public class EditTaskView extends TaskView {
 
     private void addDeleteButton(){
         delete = new HomeViewComponents.PillButton("Delete");
-        delete.setPreferredSize(new Dimension(100, 40));
         delete.setBorderPainted(false);
         delete.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -61,10 +58,5 @@ public class EditTaskView extends TaskView {
         habitDescTF.setText(editTaskViewModel.getDesc());
         habitRepeatCB.setSelectedItem(editTaskViewModel.getRepeat());
         habitDueLB.setText(editTaskViewModel.getDueDate());
-    }
-
-    ///  get method for controller
-    public EditTaskController getEditTaskController() {
-        return editTaskController;
     }
 }
