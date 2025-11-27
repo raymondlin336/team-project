@@ -1,4 +1,4 @@
-package use_case.habit.get;
+package use_case.habit.overview.get;
 
 import entity.Habit;
 

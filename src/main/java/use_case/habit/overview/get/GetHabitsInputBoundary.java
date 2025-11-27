@@ -1,4 +1,4 @@
-package use_case.habit.overview;
+package use_case.habit.overview.get;
 
 public interface GetHabitsInputBoundary {
     /**

@@ -1,4 +1,4 @@
-package use_case.habit.get;
+package use_case.habit.overview.get;
 
 import entity.Freq;
 import entity.Habit;
@@ -9,13 +9,11 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * Interactor for getting habits for the Home (Habits Overview) screen.
- *
- * Responsibilities:
- *  - Load all habits from the data access layer.
- *  - Group them into Daily / Weekly / Monthly based on the frequency
- *    of the *next* task in each habit.
- *  - Ignore Freq.Once, since the UI only has Daily / Weekly / Monthly tabs.
+ * interactor for getting habits for the HomeView screen.
+ * responsbilities:
+ *  - load all habits from  data access layer.
+ *  - group them into daily, monthly and weekly... based on the frequency
+ *    of the ***NEXT*** task in each habit. since we can like edit it in the middle and change freq.
  */
 public class GetHabitsInteractor implements GetHabitsInputBoundary {
 
@@ -30,7 +28,7 @@ public class GetHabitsInteractor implements GetHabitsInputBoundary {
 
     @Override
     public void execute(GetHabitsInputData inputData) {
-        // 1. Fetch all habits from data store
+        // get all habits from data store
         List<Habit> loadedHabits = habitDataAccess.findAll();
         ArrayList<Habit> allHabits = new ArrayList<>(loadedHabits);
 
@@ -39,13 +37,13 @@ public class GetHabitsInteractor implements GetHabitsInputBoundary {
             return;
         }
 
-        // 2. Group by frequency of the *next* task
+        // group by frequency by the NEXT task
         ArrayList<Habit> dailyHabits = new ArrayList<>();
         ArrayList<Habit> weeklyHabits = new ArrayList<>();
         ArrayList<Habit> monthlyHabits = new ArrayList<>();
 
         for (Habit habit : allHabits) {
-            // We assume each habit has at least one task and we use the "next" task’s freq.
+            // We assume each habit has at least one task and we use the NEXT task’s freq.
             Freq freq = habit.get_next().freq;
 
             switch (freq) {
@@ -58,14 +56,12 @@ public class GetHabitsInteractor implements GetHabitsInputBoundary {
                 case Monthly:
                     monthlyHabits.add(habit);
                     break;
-                case Once:
                 default:
-                    // UI has no tab for "Once"; skip it for Home Overview.
                     break;
             }
         }
 
-        // 3. Build output and send to presenter
+        // build output and send to presenter
         GetHabitsOutputData outputData =
                 new GetHabitsOutputData(dailyHabits, weeklyHabits, monthlyHabits, allHabits);
 
