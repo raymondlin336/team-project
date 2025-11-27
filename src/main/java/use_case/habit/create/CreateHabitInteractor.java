@@ -18,7 +18,7 @@ public class CreateHabitInteractor implements CreateHabitInputBoundary {
     private final CreateHabitOutputBoundary presenter;
 
     public CreateHabitInteractor(HabitDataAccessInterface habitDataAccessObject,
-                                 CreateHabitOutputBoundary presenter) {
+            CreateHabitOutputBoundary presenter) {
         this.habitDataAccessObject = Objects.requireNonNull(habitDataAccessObject, "habitDataAccessObject");
         this.presenter = Objects.requireNonNull(presenter, "presenter");
     }
@@ -41,8 +41,7 @@ public class CreateHabitInteractor implements CreateHabitInputBoundary {
                 inputData.getDescription(),
                 inputData.getFrequency(),
                 today,
-                newId
-        );
+                newId);
 
         Habit persisted = habitDataAccessObject.save(habit);
         presenter.prepareSuccessView(new CreateHabitOutputData(persisted));
