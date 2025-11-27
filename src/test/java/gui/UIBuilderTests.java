@@ -11,12 +11,16 @@ import gui.home.HomeView;
 import gui.home.HomeViewController;
 import gui.home.HomeViewModel;
 import gui.new_task.NewTaskController;
+import gui.new_task.NewTaskPresenter;
 import gui.new_task.NewTaskView;
+import gui.new_task.NewTaskViewModel;
 import gui.statistics.StatisticsController;
 import gui.statistics.StatisticsPresenter;
 import gui.statistics.StatisticsView;
 import gui.statistics.StatisticsViewModel;
 import org.junit.Test;
+import use_case.habit.create.CreateHabitInteractor;
+import use_case.habit.create.CreateHabitOutputData;
 import use_case.statistics.get.GetStatisticsInteractor;
 
 import java.util.ArrayList;
@@ -33,14 +37,17 @@ public class UIBuilderTests {
         EditTaskViewModel editTaskViewModel = new EditTaskViewModel(habits.get(0));
         EditTaskView editTaskView = new EditTaskView(editTaskViewModel, editTaskController);
 
+        NewTaskViewModel newTaskViewModel = new NewTaskViewModel();
+        NewTaskPresenter newTaskPresenter = new NewTaskPresenter(newTaskViewModel);
+        CreateHabitInteractor createHabitInteractor = new CreateHabitInteractor(, newTaskPresenter);// TODO: What goes here? What's the DOA?
         NewTaskController newTaskController = new NewTaskController(true);
-        NewTaskView newTaskView = new NewTaskView(newTaskController);
+        NewTaskView newTaskView = new NewTaskView(newTaskController, newTaskViewModel);
 
-        StatisticsViewModel vm = new StatisticsViewModel(habits);
-        StatisticsPresenter statisticsPresenter = new StatisticsPresenter(vm);
+        StatisticsViewModel statisticsViewModel = new StatisticsViewModel(habits);
+        StatisticsPresenter statisticsPresenter = new StatisticsPresenter(statisticsViewModel);
         GetStatisticsInteractor getStatisticsInteractor = new GetStatisticsInteractor(, statisticsPresenter);// TODO: What goes here? What's the DOA?
-        StatisticsController statisticsController = new StatisticsController();
-        StatisticsView satisticsView = new StatisticsView("Statistics", vm, statisticsController);
+        StatisticsController statisticsController = new StatisticsController(getStatisticsInteractor);
+        StatisticsView satisticsView = new StatisticsView("Statistics", statisticsViewModel, statisticsController);
 
         HomeViewModel test = new HomeViewModel(habits);
         HomeViewController homeViewController = new HomeViewController(true);

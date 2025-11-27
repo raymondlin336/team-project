@@ -171,7 +171,7 @@ public class StatisticsView implements PropertyChangeListener {
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-
+        createUI(800, 600);
     }
 
     static class SquareRowPanel extends JPanel {
