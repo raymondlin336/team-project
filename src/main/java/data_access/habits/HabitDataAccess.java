@@ -53,10 +53,15 @@ public class HabitDataAccess implements HabitDataAccessInterface {
     @Override
     public void deleteById(int id) {
         this.load();
-        for (Habit h : this.user.habits) {
+        int ind = -1;
+        for (int i = 0; i < this.user.habits.size(); i++) {
+            Habit h = this.user.habits.get(i);
             if (h.id == id) {
-                this.user.habits.remove(h);
+                ind = i;
             }
+        }
+        if (ind >= 0) {
+            this.user.habits.remove(ind);
         }
         this.save();
     }
