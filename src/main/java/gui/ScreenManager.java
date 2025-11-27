@@ -41,6 +41,11 @@ public class ScreenManager {
         newEditController.addScreenManager(
                 editTaskView.getEditTaskController().getScreenManager()
         );
+        mainFrame.setContentPane(newEditTaskView.getPanel());
+        mainFrame.setVisible(true);
+        mainFrame.revalidate();
+        mainFrame.repaint();
+
     }
 
     public void showAddTaskView(){

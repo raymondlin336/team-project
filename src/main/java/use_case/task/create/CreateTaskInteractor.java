@@ -30,14 +30,11 @@ public class CreateTaskInteractor implements CreateTaskInputBoundary {
             return;
         }
 
-        // Task task = new Task(
-        //         -1,
-        //         inputData.getName().trim(),
-        //         inputData.getRepeatCount(),
-        //         inputData.getFrequency());
-
-        //TODO: Not sure if these parameters are correct especially deadline, description, id and completed
-        var task = new Task(inputData.getName().trim(), "taskDescription", inputData.getFrequency(), null, -1, false);
+        Task task = new Task(
+                inputData.getName().trim(),
+                "",
+                inputData.getFrequency(),
+                new Date(0, 0, 0), -1, false);
 
         Task persisted = taskDataAccessObject.save(task);
         presenter.prepareSuccessView(new CreateTaskOutputData(persisted));
