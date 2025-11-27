@@ -13,9 +13,12 @@ import gui.home.HomeViewModel;
 import gui.new_task.NewTaskController;
 import gui.new_task.NewTaskView;
 import gui.statistics.StatisticsController;
+import gui.statistics.StatisticsPresenter;
 import gui.statistics.StatisticsView;
 import gui.statistics.StatisticsViewModel;
 import org.junit.Test;
+import use_case.statistics.get.GetStatisticsInteractor;
+
 import java.util.ArrayList;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -34,14 +37,16 @@ public class UIBuilderTests {
         NewTaskView newTaskView = new NewTaskView(newTaskController);
 
         StatisticsViewModel vm = new StatisticsViewModel(habits);
+        StatisticsPresenter statisticsPresenter = new StatisticsPresenter(vm);
+        GetStatisticsInteractor getStatisticsInteractor = new GetStatisticsInteractor(, statisticsPresenter);// TODO: What goes here? What's the DOA?
         StatisticsController statisticsController = new StatisticsController();
-        StatisticsView statisticsView = new StatisticsView("Statistics", vm, statisticsController);
+        StatisticsView satisticsView = new StatisticsView("Statistics", vm, statisticsController);
 
         HomeViewModel test = new HomeViewModel(habits);
         HomeViewController homeViewController = new HomeViewController(true);
         HomeView homeView = new HomeView(test, homeViewController);
 
-        ScreenManager manager = new ScreenManager(editTaskView, newTaskView, homeView, statisticsView);
+        ScreenManager manager = new ScreenManager(editTaskView, newTaskView, homeView, satisticsView, statisticsController);
         homeViewController.addScreenManager(manager);
         editTaskController.addScreenManager(manager);
         newTaskController.addScreenManager(manager);

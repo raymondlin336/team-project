@@ -21,6 +21,7 @@ import gui.splash_quote.SplashQuotePresenter;
 import gui.splash_quote.SplashQuoteView;
 import gui.splash_quote.SplashQuoteViewModel;
 import gui.statistics.StatisticsController;
+import gui.statistics.StatisticsPresenter;
 import gui.statistics.StatisticsView;
 import gui.statistics.StatisticsViewModel;
 import use_case.quote.data_access_interface.QuoteDataAccessInterface;
@@ -74,6 +75,7 @@ public class PlaceHolderAppBuilder3 {
 
         // Statistics
         StatisticsViewModel vm = new StatisticsViewModel(habits);
+        StatisticsPresenter statisticsPresenter = new StatisticsPresenter(vm);
         StatisticsController statisticsController = new StatisticsController();
         StatisticsView satisticsView = new StatisticsView("Statistics", vm, statisticsController);
 
@@ -83,7 +85,7 @@ public class PlaceHolderAppBuilder3 {
         HomeView homeView = new HomeView(test, homeViewController);
         //
         // ScreenManager
-        ScreenManager manager = new ScreenManager(editTaskView, newTaskView, homeView, satisticsView);
+        ScreenManager manager = new ScreenManager(editTaskView, newTaskView, homeView, satisticsView, statisticsController);
         homeViewController.addScreenManager(manager);
         editTaskController.addScreenManager(manager);
         newTaskController.addScreenManager(manager);

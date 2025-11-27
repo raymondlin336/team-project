@@ -8,9 +8,13 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
 
-public class StatisticsView {
+public class StatisticsView implements PropertyChangeListener {
+
     private String view_name;
     private StatisticsController statisticsController;
     private StatisticsViewModel statisticsViewModel;
@@ -18,10 +22,19 @@ public class StatisticsView {
     private JPanel mainpanel;
 
     public StatisticsView(String view_name, StatisticsViewModel statisticsViewModel, StatisticsController statisticsController) {
+        this.statisticsViewModel.addPropertyChangeListener(this);
         this.view_name = view_name;
         this.statisticsViewModel = statisticsViewModel;
         this.statisticsController = statisticsController;
         createUI(800, 600);
+    }
+
+    private void refreshFromViewModel(){
+        createUI(800, 600);
+    }
+
+    public void propertyChange(){
+        refreshFromViewModel();
     }
 
     private void createUI(int wd_width,int wd_height) {
@@ -154,6 +167,11 @@ public class StatisticsView {
         scrollPane.getHorizontalScrollBar().setPreferredSize(new Dimension(550, 12));
         rowPanel.add(scrollPane, BorderLayout.CENTER);
         return rowPanel;
+    }
+
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
+
     }
 
     static class SquareRowPanel extends JPanel {

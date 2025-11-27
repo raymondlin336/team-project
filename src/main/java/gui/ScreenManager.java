@@ -6,9 +6,15 @@ import gui.edit_task.EditTaskView;
 import gui.edit_task.EditTaskViewModel;
 import gui.home.HomeView;
 import gui.new_task.NewTaskView;
+import gui.statistics.StatisticsController;
+import gui.statistics.StatisticsPresenter;
 import gui.statistics.StatisticsView;
+import use_case.habit.overview.get.GetHabitsOutputData;
+import use_case.statistics.get.GetStatisticsOutputData;
 
 import javax.swing.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ScreenManager {
     private JFrame mainFrame;
@@ -16,11 +22,13 @@ public class ScreenManager {
     private NewTaskView newTaskView;
     private HomeView homeView;
     private StatisticsView statisticsView;
+    private StatisticsController statisticsController;
 
     public ScreenManager(EditTaskView editTaskView,
                          NewTaskView newTaskView,
                          HomeView homeView,
-                         StatisticsView statisticsView) {
+                         StatisticsView statisticsView,
+                         StatisticsController statisticsController) {
         this.mainFrame = new JFrame();
         mainFrame.setVisible(true);
         mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -63,6 +71,7 @@ public class ScreenManager {
     };
 
     public void showStatisticsView(){
+        statisticsController.updateStatistics();
         mainFrame.setContentPane(statisticsView.getPanel());
         mainFrame.setVisible(true);
         mainFrame.revalidate();
