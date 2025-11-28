@@ -33,7 +33,6 @@ public class ScreenManager {
 
     public ScreenManager(HabitDataAccess habitDataAccess,
                          NewTaskView newTaskView,
-                         NewTaskController newTaskController,
                          HomeView homeView,
                          StatisticsView statisticsView,
                          StatisticsController statisticsController) {
