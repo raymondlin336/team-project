@@ -12,6 +12,8 @@ import java.util.Optional;
 public interface HabitDataAccessInterface {
     Habit save(Habit habit);
 
+    void save_file();
+
     Optional<Habit> findById(int id);
 
     List<Habit> findAll();

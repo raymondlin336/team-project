@@ -34,9 +34,6 @@ public class EditTaskController extends TaskController {
     public void addScreenManager(ScreenManager screenManager){
         this.screenManager = screenManager;
     }
-    public ScreenManager getScreenManager(){
-        return this.screenManager;
-    }
     public void updateEditTask(int habitId, String name, String description, Freq freq){
         editHabitInteractor.execute(new EditHabitInputData(habitId, name, description, freq));
     }

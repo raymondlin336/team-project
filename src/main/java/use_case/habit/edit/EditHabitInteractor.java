@@ -45,16 +45,16 @@ public class EditHabitInteractor implements EditHabitInputBoundary {
             return;
         }
 
-        Habit habit = habitOptional.get();
-
+        Habit habit = habitDataAccessObject.findById(inputData.getHabitId()).get();
         // 3. Apply edits to the habit using entity.Habit's methods
         habit.change_name(inputData.getName().trim());
         habit.change_desc(inputData.getDescription().trim());
         habit.change_freq(inputData.getFrequency());
+        System.out.println(habit.get_next().name);
 
         // 4. Persist the updated habit and prepare output
-        Habit persisted = habitDataAccessObject.save(habit);
-        EditHabitOutputData outputData = new EditHabitOutputData(persisted, Instant.now());
+        habitDataAccessObject.save_file();
+        EditHabitOutputData outputData = new EditHabitOutputData(habit, Instant.now());
         presenter.prepareSuccessView(outputData);
     }
 

@@ -21,15 +21,17 @@ public class HabitDataAccess implements HabitDataAccessInterface {
         this.user = this.io.getUser();
     }
 
-    private void save() {
+    @Override
+    public void save_file() {
         this.io.saveUser(this.user);
     }
 
     @Override
     public Habit save(Habit habit) {
+        System.out.println(habit.get_next().name);
         this.load();
         user.habits.add(habit);
-        this.save();
+        this.save_file();
         return habit;
     }
 
@@ -63,7 +65,7 @@ public class HabitDataAccess implements HabitDataAccessInterface {
         if (ind >= 0) {
             this.user.habits.remove(ind);
         }
-        this.save();
+        this.save_file();
     }
 
     @Override

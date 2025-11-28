@@ -54,7 +54,7 @@ public class EditTaskView extends TaskView implements PropertyChangeListener {
     private void showHabitInfo(){
         habitNameTF.setText(editTaskViewModel.getName());
         habitDescTF.setText(editTaskViewModel.getDesc());
-        habitRepeatCB.setSelectedItem(editTaskViewModel.getRepeat());
+        habitRepeatCB.setSelectedItem(editTaskViewModel.getRepeat().toString());
         habitDueLB.setText(editTaskViewModel.getDueDate());
     }
 

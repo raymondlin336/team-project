@@ -39,7 +39,7 @@ public class ScreenManager {
         this.mainFrame = new JFrame();
         mainFrame.setVisible(true);
         mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        mainFrame.setSize(800, 600); // or pack later
+        mainFrame.setSize(800, 600);
         mainFrame.setLocationRelativeTo(null);
         this.habitDataAccess = habitDataAccess;
         this.newTaskView = newTaskView;
