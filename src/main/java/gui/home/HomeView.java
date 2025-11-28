@@ -6,6 +6,8 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.Collections;
 import java.util.List;
 
@@ -16,12 +18,18 @@ import gui.home.HomeViewComponents.CircleButton;
 
 /// Skibidi
 
-public class HomeView implements HomeViewInterface {
+public class HomeView implements PropertyChangeListener {
 
     private HomeViewModel homeViewModel;
     private HomePresenter homePresenter;
     private HomeViewController homeViewController;
+
     private FrequencyTab currentTab = FrequencyTab.DAILY;
+
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
+
+    }
 
     public enum FrequencyTab {
         DAILY, WEEKLY, MONTHLY
@@ -52,6 +60,8 @@ public class HomeView implements HomeViewInterface {
         this.homePresenter = presenter;
         this.homeViewController = controller;
         this.mainFrame = new JFrame("Habits");
+        this.homeViewModel.addPropertyChangeListener(this);
+
         createUIComponents(900, 600);
     }
 
@@ -132,6 +142,7 @@ public class HomeView implements HomeViewInterface {
         dailyTab.setSelected(true);
         updateSegmentLook();
         showTasks(homeViewModel != null ? homeViewModel.dailyHabits : null);
+        System.out.println(homeViewModel.dailyHabits);
     }
 
     /**
@@ -247,7 +258,6 @@ public class HomeView implements HomeViewInterface {
         }
     }
 
-    @Override
     public void refreshAll() {
         if (currentTab == FrequencyTab.DAILY) {
             showTasks(homeViewModel.dailyHabits);

@@ -2,10 +2,13 @@ package gui.home;
 
 import entity.Freq;
 import entity.Habit;
+import use_case.habit.overview.get.GetHabitsOutputBoundary;
+import use_case.habit.overview.get.GetHabitsOutputData;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class HomePresenter {
+public class HomePresenter implements GetHabitsOutputBoundary {
     private final HomeViewModel viewModel;
     private HomeViewInterface view;  // set later
 
@@ -34,7 +37,7 @@ public class HomePresenter {
         }
 
         if (view != null) {
-            // e.g. default to daily
+            // default to daily
             view.showTasks(viewModel.dailyHabits);
         }
     }
@@ -55,6 +58,23 @@ public class HomePresenter {
         if (view != null) {
             view.showTasks(viewModel.monthlyHabits);
         }
+    }
+
+    @Override
+    public void prepareSuccessView(GetHabitsOutputData outputData) {
+        viewModel.updateHabits(
+                new ArrayList<Habit>(outputData.getDailyHabits()),
+                new ArrayList<Habit>(outputData.getWeeklyHabits()),
+                new ArrayList<Habit>(outputData.getMonthlyHabits())
+        );
+        if (view != null) {
+            view.refreshAll();
+        }
+    }
+
+    @Override
+    public void prepareFailView(String errorMessage) {
+        // TODO: prepare a failed view
     }
 }
 
