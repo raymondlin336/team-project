@@ -9,9 +9,7 @@ import gui.edit_task.EditTaskController;
 import gui.edit_task.EditTaskPresenter;
 import gui.edit_task.EditTaskView;
 import gui.edit_task.EditTaskViewModel;
-import gui.home.HomeView;
-import gui.home.HomeViewController;
-import gui.home.HomeViewModel;
+import gui.home.*;
 import gui.new_task.NewTaskController;
 import gui.new_task.NewTaskPresenter;
 import gui.new_task.NewTaskView;
@@ -56,9 +54,10 @@ public class UIBuilderTests {
         StatisticsController statisticsController = new StatisticsController(getStatisticsInteractor);
         StatisticsView satisticsView = new StatisticsView("Statistics", statisticsViewModel, statisticsController);
 
-        HomeViewModel test = new HomeViewModel(habits);
-        HomeViewController homeViewController = new HomeViewController(true);
-        HomeView homeView = new HomeView(test, homeViewController);
+        HomeViewModel test = new HomeViewModel();
+        HomePresenter homePresenter = new HomePresenter(test);
+        HomeViewController homeViewController = new HomeViewController(true, homePresenter);
+        HomeView homeView = new HomeView(test, homePresenter, homeViewController);
 
         ScreenManager manager = new ScreenManager(editTaskView, newTaskView, homeView, satisticsView, statisticsController);
         homeViewController.addScreenManager(manager);

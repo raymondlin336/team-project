@@ -8,48 +8,35 @@ import entity.Habit;
 import javax.script.ScriptEngine;
 
 public class HomeViewController extends TaskController {
-    private ScreenManager screenManager;
-    public HomeViewController(Boolean log_messages) {
+    private static ScreenManager screenManager;
+    private HomePresenter homePresenter;
+    public HomeViewController(Boolean log_messages, HomePresenter presenter /*, MarkHabitDoneUseCase uc */) {
         super(log_messages);
-    }
-    public void markTaskDone(Boolean task_done, Habit habit) {
-        /// Mark task done for the day/week/month
-        if (habit.get_next().freq == Freq.Daily) {
-            /// Mark
-        } else if (habit.get_next().freq == Freq.Weekly) {
-            /// Mark done
-        } else if (habit.get_next().freq == Freq.Monthly) {
-            /// Mark done
-        }
-
+        this.homePresenter = presenter;
+        // this.markHabitDoneUseCase = uc;
     }
 
-    public void markTaskNotDone(Boolean task_done, Habit habit) {
-        /// Mark task not done for the day/week/month
-        if (habit.get_next().freq == Freq.Daily) {
-            /// Mark
-        } else if (habit.get_next().freq == Freq.Weekly) {
-            /// Mark done
-        } else if (habit.get_next().freq == Freq.Monthly) {
-            /// Mark done
-        }
+    public void onHabitCheckboxClicked(Habit habit) {
+        // 1) Call the use case to toggle the habit’s done status
+        // markHabitDoneUseCase.execute(habit);
 
+        // 2) After use case gives you updated list of habits, re-present them:
+        // presenter.presentHabits(updatedHabits);
     }
-
 
     public void addScreenManager(ScreenManager screenManager){
         this.screenManager = screenManager;
     }
 
-    public void showEditTaskWindow(Habit habit){
+    public static void showEditTaskWindow(Habit habit){
         screenManager.showEditTaskView(habit); // Needs to be implemented somewhere!
     }
 
-    public void showStatisticsWindow(){
+    public static void showStatisticsWindow(){
         screenManager.showStatisticsView(); // Needs to be implemented somewhere!
     }
 
-    public void showAddTaskWindow(){
+    public static void showAddTaskWindow(){
         screenManager.showAddTaskView();
     }
 }
