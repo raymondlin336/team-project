@@ -1,5 +1,6 @@
 package gui.new_task;
 
+import entity.Freq;
 import gui.home.HomeViewComponents;
 import gui.task.TaskView;
 import use_case.habit.create.CreateHabitOutputBoundary;
@@ -44,7 +45,15 @@ public class NewTaskView extends TaskView implements PropertyChangeListener {
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         if (evt.getPropertyName().equals("AddSuccess")){
+            clearHabitInfo();
             newTaskController.showHomeWindow();
         }
+    }
+
+    private void clearHabitInfo(){
+        habitNameTF.setText("");
+        habitDescTF.setText("");
+        habitRepeatCB.setSelectedItem(Freq.Once);
+        habitDueLB.setText("");
     }
 }
