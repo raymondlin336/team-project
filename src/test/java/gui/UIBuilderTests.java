@@ -60,7 +60,7 @@ public class UIBuilderTests {
         HomeViewController homeViewController = new HomeViewController(true);
         HomeView homeView = new HomeView(test, homeViewController);
 
-        ScreenManager manager = new ScreenManager(editTaskView, newTaskView, newTaskController, homeView, satisticsView, statisticsController);
+        ScreenManager manager = new ScreenManager(editTaskView, newTaskView, homeView, satisticsView, statisticsController);
         homeViewController.addScreenManager(manager);
         editTaskController.addScreenManager(manager);
         newTaskController.addScreenManager(manager);

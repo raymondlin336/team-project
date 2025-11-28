@@ -26,7 +26,7 @@ public class StatisticsView implements PropertyChangeListener {
         this.statisticsViewModel = statisticsViewModel;
         this.statisticsViewModel.addPropertyChangeListener(this);
         this.statisticsController = statisticsController;
-        //createUI(800, 600);
+        createUI(800, 600);
     }
 
     private void refreshFromViewModel(){

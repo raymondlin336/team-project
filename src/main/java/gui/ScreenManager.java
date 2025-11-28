@@ -28,7 +28,6 @@ public class ScreenManager {
 
     public ScreenManager(EditTaskView editTaskView,
                          NewTaskView newTaskView,
-                         NewTaskController newTaskController,
                          HomeView homeView,
                          StatisticsView statisticsView,
                          StatisticsController statisticsController) {
