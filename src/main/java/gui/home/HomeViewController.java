@@ -42,7 +42,7 @@ public class HomeViewController extends TaskController {
     }
 
     public void showEditTaskWindow(Habit habit){
-        screenManager.showEditTaskView(habit); // Needs to be implemented somewhere!
+        screenManager.showEditTaskView(habit.id); // Needs to be implemented somewhere!
     }
 
     public void showStatisticsWindow(){

@@ -23,4 +23,7 @@ public class StatisticsController {
     public void updateStatistics(){
         getStatisticsInteractor.execute(new GetStatisticsInputData());
     }
+    public ScreenManager getScreenManager() {
+        return screenManager;
+    }
 }

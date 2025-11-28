@@ -20,10 +20,6 @@ public class EditTaskView extends TaskView implements PropertyChangeListener {
         this.editTaskViewModel = editTaskViewModel;
         this.editTaskViewModel.addPropertyChangeListener(this);
         this.editTaskController = editTaskController;
-        createUI(800, 600, view_name);
-        addSaveButton();
-        addCancelButton();
-        addDeleteButton();
     }
 
     private void addSaveButton(){
@@ -68,8 +64,13 @@ public class EditTaskView extends TaskView implements PropertyChangeListener {
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        if (evt.getPropertyName().equals("AddSuccess")) {
-            editTaskController.showHomeWindow();
+        if (evt.getPropertyName().equals("EditHabitOutputData")) {
+            System.out.println("UI created");
+            createUI(800, 600, view_name);
+            addSaveButton();
+            addCancelButton();
+            addDeleteButton();
+            showHabitInfo();
         }
     }
 }

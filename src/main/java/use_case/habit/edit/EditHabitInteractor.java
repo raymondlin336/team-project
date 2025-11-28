@@ -58,6 +58,16 @@ public class EditHabitInteractor implements EditHabitInputBoundary {
         presenter.prepareSuccessView(outputData);
     }
 
+    public void first_execute(int HabitId){
+        Optional<Habit> habitOptional = habitDataAccessObject.findById(HabitId);
+        if (habitOptional.isEmpty()) {
+            presenter.prepareFailView("Habit " + HabitId + " does not exist.");
+        }
+        else{
+            presenter.prepareSuccessView(new EditHabitOutputData(habitOptional.get(), Instant.now()));
+        }
+    }
+
     /**
      * Validates the incoming edit request.
      *
