@@ -1,4 +1,4 @@
 package gui.home;
 
-public class homePresenter {
+public class HomePresenter {
 }
