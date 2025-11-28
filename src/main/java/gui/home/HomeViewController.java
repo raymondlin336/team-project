@@ -28,12 +28,12 @@ public class HomeViewController extends TaskController {
         this.screenManager = screenManager;
     }
 
-    public static void showEditTaskWindow(Habit habit){
-        screenManager.showEditTaskView(habit); // Needs to be implemented somewhere!
+    public static void showEditTaskWindow(int habitId){
+        screenManager.showEditTaskView(habitId);
     }
 
     public static void showStatisticsWindow(){
-        screenManager.showStatisticsView(); // Needs to be implemented somewhere!
+        screenManager.showStatisticsView();
     }
 
     public static void showAddTaskWindow(){
