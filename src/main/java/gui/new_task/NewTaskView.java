@@ -2,18 +2,24 @@ package gui.new_task;
 
 import gui.home.HomeViewComponents;
 import gui.task.TaskView;
+import use_case.habit.create.CreateHabitOutputBoundary;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
-public class NewTaskView extends TaskView {
+public class NewTaskView extends TaskView implements PropertyChangeListener {
     private NewTaskController newTaskController;
+    private NewTaskViewModel newTaskViewModel;
     private JButton add;
 
-    public NewTaskView(NewTaskController newTaskController) {
+    public NewTaskView(NewTaskController newTaskController, NewTaskViewModel newTaskViewModel) {
         super("New Task", newTaskController);
+        this.newTaskViewModel = newTaskViewModel;
+        this.newTaskViewModel.addPropertyChangeListener(this);
         this.newTaskController = newTaskController;
         createUI(800, 600, view_name);
         addAddButton();
@@ -35,4 +41,10 @@ public class NewTaskView extends TaskView {
         buttonsRow.add(add);
     }
 
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
+        if (evt.getPropertyName().equals("AddSuccess")){
+            newTaskController.showHomeWindow();
+        }
+    }
 }

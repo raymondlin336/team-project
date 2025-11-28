@@ -6,8 +6,10 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
-public class EditTaskView extends TaskView {
+public class EditTaskView extends TaskView implements PropertyChangeListener {
     private EditTaskViewModel editTaskViewModel;
     private EditTaskController editTaskController;
     private JButton save;
@@ -16,12 +18,8 @@ public class EditTaskView extends TaskView {
     public EditTaskView(EditTaskViewModel editTaskViewModel, EditTaskController editTaskController) {
         super("Edit Task",  editTaskController);
         this.editTaskViewModel = editTaskViewModel;
+        this.editTaskViewModel.addPropertyChangeListener(this);
         this.editTaskController = editTaskController;
-        createUI(800, 600, view_name);
-        addSaveButton();
-        addCancelButton();
-        addDeleteButton();
-        showHabitInfo();
     }
 
     private void addSaveButton(){
@@ -56,11 +54,27 @@ public class EditTaskView extends TaskView {
     private void showHabitInfo(){
         habitNameTF.setText(editTaskViewModel.getName());
         habitDescTF.setText(editTaskViewModel.getDesc());
-        habitRepeatCB.setSelectedItem(editTaskViewModel.getRepeat());
+        habitRepeatCB.setSelectedItem(editTaskViewModel.getRepeat().toString());
         habitDueLB.setText(editTaskViewModel.getDueDate());
     }
 
     public EditTaskController getEditTaskController() {
         return editTaskController;
+    }
+
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
+        if (evt.getPropertyName().equals("EditHabitOutputData")) {
+            System.out.println("UI created");
+            createUI(800, 600, view_name);
+            addSaveButton();
+            addCancelButton();
+            addDeleteButton();
+            showHabitInfo();
+            editTaskController.showHomeWindow();
+        }
+        else if (evt.getPropertyName().equals("Delete")) {
+            editTaskController.showHomeWindow();
+        }
     }
 }

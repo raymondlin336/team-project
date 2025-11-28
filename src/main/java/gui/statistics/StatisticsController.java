@@ -7,9 +7,11 @@ import use_case.statistics.get.GetStatisticsInteractor;
 public class StatisticsController {
     private ScreenManager screenManager;
     private GetStatisticsInteractor getStatisticsInteractor;
-    public void addScreenManager(ScreenManager screenManager, GetStatisticsInteractor getStatisticsInteractor) {
-        this.screenManager = screenManager;
+    public StatisticsController(GetStatisticsInteractor getStatisticsInteractor) {
         this.getStatisticsInteractor = getStatisticsInteractor;
+    }
+    public void addScreenManager(ScreenManager screenManager) {
+        this.screenManager = screenManager;
     }
     public void goHome(){
         screenManager.showHomeView();
@@ -20,5 +22,8 @@ public class StatisticsController {
     }
     public void updateStatistics(){
         getStatisticsInteractor.execute(new GetStatisticsInputData());
+    }
+    public ScreenManager getScreenManager() {
+        return screenManager;
     }
 }

@@ -1,17 +1,21 @@
 package gui.statistics;
 
-import use_case.habit.overview.get.GetHabitsOutputBoundary;
-import use_case.habit.overview.get.GetHabitsOutputData;
+import entity.Habit;
+import use_case.statistics.get.GetStatisticsOutputBoundary;
+import use_case.statistics.get.GetStatisticsOutputData;
 
-public class StatisticsPresenter implements GetHabitsOutputBoundary {
+import java.util.ArrayList;
+
+public class StatisticsPresenter implements GetStatisticsOutputBoundary {
     private StatisticsViewModel statisticsViewModel;
     public StatisticsPresenter(StatisticsViewModel statisticsViewModel) {
         this.statisticsViewModel = statisticsViewModel;
     }
 
+
     @Override
-    public void prepareSuccessView(GetHabitsOutputData outputData) {
-        statisticsViewModel.updateHabits(outputData.getAllHabits());
+    public void prepareSuccessView(GetStatisticsOutputData outputData) {
+        statisticsViewModel.updateHabits(new ArrayList<Habit>(outputData.getRecurringHabits()));
     }
 
     @Override

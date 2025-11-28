@@ -1,22 +1,26 @@
 package gui;
 
+import data_access.habits.HabitDataAccess;
 import entity.Date;
 import entity.Freq;
 import entity.Habit;
 import entity.Task;
-import gui.edit_task.EditTaskController;
-import gui.edit_task.EditTaskView;
-import gui.edit_task.EditTaskViewModel;
+import gui.home.HomePresenter;
 import gui.home.HomeView;
 import gui.home.HomeViewController;
 import gui.home.HomeViewModel;
 import gui.new_task.NewTaskController;
+import gui.new_task.NewTaskPresenter;
 import gui.new_task.NewTaskView;
+import gui.new_task.NewTaskViewModel;
 import gui.statistics.StatisticsController;
 import gui.statistics.StatisticsPresenter;
 import gui.statistics.StatisticsView;
 import gui.statistics.StatisticsViewModel;
 import org.junit.Test;
+import use_case.habit.create.CreateHabitInteractor;
+import use_case.habit.create.CreateHabitOutputData;
+import use_case.habit.edit.EditHabitInteractor;
 import use_case.statistics.get.GetStatisticsInteractor;
 
 import java.util.ArrayList;
@@ -29,26 +33,27 @@ public class UIBuilderTests {
         System.out.println("UIBuilderTest");
         ArrayList<Habit> habits = createTestHabits();
 
-        EditTaskController editTaskController = new EditTaskController(true);
-        EditTaskViewModel editTaskViewModel = new EditTaskViewModel(habits.get(0));
-        EditTaskView editTaskView = new EditTaskView(editTaskViewModel, editTaskController);
+        HabitDataAccess dataAccess = new HabitDataAccess("src/main/java/placeholders/placeholder_json.json", 0);
 
-        NewTaskController newTaskController = new NewTaskController(true);
-        NewTaskView newTaskView = new NewTaskView(newTaskController);
+        NewTaskViewModel newTaskViewModel = new NewTaskViewModel();
+        NewTaskPresenter newTaskPresenter = new NewTaskPresenter(newTaskViewModel);
+        CreateHabitInteractor createHabitInteractor = new CreateHabitInteractor(dataAccess, newTaskPresenter);
+        NewTaskController newTaskController = new NewTaskController(true, createHabitInteractor);
+        NewTaskView newTaskView = new NewTaskView(newTaskController, newTaskViewModel);
 
-        StatisticsViewModel vm = new StatisticsViewModel(habits);
-        StatisticsPresenter statisticsPresenter = new StatisticsPresenter(vm);
-        GetStatisticsInteractor getStatisticsInteractor = new GetStatisticsInteractor(, statisticsPresenter);// TODO: What goes here? What's the DOA?
-        StatisticsController statisticsController = new StatisticsController();
-        StatisticsView satisticsView = new StatisticsView("Statistics", vm, statisticsController);
+        StatisticsViewModel statisticsViewModel = new StatisticsViewModel();
+        StatisticsPresenter statisticsPresenter = new StatisticsPresenter(statisticsViewModel);
+        GetStatisticsInteractor getStatisticsInteractor = new GetStatisticsInteractor(dataAccess, statisticsPresenter);
+        StatisticsController statisticsController = new StatisticsController(getStatisticsInteractor);
+        StatisticsView satisticsView = new StatisticsView("Statistics", statisticsViewModel, statisticsController);
 
-        HomeViewModel test = new HomeViewModel(habits);
-        HomeViewController homeViewController = new HomeViewController(true);
-        HomeView homeView = new HomeView(test, homeViewController);
+        HomeViewModel test = new HomeViewModel();
+        HomePresenter homePresenter = new HomePresenter(test);
+        HomeViewController homeViewController = new HomeViewController(true, homePresenter);
+        HomeView homeView = new HomeView(test, homePresenter, homeViewController);
 
-        ScreenManager manager = new ScreenManager(editTaskView, newTaskView, homeView, satisticsView, statisticsController);
+        ScreenManager manager = new ScreenManager(dataAccess, newTaskView, homeView, satisticsView, statisticsController);
         homeViewController.addScreenManager(manager);
-        editTaskController.addScreenManager(manager);
         newTaskController.addScreenManager(manager);
         statisticsController.addScreenManager(manager);
 

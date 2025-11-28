@@ -3,10 +3,14 @@ package gui.new_task;
 import entity.Freq;
 import gui.task.TaskController;
 import entity.Habit;
+import use_case.habit.create.CreateHabitInputData;
+import use_case.habit.create.CreateHabitInteractor;
 
 public class NewTaskController extends TaskController {
-    public NewTaskController(Boolean log_messages) {
-        super(log_messages);
+    private CreateHabitInteractor createHabitInteractor;
+    public NewTaskController(Boolean log_messages, CreateHabitInteractor createHabitInteractor) {
+        super(true);
+        this.createHabitInteractor = createHabitInteractor;
     }
     public void add_habit(String name, String description, String frequency){
         Freq freq = Freq.Once;
@@ -20,6 +24,10 @@ public class NewTaskController extends TaskController {
             freq = Freq.Monthly;
         }
         showHomeWindow();
+        updateNewHabit(new CreateHabitInputData(name, description, freq));
         print_log_message("adding habit {ID: [unassigned] name: [" + name + "] description: [" + description + "] frequency: [" + freq + "]}");
+    }
+    public void updateNewHabit(CreateHabitInputData createHabitInputData){
+        createHabitInteractor.execute(createHabitInputData);
     }
 }

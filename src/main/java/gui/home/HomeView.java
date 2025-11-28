@@ -5,6 +5,9 @@ import entity.Habit;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
+import java.awt.event.ActionListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.Collections;
 import java.util.List;
 
@@ -15,11 +18,22 @@ import gui.home.HomeViewComponents.CircleButton;
 
 /// Skibidi
 
-public class HomeView {
+public class HomeView implements PropertyChangeListener {
 
     private HomeViewModel homeViewModel;
+    private HomePresenter homePresenter;
+    private HomeViewController homeViewController;
 
-    private gui.home.HomeViewController HomeViewController;
+    private FrequencyTab currentTab = FrequencyTab.DAILY;
+
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
+
+    }
+
+    public enum FrequencyTab {
+        DAILY, WEEKLY, MONTHLY
+    }
 
     private JFrame mainFrame;
 
@@ -39,11 +53,15 @@ public class HomeView {
     // "Add task" button at the bottom of the card (exposed for controller)
     private JButton addTaskButton;
 
-    public HomeView(HomeViewModel homeViewModel, gui.home.HomeViewController controller) {
-        // Assign viewmodel
-        this.homeViewModel = homeViewModel;
-        this.HomeViewController = controller;
+    public HomeView(HomeViewModel vm,
+                    HomePresenter presenter,
+                    HomeViewController controller) {
+        this.homeViewModel = vm;
+        this.homePresenter = presenter;
+        this.homeViewController = controller;
         this.mainFrame = new JFrame("Habits");
+        this.homeViewModel.addPropertyChangeListener(this);
+
         createUIComponents(900, 600);
     }
 
@@ -124,6 +142,7 @@ public class HomeView {
         dailyTab.setSelected(true);
         updateSegmentLook();
         showTasks(homeViewModel != null ? homeViewModel.dailyHabits : null);
+        System.out.println(homeViewModel.dailyHabits);
     }
 
     /**
@@ -149,18 +168,21 @@ public class HomeView {
 
         // Wire up actions to re-render the task list
         dailyTab.addActionListener(e -> {
+            currentTab = FrequencyTab.DAILY;
             updateSegmentLook();
-            showTasks(homeViewModel != null ? homeViewModel.dailyHabits : null);
+            homePresenter.onDailyTabSelected();
         });
 
         weeklyTab.addActionListener(e -> {
+            currentTab = FrequencyTab.WEEKLY;
             updateSegmentLook();
-            showTasks(homeViewModel != null ? homeViewModel.weeklyHabits : null);
+            homePresenter.onWeeklyTabSelected();
         });
 
         monthlyTab.addActionListener(e -> {
+            currentTab = FrequencyTab.MONTHLY;
             updateSegmentLook();
-            showTasks(homeViewModel != null ? homeViewModel.monthlyHabits : null);
+            homePresenter.onMonthlyTabSelected();
         });
 
         return panel;
@@ -209,7 +231,7 @@ public class HomeView {
     /**
      * Renders the tasks inside the central list according to the selected frequency.
      */
-    private void showTasks(List<Habit> habits) {
+    public void showTasks(List<Habit> habits) {
         tasksContainer.removeAll();
 
         List<Habit> safeList = habits != null ? habits : Collections.emptyList();
@@ -233,6 +255,16 @@ public class HomeView {
             SwingUtilities.invokeLater(() ->
                     tasksScrollPane.getVerticalScrollBar().setValue(0)
             );
+        }
+    }
+
+    public void refreshAll() {
+        if (currentTab == FrequencyTab.DAILY) {
+            showTasks(homeViewModel.dailyHabits);
+        } else if (currentTab == FrequencyTab.WEEKLY) {
+            showTasks(homeViewModel.weeklyHabits);
+        } else if (currentTab == FrequencyTab.MONTHLY) {
+            showTasks(homeViewModel.monthlyHabits);
         }
     }
 
@@ -271,7 +303,7 @@ public class HomeView {
 
         JButton menuButton = new CircleButton("...");
         menuButton.addActionListener(e -> {
-            HomeViewController.showEditTaskWindow(habit);
+            HomeViewController.showEditTaskWindow(habit.id);
         });
 
 
@@ -362,42 +394,12 @@ public class HomeView {
      * The button has two states: [ ] (not done) and [✓] (done).
      */
     private CircleButton createChecklistButton(Habit habit) {
-        // Initial state: assume NOT done; change if you have a real field
-        boolean done = false;  // e.g. habit.isDoneToday() if you have that
-
-        CircleButton checkButton = new CircleButton(done ? "[✓]" : "[  ]");
+        CircleButton checkButton = new CircleButton("[  ]");
         checkButton.setFocusPainted(false);
 
-        // Store the current done state on the button itself
-        checkButton.putClientProperty("done", done);
-
         checkButton.addActionListener(e -> {
-            // Read current state
-            boolean currentlyDone = (Boolean) checkButton.getClientProperty("done");
-            boolean nowDone = !currentlyDone;
-
-            // Update stored state
-            checkButton.putClientProperty("done", nowDone);
-
-            // Update the text shown on the button
-            checkButton.setText(nowDone ? "[✓]" : "[  ]");
-
-            // Tell the controller so it can update the Habit model
-            if (nowDone) {
-                // task just became DONE
-                if (this.HomeViewController != null) {
-                    this.HomeViewController.markTaskDone(true, habit);
-                }
-            } else {
-                // task just became NOT DONE
-                if (this.HomeViewController != null) {
-                    this.HomeViewController.markTaskNotDone(false, habit);
-                }
-            }
-
-            // Make sure UI refreshes
-            checkButton.revalidate();
-            checkButton.repaint();
+            // Let the controller/use case handle it.
+            homeViewController.onHabitCheckboxClicked(habit);
         });
 
         return checkButton;
