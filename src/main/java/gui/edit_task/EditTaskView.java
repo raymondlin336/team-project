@@ -71,6 +71,10 @@ public class EditTaskView extends TaskView implements PropertyChangeListener {
             addCancelButton();
             addDeleteButton();
             showHabitInfo();
+            editTaskController.showHomeWindow();
+        }
+        else if (evt.getPropertyName().equals("Delete")) {
+            editTaskController.showHomeWindow();
         }
     }
 }

@@ -1,6 +1,7 @@
 package gui.edit_task;
 
 import entity.Habit;
+import use_case.habit.delete.DeleteHabitOutputData;
 import use_case.habit.edit.EditHabitOutputData;
 
 import java.beans.PropertyChangeListener;
@@ -13,6 +14,10 @@ public class EditTaskViewModel{
         Habit oldhabit = this.habit;
         this.habit =  editHabitOutputData.getHabit();
         pcs.firePropertyChange("EditHabitOutputData", oldhabit, this.habit);
+
+    }
+    public void updateEditTask(DeleteHabitOutputData deleteHabitOutputData){
+        pcs.firePropertyChange("Delete", null, null);
     }
     public void addPropertyChangeListener(PropertyChangeListener l) {
         pcs.addPropertyChangeListener(l);

@@ -303,7 +303,7 @@ public class HomeView implements PropertyChangeListener {
 
         JButton menuButton = new CircleButton("...");
         menuButton.addActionListener(e -> {
-            HomeViewController.showEditTaskWindow(habit);
+            HomeViewController.showEditTaskWindow(habit.id);
         });
 
 
