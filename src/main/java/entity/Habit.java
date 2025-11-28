@@ -18,6 +18,7 @@ public class Habit {
     }
 
     public Habit(String name, String desc, Freq freq, Date date, int id) {
+        this.id = id;
         Task task = new Task(name, desc, freq, date, 0, false);
         this.tasks.add(task);
         Random random = new Random();
