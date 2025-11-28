@@ -5,16 +5,12 @@ import gui.task.TaskController;
 import entity.Habit;
 import use_case.habit.create.CreateHabitInputData;
 import use_case.habit.create.CreateHabitInteractor;
-import use_case.statistics.get.GetStatisticsInputData;
 
 public class NewTaskController extends TaskController {
     private CreateHabitInteractor createHabitInteractor;
-    public NewTaskController(CreateHabitInteractor createHabitInteractor) {
+    public NewTaskController(Boolean log_messages, CreateHabitInteractor createHabitInteractor) {
         super(true);
         this.createHabitInteractor = createHabitInteractor;
-    }
-    public NewTaskController(Boolean log_messages) {
-        super(log_messages);
     }
     public void add_habit(String name, String description, String frequency){
         Freq freq = Freq.Once;

@@ -5,6 +5,7 @@ import gui.edit_task.EditTaskController;
 import gui.edit_task.EditTaskView;
 import gui.edit_task.EditTaskViewModel;
 import gui.home.HomeView;
+import gui.new_task.NewTaskController;
 import gui.new_task.NewTaskView;
 import gui.statistics.StatisticsController;
 import gui.statistics.StatisticsPresenter;
@@ -20,6 +21,7 @@ public class ScreenManager {
     private JFrame mainFrame;
     private EditTaskView editTaskView;
     private NewTaskView newTaskView;
+    private NewTaskController newTaskController;
     private HomeView homeView;
     private StatisticsView statisticsView;
     private StatisticsController statisticsController;
@@ -38,12 +40,13 @@ public class ScreenManager {
         this.newTaskView = newTaskView;
         this.homeView = homeView;
         this.statisticsView = statisticsView;
+        this.statisticsController = statisticsController;
     }
 
     public void showEditTaskView(Habit habit1) {
         ///  Create new edit view based on passed habit
         EditTaskController newEditController = new EditTaskController(true);
-        EditTaskViewModel newEditViewModel = new EditTaskViewModel(habit1);
+        EditTaskViewModel newEditViewModel = new EditTaskViewModel();
         EditTaskView newEditTaskView = new EditTaskView(newEditViewModel, newEditController);
 
         newEditController.addScreenManager(

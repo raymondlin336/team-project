@@ -18,6 +18,7 @@ public class NewTaskView extends TaskView implements PropertyChangeListener {
 
     public NewTaskView(NewTaskController newTaskController, NewTaskViewModel newTaskViewModel) {
         super("New Task", newTaskController);
+        this.newTaskViewModel = newTaskViewModel;
         this.newTaskViewModel.addPropertyChangeListener(this);
         this.newTaskController = newTaskController;
         createUI(800, 600, view_name);
@@ -42,7 +43,7 @@ public class NewTaskView extends TaskView implements PropertyChangeListener {
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        if (evt.getPropertyName() == "AddSuccess"){
+        if (evt.getPropertyName().equals("AddSuccess")){
             newTaskController.showHomeWindow();
         }
     }

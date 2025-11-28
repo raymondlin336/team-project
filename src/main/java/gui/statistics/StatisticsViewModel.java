@@ -10,13 +10,6 @@ import java.util.ArrayList;
 public class StatisticsViewModel {
     private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
     private ArrayList<Habit> habits = new ArrayList<Habit>();
-    public StatisticsViewModel(ArrayList<Habit> habits) {
-        for (Habit habit : habits) {
-            if (!(habit.get_next().freq == Freq.Once)) {
-                this.habits.add(habit);
-            }
-        }
-    }
     public int numOfTasks(){
         return this.habits.size();
     }

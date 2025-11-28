@@ -6,7 +6,7 @@ import use_case.habit.create.CreateHabitOutputData;
 import use_case.habit.overview.get.GetHabitsOutputData;
 
 public class NewTaskPresenter implements CreateHabitOutputBoundary {
-    private  NewTaskViewModel newTaskViewModel;
+    private NewTaskViewModel newTaskViewModel;
     public NewTaskPresenter(NewTaskViewModel newTaskViewModel) {
         this.newTaskViewModel = newTaskViewModel;
     }
@@ -19,5 +19,6 @@ public class NewTaskPresenter implements CreateHabitOutputBoundary {
     @Override
     public void prepareFailView(String errorMessage) {
         // TODO: prepare a failed view
+        System.out.println("Error: " + errorMessage);
     }
 }

@@ -1,10 +1,12 @@
 package gui;
 
+import data_access.habits.HabitDataAccess;
 import entity.Date;
 import entity.Freq;
 import entity.Habit;
 import entity.Task;
 import gui.edit_task.EditTaskController;
+import gui.edit_task.EditTaskPresenter;
 import gui.edit_task.EditTaskView;
 import gui.edit_task.EditTaskViewModel;
 import gui.home.HomeView;
@@ -21,6 +23,7 @@ import gui.statistics.StatisticsViewModel;
 import org.junit.Test;
 import use_case.habit.create.CreateHabitInteractor;
 import use_case.habit.create.CreateHabitOutputData;
+import use_case.habit.edit.EditHabitInteractor;
 import use_case.statistics.get.GetStatisticsInteractor;
 
 import java.util.ArrayList;
@@ -33,19 +36,23 @@ public class UIBuilderTests {
         System.out.println("UIBuilderTest");
         ArrayList<Habit> habits = createTestHabits();
 
+        HabitDataAccess dataAccess = new HabitDataAccess("src/main/java/placeholders/placeholder_json.json", 0);
+
+        EditTaskViewModel editTaskViewModel = new EditTaskViewModel();
+        EditTaskPresenter editTaskPresenter = new EditTaskPresenter(editTaskViewModel);
+        EditHabitInteractor editHabitInteractor = new EditHabitInteractor(dataAccess, editTaskPresenter);
         EditTaskController editTaskController = new EditTaskController(true);
-        EditTaskViewModel editTaskViewModel = new EditTaskViewModel(habits.get(0));
         EditTaskView editTaskView = new EditTaskView(editTaskViewModel, editTaskController);
 
         NewTaskViewModel newTaskViewModel = new NewTaskViewModel();
         NewTaskPresenter newTaskPresenter = new NewTaskPresenter(newTaskViewModel);
-        CreateHabitInteractor createHabitInteractor = new CreateHabitInteractor(, newTaskPresenter);// TODO: What goes here? What's the DOA?
-        NewTaskController newTaskController = new NewTaskController(true);
+        CreateHabitInteractor createHabitInteractor = new CreateHabitInteractor(dataAccess, newTaskPresenter);
+        NewTaskController newTaskController = new NewTaskController(true, createHabitInteractor);
         NewTaskView newTaskView = new NewTaskView(newTaskController, newTaskViewModel);
 
-        StatisticsViewModel statisticsViewModel = new StatisticsViewModel(habits);
+        StatisticsViewModel statisticsViewModel = new StatisticsViewModel();
         StatisticsPresenter statisticsPresenter = new StatisticsPresenter(statisticsViewModel);
-        GetStatisticsInteractor getStatisticsInteractor = new GetStatisticsInteractor(, statisticsPresenter);// TODO: What goes here? What's the DOA?
+        GetStatisticsInteractor getStatisticsInteractor = new GetStatisticsInteractor(dataAccess, statisticsPresenter);
         StatisticsController statisticsController = new StatisticsController(getStatisticsInteractor);
         StatisticsView satisticsView = new StatisticsView("Statistics", statisticsViewModel, statisticsController);
 

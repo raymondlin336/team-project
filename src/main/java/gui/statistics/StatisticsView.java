@@ -22,9 +22,9 @@ public class StatisticsView implements PropertyChangeListener {
     private JPanel mainpanel;
 
     public StatisticsView(String view_name, StatisticsViewModel statisticsViewModel, StatisticsController statisticsController) {
-        this.statisticsViewModel.addPropertyChangeListener(this);
         this.view_name = view_name;
         this.statisticsViewModel = statisticsViewModel;
+        this.statisticsViewModel.addPropertyChangeListener(this);
         this.statisticsController = statisticsController;
         createUI(800, 600);
     }
@@ -172,6 +172,7 @@ public class StatisticsView implements PropertyChangeListener {
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         createUI(800, 600);
+        System.out.println("Property change fired.");
     }
 
     static class SquareRowPanel extends JPanel {
