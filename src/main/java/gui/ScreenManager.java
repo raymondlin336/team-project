@@ -12,6 +12,7 @@ import gui.new_task.NewTaskView;
 import gui.statistics.StatisticsController;
 import gui.statistics.StatisticsPresenter;
 import gui.statistics.StatisticsView;
+import use_case.habit.delete.DeleteHabitInteractor;
 import use_case.habit.edit.EditHabitInteractor;
 import use_case.habit.overview.get.GetHabitsOutputData;
 import use_case.statistics.get.GetStatisticsOutputData;
@@ -53,7 +54,8 @@ public class ScreenManager {
         EditTaskViewModel editTaskViewModel = new EditTaskViewModel();
         EditTaskPresenter editTaskPresenter = new EditTaskPresenter(editTaskViewModel);
         EditHabitInteractor editHabitInteractor = new EditHabitInteractor(habitDataAccess, editTaskPresenter);
-        EditTaskController editTaskController = new EditTaskController(true, editHabitInteractor);
+        DeleteHabitInteractor deleteHabitInteractor = new DeleteHabitInteractor(habitDataAccess, editTaskPresenter);
+        EditTaskController editTaskController = new EditTaskController(true, editHabitInteractor, deleteHabitInteractor);
         EditTaskView newEditTaskView = new EditTaskView(editTaskViewModel, editTaskController);
 
         editTaskController.addScreenManager(statisticsController.getScreenManager());
