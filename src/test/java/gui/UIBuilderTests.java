@@ -5,11 +5,9 @@ import entity.Date;
 import entity.Freq;
 import entity.Habit;
 import entity.Task;
-import gui.edit_task.EditTaskController;
-import gui.edit_task.EditTaskPresenter;
-import gui.edit_task.EditTaskView;
-import gui.edit_task.EditTaskViewModel;
-import gui.home.*;
+import gui.home.HomeView;
+import gui.home.HomeViewController;
+import gui.home.HomeViewModel;
 import gui.new_task.NewTaskController;
 import gui.new_task.NewTaskPresenter;
 import gui.new_task.NewTaskView;
@@ -36,12 +34,6 @@ public class UIBuilderTests {
 
         HabitDataAccess dataAccess = new HabitDataAccess("src/main/java/placeholders/placeholder_json.json", 0);
 
-        EditTaskViewModel editTaskViewModel = new EditTaskViewModel();
-        EditTaskPresenter editTaskPresenter = new EditTaskPresenter(editTaskViewModel);
-        EditHabitInteractor editHabitInteractor = new EditHabitInteractor(dataAccess, editTaskPresenter);
-        EditTaskController editTaskController = new EditTaskController(true);
-        EditTaskView editTaskView = new EditTaskView(editTaskViewModel, editTaskController);
-
         NewTaskViewModel newTaskViewModel = new NewTaskViewModel();
         NewTaskPresenter newTaskPresenter = new NewTaskPresenter(newTaskViewModel);
         CreateHabitInteractor createHabitInteractor = new CreateHabitInteractor(dataAccess, newTaskPresenter);
@@ -54,14 +46,12 @@ public class UIBuilderTests {
         StatisticsController statisticsController = new StatisticsController(getStatisticsInteractor);
         StatisticsView satisticsView = new StatisticsView("Statistics", statisticsViewModel, statisticsController);
 
-        HomeViewModel test = new HomeViewModel();
-        HomePresenter homePresenter = new HomePresenter(test);
-        HomeViewController homeViewController = new HomeViewController(true, homePresenter);
-        HomeView homeView = new HomeView(test, homePresenter, homeViewController);
+        HomeViewModel test = new HomeViewModel(habits);
+        HomeViewController homeViewController = new HomeViewController(true);
+        HomeView homeView = new HomeView(test, homeViewController);
 
-        ScreenManager manager = new ScreenManager(editTaskView, newTaskView, homeView, satisticsView, statisticsController);
+        ScreenManager manager = new ScreenManager(dataAccess, newTaskView, newTaskController, homeView, satisticsView, statisticsController);
         homeViewController.addScreenManager(manager);
-        editTaskController.addScreenManager(manager);
         newTaskController.addScreenManager(manager);
         statisticsController.addScreenManager(manager);
 

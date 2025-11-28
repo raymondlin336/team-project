@@ -10,11 +10,13 @@ public class EditTaskPresenter implements EditHabitOutputBoundary {
     }
     @Override
     public void prepareSuccessView(EditHabitOutputData outputData) {
+        System.out.println("Edit Task success view called");
         editTaskViewModel.updateEditTask(outputData);
     }
 
     @Override
     public void prepareFailView(String errorMessage) {
+        System.out.println("Edit Task fail view called: " + errorMessage);
         // TODO: prepare a failed view
     }
 }
