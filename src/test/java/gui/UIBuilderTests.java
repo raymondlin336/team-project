@@ -5,6 +5,7 @@ import entity.Date;
 import entity.Freq;
 import entity.Habit;
 import entity.Task;
+import gui.home.HomePresenter;
 import gui.home.HomeView;
 import gui.home.HomeViewController;
 import gui.home.HomeViewModel;
@@ -46,11 +47,12 @@ public class UIBuilderTests {
         StatisticsController statisticsController = new StatisticsController(getStatisticsInteractor);
         StatisticsView satisticsView = new StatisticsView("Statistics", statisticsViewModel, statisticsController);
 
-        HomeViewModel test = new HomeViewModel(habits);
-        HomeViewController homeViewController = new HomeViewController(true);
-        HomeView homeView = new HomeView(test, homeViewController);
+        HomeViewModel test = new HomeViewModel();
+        HomePresenter homePresenter = new HomePresenter(test);
+        HomeViewController homeViewController = new HomeViewController(true, homePresenter);
+        HomeView homeView = new HomeView(test, homePresenter, homeViewController);
 
-        ScreenManager manager = new ScreenManager(dataAccess, newTaskView, newTaskController, homeView, satisticsView, statisticsController);
+        ScreenManager manager = new ScreenManager(dataAccess, newTaskView, homeView, satisticsView, statisticsController);
         homeViewController.addScreenManager(manager);
         newTaskController.addScreenManager(manager);
         statisticsController.addScreenManager(manager);
