@@ -31,6 +31,18 @@ Features:
 
 ## User Stories
 
+Kevin: As a user, I want to create and write detailed information regarding my daily habits.
+
+Raymond: As a user, I want to view visual analytics of my habit so that I can understand my progress over time. 
+
+Sumaid: As a user, I want to be able to complete and modify my habits after I create them in case my habits slightly change.
+
+Henry: As a user, I want to be able to save the habits I create and see them whenever I relaunch the app later.
+
+Farrell: As a user, I want to be able to see my habits at a glance depending on their frequency.
+
+Farrell: As a user, I want to read motivational quotes to help me stay on top of my tasks.
+
 ## API Information
 
 ## Current progress and functionality
