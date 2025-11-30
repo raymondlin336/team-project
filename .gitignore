@@ -12,6 +12,7 @@ target/
 *.iml
 *.ipr
 
+
 ### Eclipse ###
 .apt_generated
 .classpath
@@ -36,3 +37,8 @@ build/
 
 ### Mac OS ###
 .DS_Store
+
+
+### for json file
+
+src/main/java/placeholders/placeholder_json.json
