@@ -1,6 +1,5 @@
-package gui;
-
 import data_access.habits.HabitDataAccess;
+import gui.ScreenManager;
 import gui.home.HomePresenter;
 import gui.home.HomeView;
 import gui.home.HomeViewController;
@@ -13,19 +12,15 @@ import gui.statistics.StatisticsController;
 import gui.statistics.StatisticsPresenter;
 import gui.statistics.StatisticsView;
 import gui.statistics.StatisticsViewModel;
-import org.junit.Test;
 import use_case.habit.complete.CompleteHabitTaskInteractor;
 import use_case.habit.create.CreateHabitInteractor;
 import use_case.habit.overview.get.GetHabitsInteractor;
 import use_case.statistics.get.GetStatisticsInteractor;
 
-public class UIBuilderTests {
+public class AppBuilder {
+    public static void main(String[] args) {
 
-    @Test
-    public void UIBuilderTest() {
-        System.out.println("UIBuilderTest");
-
-        HabitDataAccess dataAccess = new HabitDataAccess("src/main/java/placeholders/placeholder_json.json", 0);
+        HabitDataAccess dataAccess = new HabitDataAccess("src/main/java/placeholders/habits.json", 0);
 
         NewTaskViewModel newTaskViewModel = new NewTaskViewModel();
         NewTaskPresenter newTaskPresenter = new NewTaskPresenter(newTaskViewModel);
@@ -52,11 +47,5 @@ public class UIBuilderTests {
         statisticsController.addScreenManager(manager);
 
         manager.showHomeView();
-
-        try {
-            Thread.sleep(600_000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
     }
 }
