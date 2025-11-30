@@ -16,12 +16,15 @@ Features:
 
 - A convenient home page to see the tasks due this particular day / week / month
 
+<img src="https://github.com/user-attachments/assets/12060f16-8c42-4bde-8af2-c564c2f35276" width="400">
+
 - Visualizing the progress you've made as you complete your tasks and follow your habits
 
 <img src="https://github.com/user-attachments/assets/75fdc05b-7ebe-48bf-8c46-a742531f3da3" width="400">
 
-
 - View a motivating quote each time you launch the app!
+
+[INSERT IMAGE OF THE MOTIVATIONAL QUOTE PAGE]
 
 ## Launching the App
 
