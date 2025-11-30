@@ -4,24 +4,36 @@ import entity.Freq;
 import gui.ScreenManager;
 import gui.task.TaskController;
 import entity.Habit;
+import use_case.habit.overview.get.GetHabitsInputData;
+import use_case.habit.overview.get.GetHabitsInteractor;
+import use_case.statistics.get.GetStatisticsInteractor;
+import use_case.habit.complete.CompleteHabitTaskInputBoundary;
+import use_case.habit.complete.CompleteHabitTaskInputData;
 
 import javax.script.ScriptEngine;
 
 public class HomeViewController extends TaskController {
     private static ScreenManager screenManager;
     private HomePresenter homePresenter;
-    public HomeViewController(Boolean log_messages, HomePresenter presenter /*, MarkHabitDoneUseCase uc */) {
+    private GetHabitsInteractor getHabitsInteractor;
+    private CompleteHabitTaskInputBoundary completeHabitInteractor;
+
+    public HomeViewController(Boolean log_messages, HomePresenter presenter, GetHabitsInteractor interactor, CompleteHabitTaskInputBoundary completeHabitInteractor) {
         super(log_messages);
         this.homePresenter = presenter;
-        // this.markHabitDoneUseCase = uc;
+        this.getHabitsInteractor = interactor;
+        this.completeHabitInteractor = completeHabitInteractor;
+
     }
 
     public void onHabitCheckboxClicked(Habit habit) {
-        // 1) Call the use case to toggle the habit’s done status
-        // markHabitDoneUseCase.execute(habit);
+        print_log_message("Toggled checkbox for habit {ID: " + habit.id + "}");
 
-        // 2) After use case gives you updated list of habits, re-present them:
-        // presenter.presentHabits(updatedHabits);
+        // Create the input data containing the habit ID
+        CompleteHabitTaskInputData inputData = new CompleteHabitTaskInputData(habit.id);
+
+        // Execute the Use Case
+        completeHabitInteractor.execute(inputData);
     }
 
     public void addScreenManager(ScreenManager screenManager){
@@ -39,4 +51,9 @@ public class HomeViewController extends TaskController {
     public static void showAddTaskWindow(){
         screenManager.showAddTaskView();
     }
+
+    public void updateHome(){
+        getHabitsInteractor.execute(new GetHabitsInputData());
+    }
+
 }

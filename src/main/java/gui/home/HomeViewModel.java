@@ -29,6 +29,23 @@ public class HomeViewModel {
         pcs.firePropertyChange("habits", oldMonthlyHabits, newMonthlyHabits);
     }
 
+    public void updateSingleHabit(Habit updatedHabit) {
+        replaceInList(dailyHabits, updatedHabit);
+        replaceInList(weeklyHabits, updatedHabit);
+        replaceInList(monthlyHabits, updatedHabit);
+
+        // Fire property change to trigger HomeView.propertyChange -> refreshAll()
+        pcs.firePropertyChange("habits", null, null);
+    }
+    private void replaceInList(ArrayList<Habit> list, Habit habit) {
+        for (int i = 0; i < list.size(); i++) {
+            if (list.get(i).id == habit.id) {
+                list.set(i, habit);
+                return;
+            }
+        }
+    }
+
     public void addPropertyChangeListener(PropertyChangeListener l) {
         pcs.addPropertyChangeListener(l);
     }
