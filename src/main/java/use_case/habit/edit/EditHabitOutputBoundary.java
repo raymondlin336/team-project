@@ -24,5 +24,5 @@ public interface EditHabitOutputBoundary {
      *
      * @param errorMessage a human-readable description of the error
      */
-    void prepareFailView(String errorMessage);
+    void prepareFailView(EditHabitOutputData outputData, String errorMessage);
 }

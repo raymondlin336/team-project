@@ -20,12 +20,16 @@ public class TaskView {
     protected JComboBox<String> habitRepeatCB;
     protected JPanel habitDueRow;
     protected JLabel habitDueLB;
+    protected JPanel errorRow;
+    protected JLabel errorLB;
     protected JPanel buttonsRow;
     protected JButton cancel;
+    private GridBagConstraints gbc;
 
     protected TaskView(String view_name, TaskController taskController) {
         this.view_name = view_name;
         this.taskController = taskController;
+        this.gbc = new GridBagConstraints();
     }
 
     protected void addCancelButton(){
@@ -41,7 +45,7 @@ public class TaskView {
         buttonsRow.add(cancel);
     }
 
-    protected void createUI(int wd_width,int wd_height, String window_name) {
+    protected void createUI(int wd_width,int wd_height, String window_name, Boolean due, String error_message) {
         mainframe = new JFrame(window_name);
         mainframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         mainframe.setSize(wd_width, wd_height);
@@ -58,7 +62,6 @@ public class TaskView {
         mainpanel.setMaximumSize(mainSize);
         mainpanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
-        GridBagConstraints gbc = new GridBagConstraints();
         gbc.weightx = 1.0;
         gbc.gridx = 0;
         gbc.fill = GridBagConstraints.NONE;
@@ -85,17 +88,31 @@ public class TaskView {
         gbc.gridy = 2;
         mainpanel.add(habitRepeatRow, gbc);
 
-        // Row 4: add description of due date
-        habitDueLB = new JLabel();
-        habitDueLB.setVerticalAlignment(SwingConstants.CENTER);
-        habitDueLB.setPreferredSize(new Dimension(320, 36));
-        habitDueRow = labeledRowJPanel("Due", habitDueLB);
-        gbc.gridy = 3;
-        mainpanel.add(habitDueRow, gbc);
+        if (due){
+            // Row 4: add description of due date
+            habitDueLB = new JLabel();
+            habitDueLB.setVerticalAlignment(SwingConstants.CENTER);
+            habitDueLB.setPreferredSize(new Dimension(320, 36));
+            habitDueRow = labeledRowJPanel("Due", habitDueLB);
+            gbc.gridy = 3;
+            mainpanel.add(habitDueRow, gbc);
+        }
 
-        // Row 5: save, cancel and delete buttons
+        if (!error_message.equals("")) {
+            // Row 5: error message space
+            errorLB = new JLabel();
+            errorLB.setVerticalAlignment(SwingConstants.CENTER);
+            errorLB.setPreferredSize(new Dimension(320, 36));
+            errorRow = labeledRowJPanel("Error", errorLB);
+            gbc.gridy = 4;
+            mainpanel.add(errorRow, gbc);
+            errorLB.setText(error_message);
+            errorLB.setForeground(Color.red);
+        }
+
+        // Row 6: save, cancel and delete buttons
         buttonsRow = new JPanel(new FlowLayout(FlowLayout.CENTER, 16, 0));
-        gbc.gridy = 4;
+        gbc.gridy = 5;
         mainpanel.add(buttonsRow, gbc);
 
         wrapper.add(mainpanel, new GridBagConstraints());

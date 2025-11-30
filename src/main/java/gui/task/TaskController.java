@@ -2,6 +2,8 @@ package gui.task;
 
 import gui.ScreenManager;
 
+import javax.swing.*;
+
 public class TaskController {
     protected Boolean log_messages;
     protected ScreenManager screenManager;
@@ -18,6 +20,9 @@ public class TaskController {
     }
     public void addScreenManager(ScreenManager screenManager){
         this.screenManager = screenManager;
+    }
+    public void refreshEditView(JPanel jpanel){
+        screenManager.refreshEditView(jpanel);
     }
     public void showHomeWindow(){
         screenManager.showHomeView();

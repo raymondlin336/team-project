@@ -58,15 +58,10 @@ public class EditTaskView extends TaskView implements PropertyChangeListener {
         habitDueLB.setText(editTaskViewModel.getDueDate());
     }
 
-    public EditTaskController getEditTaskController() {
-        return editTaskController;
-    }
-
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         if (evt.getPropertyName().equals("EditHabitOutputData")) {
-            System.out.println("UI created");
-            createUI(800, 600, view_name);
+            createUI(800, 600, view_name, true, "");
             addSaveButton();
             addCancelButton();
             addDeleteButton();
@@ -75,6 +70,14 @@ public class EditTaskView extends TaskView implements PropertyChangeListener {
         }
         else if (evt.getPropertyName().equals("Delete")) {
             editTaskController.showHomeWindow();
+        }
+        else if (evt.getPropertyName().equals("Error")) {
+            createUI(800, 600, view_name, true, evt.getNewValue().toString());
+            addSaveButton();
+            addCancelButton();
+            addDeleteButton();
+            showHabitInfo();
+            editTaskController.refreshEditView(getPanel());
         }
     }
 }

@@ -2,6 +2,7 @@ package use_case.habit.edit;
 
 import entity.Habit;
 import use_case.habit.HabitDataAccessInterface;
+import use_case.habit.delete.DeleteHabitOutputBoundary;
 
 import java.time.Instant;
 import java.util.ArrayList;
@@ -15,56 +16,60 @@ import java.util.Optional;
 public class EditHabitInteractor implements EditHabitInputBoundary {
 
     private final HabitDataAccessInterface habitDataAccessObject;
-    private final EditHabitOutputBoundary presenter;
+    private final EditHabitOutputBoundary editHabitPresenter;
+    private final DeleteHabitOutputBoundary deleteHabitPresenter;
 
     /**
      * Constructs an interactor for editing habits.
      *
      * @param habitDataAccessObject the data access object used to load and save habits
-     * @param presenter             the output boundary used to prepare views
+     * @param editHabitPresenter
+     * @param deleteHabitPresenter
      */
     public EditHabitInteractor(HabitDataAccessInterface habitDataAccessObject,
-                               EditHabitOutputBoundary presenter) {
+                               EditHabitOutputBoundary editHabitPresenter, DeleteHabitOutputBoundary deleteHabitPresenter) {
         this.habitDataAccessObject = Objects.requireNonNull(habitDataAccessObject, "habitDataAccessObject");
-        this.presenter = Objects.requireNonNull(presenter, "presenter");
+        this.editHabitPresenter = Objects.requireNonNull(editHabitPresenter, "presenter");
+        this.deleteHabitPresenter = Objects.requireNonNull(deleteHabitPresenter, "presenter");
     }
 
     @Override
     public void execute(EditHabitInputData inputData) {
-        // 1. Validate basic input
-        List<String> validationErrors = validate(inputData);
-        if (!validationErrors.isEmpty()) {
-            presenter.prepareFailView(String.join("; ", validationErrors));
-            return;
-        }
-
         // 2. Load the existing habit
         Optional<Habit> habitOptional = habitDataAccessObject.findById(inputData.getHabitId());
         if (habitOptional.isEmpty()) {
-            presenter.prepareFailView("Habit " + inputData.getHabitId() + " does not exist.");
+            deleteHabitPresenter.prepareFailView("Habit " + inputData.getHabitId() + " not found");
             return;
         }
 
         Habit habit = habitDataAccessObject.findById(inputData.getHabitId()).get();
+
+        // 1. Validate basic input
+        List<String> validationErrors = validate(inputData);
+        if (!validationErrors.isEmpty()) {
+            EditHabitOutputData outputData = new EditHabitOutputData(habit, Instant.now());
+            editHabitPresenter.prepareFailView(outputData, String.join("; ", validationErrors));
+            return;
+        }
+
         // 3. Apply edits to the habit using entity.Habit's methods
         habit.change_name(inputData.getName().trim());
         habit.change_desc(inputData.getDescription().trim());
         habit.change_freq(inputData.getFrequency());
-        System.out.println(habit.get_next().name);
 
         // 4. Persist the updated habit and prepare output
         habitDataAccessObject.save_file();
         EditHabitOutputData outputData = new EditHabitOutputData(habit, Instant.now());
-        presenter.prepareSuccessView(outputData);
+        editHabitPresenter.prepareSuccessView(outputData);
     }
 
     public void first_execute(int HabitId){
         Optional<Habit> habitOptional = habitDataAccessObject.findById(HabitId);
         if (habitOptional.isEmpty()) {
-            presenter.prepareFailView("Habit " + HabitId + " does not exist.");
+            editHabitPresenter.prepareFailView(new EditHabitOutputData(habitOptional.get(), Instant.now()), "Habit " + HabitId + " does not exist.");
         }
         else{
-            presenter.prepareSuccessView(new EditHabitOutputData(habitOptional.get(), Instant.now()));
+            editHabitPresenter.prepareSuccessView(new EditHabitOutputData(habitOptional.get(), Instant.now()));
         }
     }
 

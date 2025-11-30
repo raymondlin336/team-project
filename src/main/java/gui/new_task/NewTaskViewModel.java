@@ -11,6 +11,9 @@ public class NewTaskViewModel {
     public void updateNewTask(CreateHabitOutputData createHabitOutputData) {
         pcs.firePropertyChange("AddSuccess", null, null);
     }
+    public void updateNewTaskFailed(String errorMessage) {
+        pcs.firePropertyChange("AddFailed", null, errorMessage);
+    }
     public void addPropertyChangeListener(PropertyChangeListener l) {
         pcs.addPropertyChangeListener(l);
     }

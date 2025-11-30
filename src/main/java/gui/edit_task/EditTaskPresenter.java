@@ -25,6 +25,12 @@ public class EditTaskPresenter implements EditHabitOutputBoundary, DeleteHabitOu
     @Override
     public void prepareFailView(String errorMessage) {
         System.out.println("Edit Task fail view called: " + errorMessage);
-        // TODO: prepare a failed view
+        editTaskViewModel.updateEditTask(errorMessage);
+    }
+
+    @Override
+    public void prepareFailView(EditHabitOutputData outputData, String errorMessage) {
+        System.out.println("Edit Task fail view called: " + errorMessage);
+        editTaskViewModel.updateEditTask(outputData, errorMessage);
     }
 }
