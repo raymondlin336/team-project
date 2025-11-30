@@ -18,7 +18,7 @@ public class NewTaskPresenter implements CreateHabitOutputBoundary {
 
     @Override
     public void prepareFailView(String errorMessage) {
-        // TODO: prepare a failed view
+        newTaskViewModel.updateNewTaskFailed(errorMessage);
         System.out.println("Error: " + errorMessage);
     }
 }

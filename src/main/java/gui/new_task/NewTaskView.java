@@ -21,7 +21,7 @@ public class NewTaskView extends TaskView implements PropertyChangeListener {
         this.newTaskViewModel = newTaskViewModel;
         this.newTaskViewModel.addPropertyChangeListener(this);
         this.newTaskController = newTaskController;
-        createUI(800, 600, view_name);
+        createUI(800, 600, view_name, false,"");
         addAddButton();
         addCancelButton();
     }
@@ -45,6 +45,12 @@ public class NewTaskView extends TaskView implements PropertyChangeListener {
     public void propertyChange(PropertyChangeEvent evt) {
         if (evt.getPropertyName().equals("AddSuccess")){
             newTaskController.showHomeWindow();
+        }
+        if (evt.getPropertyName().equals("AddFailed")){
+            createUI(800, 600, view_name, false, evt.getNewValue().toString());
+            addAddButton();
+            addCancelButton();
+            newTaskController.refreshEditView(getPanel());
         }
     }
 }

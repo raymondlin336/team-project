@@ -1,5 +1,6 @@
 package gui.home;
 
+import entity.Date;
 import entity.Habit;
 
 import javax.swing.*;
@@ -15,6 +16,12 @@ import gui.home.HomeViewComponents.RoundedPanel;
 import gui.home.HomeViewComponents.RoundedBorder;
 import gui.home.HomeViewComponents.PillButton;
 import gui.home.HomeViewComponents.CircleButton;
+///  Date-time stuff
+import java.time.LocalDate;
+import java.time.DayOfWeek;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.TemporalAdjusters;
+import java.util.Locale;
 
 /// Skibidi
 
@@ -50,6 +57,9 @@ public class HomeView implements PropertyChangeListener {
     private JPanel tasksContainer;
     // Scroll pane that wraps the tasksContainer
     private JScrollPane tasksScrollPane;
+
+    //  Date-time
+    private JLabel dateDisplayLabel;
 
     // "Add task" button at the bottom of the card (exposed for controller)
     private JButton addTaskButton;
@@ -144,6 +154,13 @@ public class HomeView implements PropertyChangeListener {
         updateSegmentLook();
         showTasks(homeViewModel != null ? homeViewModel.dailyHabits : null);
         System.out.println(homeViewModel.dailyHabits);
+
+        // Default selection & initial render
+        dailyTab.setSelected(true);
+        updateSegmentLook();
+        updateDateLabel(FrequencyTab.DAILY);
+        showTasks(homeViewModel != null ? homeViewModel.dailyHabits : null);
+        System.out.println(homeViewModel.dailyHabits);
     }
 
     /**
@@ -167,23 +184,32 @@ public class HomeView implements PropertyChangeListener {
         panel.add(weeklyTab);
         panel.add(monthlyTab);
 
+        //  Date label config
+        dateDisplayLabel = new JLabel();
+        dateDisplayLabel.setFont(new Font("SansSerif", Font.BOLD, 13));
+        dateDisplayLabel.setForeground(Color.DARK_GRAY);
+        panel.add(dateDisplayLabel);
+
         // Wire up actions to re-render the task list
         dailyTab.addActionListener(e -> {
             currentTab = FrequencyTab.DAILY;
             updateSegmentLook();
             showTasks(homeViewModel.dailyHabits);
+            updateDateLabel(FrequencyTab.DAILY);
         });
 
         weeklyTab.addActionListener(e -> {
             currentTab = FrequencyTab.WEEKLY;
             updateSegmentLook();
             showTasks(homeViewModel.weeklyHabits);
+            updateDateLabel(FrequencyTab.WEEKLY);
         });
 
         monthlyTab.addActionListener(e -> {
             currentTab = FrequencyTab.MONTHLY;
             updateSegmentLook();
             showTasks(homeViewModel.monthlyHabits);
+            updateDateLabel(FrequencyTab.MONTHLY);
         });
 
         return panel;
@@ -393,7 +419,10 @@ public class HomeView implements PropertyChangeListener {
      * The button has two states: [ ] (not done) and [✓] (done).
      */
     private CircleButton createChecklistButton(Habit habit) {
-        boolean isCompleted = habit.get_next().completed;
+        LocalDate now = LocalDate.now();
+        Date today = new Date(now.getDayOfMonth(), now.getMonthValue() - 1, now.getYear());
+
+        boolean isCompleted = habit.get_task_by_date(today).completed;
         String initialText = isCompleted ? "[✓]" : "[  ]";
 
         CircleButton checkButton = new CircleButton(initialText);
@@ -416,6 +445,54 @@ public class HomeView implements PropertyChangeListener {
 
 
         return checkButton;
+    }
+
+    private void updateDateLabel(FrequencyTab tab) {
+        LocalDate today = LocalDate.now();
+        String text = "";
+
+        switch (tab) {
+            case DAILY:
+                // Format: "Monday, January 15th 2025"
+                String dayName = today.format(DateTimeFormatter.ofPattern("EEEE"));
+                String month = today.format(DateTimeFormatter.ofPattern("MMMM"));
+                int day = today.getDayOfMonth();
+                int year = today.getYear();
+                text = String.format("%s, %s %d%s %d", dayName, month, day, getDayNumberSuffix(day), year);
+                break;
+
+            case WEEKLY:
+                // Format: "Week of Jan 15 - Jan 21"
+                // Assuming week starts on Monday
+                LocalDate startOfWeek = today.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
+                LocalDate endOfWeek = startOfWeek.plusDays(6);
+
+                DateTimeFormatter shortFmt = DateTimeFormatter.ofPattern("MMM d");
+                text = "Week of " + startOfWeek.format(shortFmt) + " - " + endOfWeek.format(shortFmt);
+                break;
+
+            case MONTHLY:
+                // Format: "January 2025"
+                text = today.format(DateTimeFormatter.ofPattern("MMMM yyyy"));
+                break;
+        }
+
+        if (dateDisplayLabel != null) {
+            dateDisplayLabel.setText(text);
+        }
+    }
+
+    // Helper to get 'st', 'nd', 'rd', 'th'
+    private String getDayNumberSuffix(int day) {
+        if (day >= 11 && day <= 13) {
+            return "th";
+        }
+        switch (day % 10) {
+            case 1:  return "st";
+            case 2:  return "nd";
+            case 3:  return "rd";
+            default: return "th";
+        }
     }
 
     // *** Changed: now returns the root panel containing EVERYTHING ***

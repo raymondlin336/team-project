@@ -1,7 +1,6 @@
 package gui;
 
 import data_access.habits.HabitDataAccess;
-import entity.Habit;
 import gui.edit_task.EditTaskController;
 import gui.edit_task.EditTaskPresenter;
 import gui.edit_task.EditTaskView;
@@ -11,23 +10,16 @@ import gui.home.HomeViewController;
 import gui.new_task.NewTaskController;
 import gui.new_task.NewTaskView;
 import gui.statistics.StatisticsController;
-import gui.statistics.StatisticsPresenter;
 import gui.statistics.StatisticsView;
 import use_case.habit.delete.DeleteHabitInteractor;
 import use_case.habit.edit.EditHabitInteractor;
-import use_case.habit.overview.get.GetHabitsOutputData;
-import use_case.statistics.get.GetStatisticsOutputData;
 
 import javax.swing.*;
-import java.util.ArrayList;
-import java.util.List;
 
 public class ScreenManager {
     private JFrame mainFrame;
     private HabitDataAccess habitDataAccess;
-    private EditTaskView editTaskView;
     private NewTaskView newTaskView;
-    private NewTaskController newTaskController;
     private HomeView homeView;
     private HomeViewController homeViewController;
     private StatisticsView statisticsView;
@@ -56,7 +48,7 @@ public class ScreenManager {
         ///  Create new edit view based on passed habit
         EditTaskViewModel editTaskViewModel = new EditTaskViewModel();
         EditTaskPresenter editTaskPresenter = new EditTaskPresenter(editTaskViewModel);
-        EditHabitInteractor editHabitInteractor = new EditHabitInteractor(habitDataAccess, editTaskPresenter);
+        EditHabitInteractor editHabitInteractor = new EditHabitInteractor(habitDataAccess, editTaskPresenter, editTaskPresenter);
         DeleteHabitInteractor deleteHabitInteractor = new DeleteHabitInteractor(habitDataAccess, editTaskPresenter);
         EditTaskController editTaskController = new EditTaskController(true, editHabitInteractor, deleteHabitInteractor);
         EditTaskView newEditTaskView = new EditTaskView(editTaskViewModel, editTaskController);
@@ -84,6 +76,13 @@ public class ScreenManager {
         mainFrame.revalidate();
         mainFrame.repaint();
     };
+
+    public void refreshEditView(JPanel panel){
+        mainFrame.setContentPane(panel);
+        mainFrame.setVisible(true);
+        mainFrame.revalidate();
+        mainFrame.repaint();
+    }
 
     public void showStatisticsView(){
         statisticsController.updateStatistics();

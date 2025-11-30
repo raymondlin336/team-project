@@ -2,7 +2,7 @@ package entity;
 
 import org.json.JSONObject;
 
-public class Date {
+public class Date implements Cloneable{
     public int month;
     public int day;
     public int year;
@@ -25,11 +25,12 @@ public class Date {
             case Monthly:
                 Date d;
                 d = (Date) this.copy();
-                if (d.month++ == 12) {
+                d.month++;
+                if (d.month == 12) {
                     d.month = 0;
                     d.year++;
                 }
-                d.day = Math.max(days_in_months[d.month], day);
+                d.day = Math.min(days_in_months[d.month], day);
                 return d;
             default:
                 return null;
@@ -37,28 +38,34 @@ public class Date {
     }
 
     public Date copy() {
-        return new Date(this.day, this.month, this.day);
+        return new Date(this.day, this.month, this.year);
     }
 
     public Date increase_date_number(int num) {
-        Date d;
-        try {
-            d = (Date) this.clone();
-            d.day += num;
-            int month_days = days_in_months[d.month];
-            if (d.day > month_days) {
-                d.day = d.day % month_days;
-                d.month++;
-                if (d.month == 12) {
-                    d.month = 0;
-                    d.year++;
-                }
-            }
-            return d;
-        } catch (CloneNotSupportedException e) {
-            e.printStackTrace();
-            return null;
+        // Use copy() instead of clone/try-catch for cleaner code
+        Date d = this.copy();
+        d.day += num;
+
+        // Fix if out of bounds (since month index starts at 0)
+        while (d.month >= 12) {
+            d.month -= 12;
+            d.year++;
         }
+
+        // LOGIC FIX:
+        // Use a while loop instead of 'if' to handle adding large numbers of days.
+        // Use subtraction instead of modulo (%) to prevent "Day 0" bugs.
+        while (d.day > days_in_months[d.month]) {
+            d.day -= days_in_months[d.month];
+            d.month++;
+
+            // Check month wrap-around immediately inside the loop
+            if (d.month >= 12) {
+                d.month = 0;
+                d.year++;
+            }
+        }
+        return d;
     }
 
     public JSONObject toJSON() {
@@ -70,11 +77,44 @@ public class Date {
     }
 
     public static Date fromJSON(JSONObject json) {
-        return new Date(json.getInt("year"), json.getInt("month"), json.getInt("year"));
+        return new Date(json.getInt("day"), json.getInt("month"), json.getInt("year"));
     }
 
     @Override
     public String toString() {
         return month + "/" + day + "/" + year;
+    }
+
+    public static boolean leq(Date d1, Date d2) {
+        if (d1.year < d2.year) {
+            return true;
+        } else if (d1.year == d2.year && d1.month < d2.month) {
+            return true;
+        } else if (d1.year == d2.year && d1.month == d2.month && d1.day <= d2.day) {
+            return true;
+        }
+        return false;
+    }
+
+    public static boolean lessThan(Date d1, Date d2) {
+        if (d1.year < d2.year) {
+            return true;
+        } else if (d1.year == d2.year && d1.month < d2.month) {
+            return true;
+        } else if (d1.year == d2.year && d1.month == d2.month && d1.day < d2.day) {
+            return true;
+        }
+        return false;
+    }
+
+    public static boolean geq(Date d1, Date d2) {
+        if (d1.year > d2.year) {
+            return true;
+        } else if (d1.year == d2.year && d1.month > d2.month) {
+            return true;
+        } else if (d1.year == d2.year && d1.month == d2.month && d1.day >= d2.day) {
+            return true;
+        }
+        return false;
     }
 }

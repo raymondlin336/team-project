@@ -19,6 +19,12 @@ public class EditTaskViewModel{
     public void updateEditTask(DeleteHabitOutputData deleteHabitOutputData){
         pcs.firePropertyChange("Delete", null, null);
     }
+    public void updateEditTask(String errorMessage){
+        pcs.firePropertyChange("Error", null, errorMessage);
+    }
+    public void updateEditTask(EditHabitOutputData editHabitOutputData, String errorMessage){
+        pcs.firePropertyChange("Error", null, errorMessage);
+    }
     public void addPropertyChangeListener(PropertyChangeListener l) {
         pcs.addPropertyChangeListener(l);
     }

@@ -14,13 +14,11 @@ import javax.script.ScriptEngine;
 
 public class HomeViewController extends TaskController {
     private static ScreenManager screenManager;
-    private HomePresenter homePresenter;
     private GetHabitsInteractor getHabitsInteractor;
     private CompleteHabitTaskInputBoundary completeHabitInteractor;
 
-    public HomeViewController(Boolean log_messages, HomePresenter presenter, GetHabitsInteractor interactor, CompleteHabitTaskInputBoundary completeHabitInteractor) {
+    public HomeViewController(Boolean log_messages, GetHabitsInteractor interactor, CompleteHabitTaskInputBoundary completeHabitInteractor) {
         super(log_messages);
-        this.homePresenter = presenter;
         this.getHabitsInteractor = interactor;
         this.completeHabitInteractor = completeHabitInteractor;
 

@@ -28,9 +28,26 @@ public class HabitDataAccess implements HabitDataAccessInterface {
 
     @Override
     public Habit save(Habit habit) {
-        System.out.println(habit.get_next().name);
+        // 1. Load current data
         this.load();
-        user.habits.add(habit);
+
+        // 2. Look for the index of the habit with the same ID
+        int index = -1;
+        for (int i = 0; i < this.user.habits.size(); i++) {
+            if (this.user.habits.get(i).id == habit.id) {
+                index = i;
+                break;
+            }
+        }
+
+        // 3. If found, replace it. If not found, add it.
+        if (index != -1) {
+            this.user.habits.set(index, habit);
+        } else {
+            this.user.habits.add(habit);
+        }
+
+        // 4. Save back to file
         this.save_file();
         return habit;
     }
