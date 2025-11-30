@@ -129,7 +129,7 @@ public class HomePresenter implements GetHabitsOutputBoundary, CompleteHabitTask
                                  ArrayList<Habit> monthlyList,
                                  Date today, Date weekStart, Date weekEnd) {
 
-        var next = habit.get_next();
+        var next = habit.get_task_by_date(today);
 
         if (next == null || next.deadline == null) return;
 

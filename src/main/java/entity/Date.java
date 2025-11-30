@@ -2,7 +2,7 @@ package entity;
 
 import org.json.JSONObject;
 
-public class Date implements Cloneable{
+public class Date implements Cloneable {
     public int month;
     public int day;
     public int year;
@@ -83,5 +83,38 @@ public class Date implements Cloneable{
     @Override
     public String toString() {
         return month + "/" + day + "/" + year;
+    }
+
+    public static boolean leq(Date d1, Date d2) {
+        if (d1.year < d2.year) {
+            return true;
+        } else if (d1.year == d2.year && d1.month < d2.month) {
+            return true;
+        } else if (d1.year == d2.year && d1.month == d2.month && d1.day <= d2.day) {
+            return true;
+        }
+        return false;
+    }
+
+    public static boolean lessThan(Date d1, Date d2) {
+        if (d1.year < d2.year) {
+            return true;
+        } else if (d1.year == d2.year && d1.month < d2.month) {
+            return true;
+        } else if (d1.year == d2.year && d1.month == d2.month && d1.day < d2.day) {
+            return true;
+        }
+        return false;
+    }
+
+    public static boolean geq(Date d1, Date d2) {
+        if (d1.year > d2.year) {
+            return true;
+        } else if (d1.year == d2.year && d1.month > d2.month) {
+            return true;
+        } else if (d1.year == d2.year && d1.month == d2.month && d1.day >= d2.day) {
+            return true;
+        }
+        return false;
     }
 }

@@ -43,7 +43,7 @@ public class UIBuilderTests {
         HomePresenter homePresenter = new HomePresenter(test);
         GetHabitsInteractor homeInteractor = new GetHabitsInteractor(dataAccess, homePresenter);
         CompleteHabitTaskInteractor completeHabitInteractor = new CompleteHabitTaskInteractor(dataAccess, homePresenter);
-        HomeViewController homeViewController = new HomeViewController(false, homePresenter, homeInteractor, completeHabitInteractor);
+        HomeViewController homeViewController = new HomeViewController(false, homeInteractor, completeHabitInteractor);
         HomeView homeView = new HomeView(test, homePresenter, homeViewController);
 
         ScreenManager manager = new ScreenManager(dataAccess, newTaskView, homeView, homeViewController, satisticsView, statisticsController);

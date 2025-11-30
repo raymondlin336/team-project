@@ -70,7 +70,7 @@ public class CompleteHabitTaskInteractor implements CompleteHabitTaskInputBounda
             return errors;
         }
 
-        if (inputData.getHabitId() <= 0) {
+        if (inputData.getHabitId() < 0) {
             errors.add("A valid habit id must be provided.");
         }
 
