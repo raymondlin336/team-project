@@ -2,22 +2,19 @@ package gui.home;
 
 import entity.Freq;
 import entity.Habit;
+import use_case.habit.complete.CompleteHabitTaskOutputBoundary;
+import use_case.habit.complete.CompleteHabitTaskOutputData;
 import use_case.habit.overview.get.GetHabitsOutputBoundary;
 import use_case.habit.overview.get.GetHabitsOutputData;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class HomePresenter implements GetHabitsOutputBoundary {
+public class HomePresenter implements GetHabitsOutputBoundary, CompleteHabitTaskOutputBoundary {
     private final HomeViewModel viewModel;
-    private HomeViewInterface view;  // set later
 
     public HomePresenter(HomeViewModel viewModel) {
         this.viewModel = viewModel;
-    }
-
-    public void attachView(HomeViewInterface view) {
-        this.view = view;
     }
 
     public void presentHabits(List<Habit> habits) {
@@ -35,29 +32,6 @@ public class HomePresenter implements GetHabitsOutputBoundary {
                 viewModel.monthlyHabits.add(habit);
             }
         }
-
-        if (view != null) {
-            // default to daily
-            view.showTasks(viewModel.dailyHabits);
-        }
-    }
-
-    public void onDailyTabSelected() {
-        if (view != null) {
-            view.showTasks(viewModel.dailyHabits);
-        }
-    }
-
-    public void onWeeklyTabSelected() {
-        if (view != null) {
-            view.showTasks(viewModel.weeklyHabits);
-        }
-    }
-
-    public void onMonthlyTabSelected() {
-        if (view != null) {
-            view.showTasks(viewModel.monthlyHabits);
-        }
     }
 
     @Override
@@ -67,14 +41,17 @@ public class HomePresenter implements GetHabitsOutputBoundary {
                 new ArrayList<Habit>(outputData.getWeeklyHabits()),
                 new ArrayList<Habit>(outputData.getMonthlyHabits())
         );
-        if (view != null) {
-            view.refreshAll();
-        }
     }
 
     @Override
     public void prepareFailView(String errorMessage) {
-        // TODO: prepare a failed view
+        System.out.println("Error completing task: " + errorMessage);
+    }
+
+    @Override
+    public void prepareSuccessView(CompleteHabitTaskOutputData outputData) {
+        // Update the specific habit in the ViewModel
+        viewModel.updateSingleHabit(outputData.getHabit());
     }
 }
 

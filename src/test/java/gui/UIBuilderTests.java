@@ -18,9 +18,11 @@ import gui.statistics.StatisticsPresenter;
 import gui.statistics.StatisticsView;
 import gui.statistics.StatisticsViewModel;
 import org.junit.Test;
+import use_case.habit.complete.CompleteHabitTaskInteractor;
 import use_case.habit.create.CreateHabitInteractor;
 import use_case.habit.create.CreateHabitOutputData;
 import use_case.habit.edit.EditHabitInteractor;
+import use_case.habit.overview.get.GetHabitsInteractor;
 import use_case.statistics.get.GetStatisticsInteractor;
 
 import java.util.ArrayList;
@@ -49,10 +51,12 @@ public class UIBuilderTests {
 
         HomeViewModel test = new HomeViewModel();
         HomePresenter homePresenter = new HomePresenter(test);
-        HomeViewController homeViewController = new HomeViewController(true, homePresenter);
+        GetHabitsInteractor homeInteractor = new GetHabitsInteractor(dataAccess, homePresenter);
+        CompleteHabitTaskInteractor completeHabitInteractor = new CompleteHabitTaskInteractor(dataAccess, homePresenter);
+        HomeViewController homeViewController = new HomeViewController(true, homePresenter, homeInteractor, completeHabitInteractor);
         HomeView homeView = new HomeView(test, homePresenter, homeViewController);
 
-        ScreenManager manager = new ScreenManager(dataAccess, newTaskView, homeView, satisticsView, statisticsController);
+        ScreenManager manager = new ScreenManager(dataAccess, newTaskView, homeView, homeViewController, satisticsView, statisticsController);
         homeViewController.addScreenManager(manager);
         newTaskController.addScreenManager(manager);
         statisticsController.addScreenManager(manager);

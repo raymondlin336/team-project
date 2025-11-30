@@ -28,7 +28,8 @@ public class HomeView implements PropertyChangeListener {
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-
+        refreshAll();
+        System.out.println("Property change fired.");
     }
 
     public enum FrequencyTab {
@@ -170,19 +171,19 @@ public class HomeView implements PropertyChangeListener {
         dailyTab.addActionListener(e -> {
             currentTab = FrequencyTab.DAILY;
             updateSegmentLook();
-            homePresenter.onDailyTabSelected();
+            showTasks(homeViewModel.dailyHabits);
         });
 
         weeklyTab.addActionListener(e -> {
             currentTab = FrequencyTab.WEEKLY;
             updateSegmentLook();
-            homePresenter.onWeeklyTabSelected();
+            showTasks(homeViewModel.weeklyHabits);
         });
 
         monthlyTab.addActionListener(e -> {
             currentTab = FrequencyTab.MONTHLY;
             updateSegmentLook();
-            homePresenter.onMonthlyTabSelected();
+            showTasks(homeViewModel.monthlyHabits);
         });
 
         return panel;
@@ -193,14 +194,12 @@ public class HomeView implements PropertyChangeListener {
         panel.setOpaque(false);
 
         JButton statChip = createChipButton("Stat");
-        JButton setChip = createChipButton("Set");
 
         statChip.addActionListener(e -> {
             HomeViewController.showStatisticsWindow();
         });
 
         panel.add(statChip);
-        panel.add(setChip);
 
         return panel;
     }
@@ -394,13 +393,27 @@ public class HomeView implements PropertyChangeListener {
      * The button has two states: [ ] (not done) and [✓] (done).
      */
     private CircleButton createChecklistButton(Habit habit) {
-        CircleButton checkButton = new CircleButton("[  ]");
+        boolean isCompleted = habit.get_next().completed;
+        String initialText = isCompleted ? "[✓]" : "[  ]";
+
+        CircleButton checkButton = new CircleButton(initialText);
         checkButton.setFocusPainted(false);
 
         checkButton.addActionListener(e -> {
-            // Let the controller/use case handle it.
-            homeViewController.onHabitCheckboxClicked(habit);
+            // 1. Optimistic UI update (makes UI feel fast)
+            String currentText = checkButton.getText();
+            if ("[  ]".equals(currentText)) {
+                checkButton.setText("[✓]");
+            } else {
+                checkButton.setText("[  ]"); // Note: Unchecking logic not implemented in backend yet
+            }
+
+            // 2. Call the controller
+            if (homeViewController != null) {
+                homeViewController.onHabitCheckboxClicked(habit);
+            }
         });
+
 
         return checkButton;
     }

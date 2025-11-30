@@ -7,6 +7,7 @@ import gui.edit_task.EditTaskPresenter;
 import gui.edit_task.EditTaskView;
 import gui.edit_task.EditTaskViewModel;
 import gui.home.HomeView;
+import gui.home.HomeViewController;
 import gui.new_task.NewTaskController;
 import gui.new_task.NewTaskView;
 import gui.statistics.StatisticsController;
@@ -28,12 +29,14 @@ public class ScreenManager {
     private NewTaskView newTaskView;
     private NewTaskController newTaskController;
     private HomeView homeView;
+    private HomeViewController homeViewController;
     private StatisticsView statisticsView;
     private StatisticsController statisticsController;
 
     public ScreenManager(HabitDataAccess habitDataAccess,
                          NewTaskView newTaskView,
                          HomeView homeView,
+                         HomeViewController homeViewController,
                          StatisticsView statisticsView,
                          StatisticsController statisticsController) {
         this.mainFrame = new JFrame();
@@ -44,6 +47,7 @@ public class ScreenManager {
         this.habitDataAccess = habitDataAccess;
         this.newTaskView = newTaskView;
         this.homeView = homeView;
+        this.homeViewController = homeViewController;
         this.statisticsView = statisticsView;
         this.statisticsController = statisticsController;
     }
@@ -74,6 +78,7 @@ public class ScreenManager {
     }
 
     public void showHomeView(){
+        homeViewController.updateHome();
         mainFrame.setContentPane(homeView.getPanel());
         mainFrame.setVisible(true);
         mainFrame.revalidate();
