@@ -66,5 +66,7 @@ public class AppBuilder {
 
         SplashQuoteView splash = new SplashQuoteView(qscreen, controller);
         splash.setVisible(true);
+
+        ///
     }
 }
