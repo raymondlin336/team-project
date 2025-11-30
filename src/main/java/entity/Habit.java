@@ -56,6 +56,21 @@ public class Habit {
         return this.tasks.get(this.tasks.size() - 1);
     }
 
+    public Task get_next(Date d) {
+        for (Task t : this.tasks) {
+            if (Date.leq(d, t.deadline)) {
+                return t;
+            }
+        }
+        return null;
+    }
+
+    public void update_deadline_to_present(Date d) {
+        while (this.get_next(d) == null) {
+            this.update_deadline();
+        }
+    }
+
     public void change_freq(Freq freq) {
         this.get_next().freq = freq;
     }
