@@ -16,6 +16,9 @@ Features:
 
 - Visualizing the progress you've made as you complete your tasks and follow your habits
 
+<img width="1578" height="1189" alt="image" src="https://github.com/user-attachments/assets/75fdc05b-7ebe-48bf-8c46-a742531f3da3" />
+
+
 - View a motivating quote each time you launch the app!
 
 ## Launching the App
