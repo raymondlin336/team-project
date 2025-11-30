@@ -11,6 +11,7 @@ public class Task {
     public int id;
 
     public Task(String name, String desc, Freq freq, Date deadline, int id, boolean completed) {
+        this.id = id;
         this.name = name;
         this.desc = desc;
         this.freq = freq;

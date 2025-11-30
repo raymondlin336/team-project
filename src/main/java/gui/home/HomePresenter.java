@@ -33,8 +33,8 @@ public class HomePresenter implements GetHabitsOutputBoundary, CompleteHabitTask
             ///  for weekly
             LocalDate startOfWeek = now.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
             LocalDate endOfWeek = startOfWeek.plusDays(6);
-            Date weekStart = new Date(startOfWeek.getDayOfMonth(), startOfWeek.getMonthValue(), startOfWeek.getYear());
-            Date weekEnd = new Date(endOfWeek.getDayOfMonth(), endOfWeek.getMonthValue(), endOfWeek.getYear());
+            Date weekStart = new Date(startOfWeek.getDayOfMonth(), startOfWeek.getMonthValue() - 1, startOfWeek.getYear());
+            Date weekEnd = new Date(endOfWeek.getDayOfMonth(), endOfWeek.getMonthValue() - 1, endOfWeek.getYear());
 
 
             var next = habit.get_next();
@@ -55,8 +55,7 @@ public class HomePresenter implements GetHabitsOutputBoundary, CompleteHabitTask
         ArrayList<Habit> newWeekly = new ArrayList<>();
         ArrayList<Habit> newMonthly = new ArrayList<>();
 
-        // 2. Aggregate all habits from outputData so we can run YOUR filter logic on them.
-        // (Assuming outputData might return them unsorted or we want to re-sort them)
+        // 2. Aggregate all habits
         List<Habit> allHabits = new ArrayList<>();
         if (outputData.getDailyHabits() != null) allHabits.addAll(outputData.getDailyHabits());
         if (outputData.getWeeklyHabits() != null) allHabits.addAll(outputData.getWeeklyHabits());
@@ -64,33 +63,20 @@ public class HomePresenter implements GetHabitsOutputBoundary, CompleteHabitTask
 
         // 3. Date Setup
         LocalDate now = LocalDate.now();
-        Date today = new Date(now.getDayOfMonth(), now.getMonthValue(), now.getYear());
+        // FIX 1: Subtract 1 from month
+        Date today = new Date(now.getDayOfMonth(), now.getMonthValue() - 1, now.getYear());
 
         LocalDate startOfWeek = now.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
         LocalDate endOfWeek = startOfWeek.plusDays(6);
-        Date weekStart = new Date(startOfWeek.getDayOfMonth(), startOfWeek.getMonthValue(), startOfWeek.getYear());
-        Date weekEnd = new Date(endOfWeek.getDayOfMonth(), endOfWeek.getMonthValue(), endOfWeek.getYear());
+        Date weekStart = new Date(startOfWeek.getDayOfMonth(), startOfWeek.getMonthValue() - 1, startOfWeek.getYear());
+        Date weekEnd = new Date(endOfWeek.getDayOfMonth(), endOfWeek.getMonthValue() - 1, endOfWeek.getYear());
 
-        // 4. Run your Filter Logic
+        // 4. Run Filter Logic
         for (Habit habit : allHabits) {
-            var next = habit.get_next();
-
-            // Safety check for nulls if necessary
-            if (next == null || next.deadline == null) continue;
-
-            if ((next.freq == Freq.Daily || next.freq == Freq.Once) && today.day == next.deadline.day) {
-                newDaily.add(habit);
-            }
-            else if (next.freq == Freq.Weekly && (weekStart.day <= next.deadline.day && weekEnd.day >= next.deadline.day)) {
-                // Note: I changed > to >= for weekEnd to be inclusive
-                newWeekly.add(habit);
-            }
-            else if (next.freq == Freq.Monthly && today.month == next.deadline.month) {
-                newMonthly.add(habit);
-            }
+            categorizeHabit(habit, newDaily, newWeekly, newMonthly, today, weekStart, weekEnd);
         }
 
-        // 5. CRITICAL: Update ViewModel via the method that fires PropertyChange
+        // 5. Update ViewModel
         viewModel.updateHabits(newDaily, newWeekly, newMonthly);
     }
 
@@ -101,7 +87,65 @@ public class HomePresenter implements GetHabitsOutputBoundary, CompleteHabitTask
 
     @Override
     public void prepareSuccessView(CompleteHabitTaskOutputData outputData) {
-        viewModel.updateSingleHabit(outputData.getHabit());
+        // FIX 2: Do NOT just use updateSingleHabit.
+        // We must re-evaluate which list the habit belongs to.
+        // If a Daily task is completed, its next deadline is tomorrow, so it should be REMOVED from the Daily list.
+
+        Habit updatedHabit = outputData.getHabit();
+
+        // 1. Get current lists (make copies to modify)
+        ArrayList<Habit> newDaily = new ArrayList<>(viewModel.dailyHabits);
+        ArrayList<Habit> newWeekly = new ArrayList<>(viewModel.weeklyHabits);
+        ArrayList<Habit> newMonthly = new ArrayList<>(viewModel.monthlyHabits);
+
+        // 2. Remove the OLD version of this habit from all lists (based on ID)
+        newDaily.removeIf(h -> h.id == updatedHabit.id);
+        newWeekly.removeIf(h -> h.id == updatedHabit.id);
+        newMonthly.removeIf(h -> h.id == updatedHabit.id);
+
+        // 3. Re-calculate dates
+        LocalDate now = LocalDate.now();
+        Date today = new Date(now.getDayOfMonth(), now.getMonthValue() - 1, now.getYear());
+
+        LocalDate startOfWeek = now.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
+        LocalDate endOfWeek = startOfWeek.plusDays(6);
+        Date weekStart = new Date(startOfWeek.getDayOfMonth(), startOfWeek.getMonthValue() - 1, startOfWeek.getYear());
+        Date weekEnd = new Date(endOfWeek.getDayOfMonth(), endOfWeek.getMonthValue() - 1, endOfWeek.getYear());
+
+        // 4. Check where the UPDATED habit belongs now
+        categorizeHabit(updatedHabit, newDaily, newWeekly, newMonthly, today, weekStart, weekEnd);
+
+        // 5. Push full update to ViewModel (this will refresh the UI)
+        viewModel.updateHabits(newDaily, newWeekly, newMonthly);
+    }
+
+    /**
+     * Helper to avoid duplicate logic.
+     * Decides which list(s) the habit belongs to based on its NEXT task deadline.
+     */
+    private void categorizeHabit(Habit habit,
+                                 ArrayList<Habit> dailyList,
+                                 ArrayList<Habit> weeklyList,
+                                 ArrayList<Habit> monthlyList,
+                                 Date today, Date weekStart, Date weekEnd) {
+
+        var next = habit.get_next();
+
+        if (next == null || next.deadline == null) return;
+
+        if ((next.freq == Freq.Daily || next.freq == Freq.Once) && today.day == next.deadline.day) {
+            dailyList.add(habit);
+        }
+        else if (next.freq == Freq.Weekly && (weekStart.day <= next.deadline.day && weekEnd.day >= next.deadline.day)) {
+            weeklyList.add(habit);
+        }
+        else if (next.freq == Freq.Monthly && today.month == next.deadline.month) {
+            monthlyList.add(habit);
+        }
+        System.out.println("Today's date is: " + today);
+        System.out.println(today.day);
+        System.out.println(next.deadline.day);
+        System.out.println(dailyList);
     }
 }
 

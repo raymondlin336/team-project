@@ -33,7 +33,7 @@ public class CreateHabitInteractor implements CreateHabitInputBoundary {
 
         // Get today's date for the first task's due date
         LocalDate now = LocalDate.now();
-        Date today = new Date(now.getDayOfMonth(), now.getMonthValue(), now.getYear());
+        Date today = new Date(now.getDayOfMonth(), now.getMonthValue() - 1, now.getYear());
 
         int newId = habitDataAccessObject.getNextId();
         Habit habit = new Habit(
