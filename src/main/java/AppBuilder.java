@@ -29,7 +29,7 @@ import use_case.statistics.get.GetStatisticsInteractor;
 public class AppBuilder {
     public static void main(String[] args) {
 
-        HabitDataAccess dataAccess = new HabitDataAccess("src/main/java/placeholders/habits.json", 0);
+        HabitDataAccess dataAccess = new HabitDataAccess("src/main/java/data_access/habits.json", 0);
 
         NewTaskViewModel newTaskViewModel = new NewTaskViewModel();
         NewTaskPresenter newTaskPresenter = new NewTaskPresenter(newTaskViewModel);
