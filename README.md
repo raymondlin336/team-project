@@ -15,6 +15,14 @@ at the end of the term.
 
 ## Project Summary
 
+Our app, 'Habit Tracker', is an application that allows a user to keep track of tasks they want to get done on a regular basis.
+
+Each 'Habit' has a name and description, and repeats on a daily, weekly, or monthly basis. The user can also create habits that do not repeat.
+
+Each 
+
+
+
 ### Mini Wordle:
 #### General idea: 3 main panels of UI
 - Log in and log out page
