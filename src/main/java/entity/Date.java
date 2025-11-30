@@ -2,7 +2,7 @@ package entity;
 
 import org.json.JSONObject;
 
-public class Date implements Cloneable {
+public class Date implements Cloneable{
     public int month;
     public int day;
     public int year;

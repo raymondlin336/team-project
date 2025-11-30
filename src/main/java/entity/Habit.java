@@ -67,6 +67,13 @@ public class Habit {
         return null;
     }
 
+    public void update_deadline() {
+        Task t = this.tasks.get(this.tasks.size() - 1).update_deadline();
+        if (t.deadline != null) {
+            this.tasks.add(t);
+        }
+    }
+
     public Task get_next() {
         return this.tasks.get(this.tasks.size() - 1);
     }
