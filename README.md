@@ -61,3 +61,9 @@ Latest implemented features:
 - Test cases achieved 100% code coverage
 
 - File structure reorganized, code clean ups made
+
+## Future Features
+
+Daily habit reminders/notifications.
+Google Calendar sync to schedule habit time blocks.
+Social challenges and friend competitions to make habits more engaging.
