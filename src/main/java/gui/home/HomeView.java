@@ -136,7 +136,7 @@ public class HomeView implements PropertyChangeListener {
         JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
         bottomPanel.setOpaque(false);
 
-        addTaskButton = new PillButton("Add task");
+        addTaskButton = new PillButton("Add Habit™");
         addTaskButton.setPreferredSize(new Dimension(420, 36));
         addTaskButton.setFocusPainted(false);
         addTaskButton.addActionListener(e -> {
@@ -193,14 +193,14 @@ public class HomeView implements PropertyChangeListener {
             currentTab = FrequencyTab.WEEKLY;
             updateSegmentLook();
             showTasks(homeViewModel.weeklyHabits);
-            showTasks(homeViewModel.weeklyHabits);
+            updateDateLabel(FrequencyTab.WEEKLY);
         });
 
         monthlyTab.addActionListener(e -> {
             currentTab = FrequencyTab.MONTHLY;
             updateSegmentLook();
             showTasks(homeViewModel.monthlyHabits);
-            showTasks(homeViewModel.monthlyHabits);
+            updateDateLabel(FrequencyTab.MONTHLY);
         });
 
         return panel;
@@ -422,7 +422,7 @@ public class HomeView implements PropertyChangeListener {
             if ("[  ]".equals(currentText)) {
                 checkButton.setText("[✓]");
             } else {
-                checkButton.setText("[  ]"); // TODO: Unchecking logic not implemented in backend yet
+                checkButton.setText("[  ]"); // TODO: Unchecking logic not implemented yet
             }
 
             // 2. Call the controller
