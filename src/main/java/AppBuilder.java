@@ -1,4 +1,5 @@
 import data_access.habits.HabitDataAccess;
+import data_access.quotes.ZenQuotesApiDataAccess;
 import gui.ScreenManager;
 import gui.home.HomePresenter;
 import gui.home.HomeView;
@@ -8,6 +9,10 @@ import gui.new_task.NewTaskController;
 import gui.new_task.NewTaskPresenter;
 import gui.new_task.NewTaskView;
 import gui.new_task.NewTaskViewModel;
+import gui.splash_quote.SplashQuoteController;
+import gui.splash_quote.SplashQuotePresenter;
+import gui.splash_quote.SplashQuoteView;
+import gui.splash_quote.SplashQuoteViewModel;
 import gui.statistics.StatisticsController;
 import gui.statistics.StatisticsPresenter;
 import gui.statistics.StatisticsView;
@@ -15,6 +20,10 @@ import gui.statistics.StatisticsViewModel;
 import use_case.habit.complete.CompleteHabitTaskInteractor;
 import use_case.habit.create.CreateHabitInteractor;
 import use_case.habit.overview.get.GetHabitsInteractor;
+import use_case.quote.data_access_interface.QuoteDataAccessInterface;
+import use_case.quote.input.GetDailyQuoteInputBoundary;
+import use_case.quote.interactor.GetDailyQuoteInteractor;
+import use_case.quote.output.GetDailyQuoteOutputBoundary;
 import use_case.statistics.get.GetStatisticsInteractor;
 
 public class AppBuilder {
@@ -47,5 +56,15 @@ public class AppBuilder {
         statisticsController.addScreenManager(manager);
 
         manager.showHomeView();
+
+        // Quote Splash Screen
+        SplashQuoteViewModel qscreen = new SplashQuoteViewModel();
+        QuoteDataAccessInterface gateway = new ZenQuotesApiDataAccess();
+        GetDailyQuoteOutputBoundary presenter = new SplashQuotePresenter(qscreen);
+        GetDailyQuoteInputBoundary interactor = new GetDailyQuoteInteractor(gateway, presenter);
+        SplashQuoteController controller = new SplashQuoteController(interactor);
+
+        SplashQuoteView splash = new SplashQuoteView(qscreen, controller);
+        splash.setVisible(true);
     }
 }
