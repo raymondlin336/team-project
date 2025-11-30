@@ -8,6 +8,8 @@ Features:
 
 - Adding habits, including a name, description, and how often they repeat
 
+<img src="https://github.com/user-attachments/assets/ca038829-592b-450d-8db6-8651abd66d29" width="400">
+
 - Editing information of a habit in case it changes over time
   
 - Saving your habits locally, and you can see the habits you made whenever you launch the app again.
@@ -16,7 +18,7 @@ Features:
 
 - Visualizing the progress you've made as you complete your tasks and follow your habits
 
-<img width="1578" height="1189" alt="image" src="https://github.com/user-attachments/assets/75fdc05b-7ebe-48bf-8c46-a742531f3da3" />
+<img src="https://github.com/user-attachments/assets/75fdc05b-7ebe-48bf-8c46-a742531f3da3" width="400">
 
 
 - View a motivating quote each time you launch the app!
