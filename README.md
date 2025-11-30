@@ -48,7 +48,7 @@ Farrell: As a user, I want to read motivational quotes to help me stay on top of
 
 ## API Information
 
-- We use ZenQuotes to periodically fetch motivational quotes by famous people each time the app is launched.
+- We use ZenQuotes to periodically fetch motivational quotes by famous people each time the app is launched. We just called the API and got some strings in JSON format to display in a window.
 
 ## Current progress and functionality
 
