@@ -64,8 +64,8 @@ Latest implemented features:
 
 ## Future Features
 
--Daily habit reminders/notifications.
+- Daily habit reminders/notifications.
 
--Google Calendar sync to schedule habit time blocks.
+- Google Calendar sync to schedule habit time blocks.
 
--Social challenges and friend competitions to make habits more engaging.
+- Social challenges and friend competitions to make habits more engaging.
