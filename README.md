@@ -49,3 +49,15 @@ Farrell: As a user, I want to read motivational quotes to help me stay on top of
 ## API Information
 
 ## Current progress and functionality
+
+Latest implemented features:
+
+- prepareFailedView implemented for editing and adding new habits, telling the user what to change to resolve them (if possible)
+
+- App builder finalized, placeholder files deprecated
+
+- Homepage fixed so that it only shows upcoming tasks (habits)
+
+- Test cases achieved 100% code coverage
+
+- File structure reorganized, code clean ups made
