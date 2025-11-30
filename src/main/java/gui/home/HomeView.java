@@ -21,7 +21,6 @@ import gui.home.HomeViewComponents.CircleButton;
 public class HomeView implements PropertyChangeListener {
 
     private HomeViewModel homeViewModel;
-    private HomePresenter homePresenter;
     private HomeViewController homeViewController;
 
     private FrequencyTab currentTab = FrequencyTab.DAILY;
@@ -55,10 +54,8 @@ public class HomeView implements PropertyChangeListener {
     private JButton addTaskButton;
 
     public HomeView(HomeViewModel vm,
-                    HomePresenter presenter,
                     HomeViewController controller) {
         this.homeViewModel = vm;
-        this.homePresenter = presenter;
         this.homeViewController = controller;
         this.mainFrame = new JFrame("Habits");
         this.homeViewModel.addPropertyChangeListener(this);
@@ -405,7 +402,7 @@ public class HomeView implements PropertyChangeListener {
             if ("[  ]".equals(currentText)) {
                 checkButton.setText("[✓]");
             } else {
-                checkButton.setText("[  ]"); // Note: Unchecking logic not implemented in backend yet
+                checkButton.setText("[  ]"); // TODO: Unchecking logic not implemented in backend yet
             }
 
             // 2. Call the controller
