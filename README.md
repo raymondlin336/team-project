@@ -24,7 +24,7 @@ Features:
 
 - View a motivating quote each time you launch the app!
 
-[INSERT IMAGE OF THE MOTIVATIONAL QUOTE PAGE]
+<img src="https://github.com/user-attachments/assets/383bb211-03c1-4004-ab96-41f1d3adbfc6" width="400">
 
 ## Launching the App
 
@@ -47,6 +47,8 @@ Farrell: As a user, I want to be able to see my habits at a glance depending on 
 Farrell: As a user, I want to read motivational quotes to help me stay on top of my tasks.
 
 ## API Information
+
+- We use ZenQuotes to periodically fetch motivational quotes by famous people each time the app is launched.
 
 ## Current progress and functionality
 
