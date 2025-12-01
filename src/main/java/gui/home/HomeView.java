@@ -140,7 +140,7 @@ public class HomeView implements PropertyChangeListener {
         JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
         bottomPanel.setOpaque(false);
 
-        addTaskButton = new PillButton("Add task");
+        addTaskButton = new PillButton("Add Habit™");
         addTaskButton.setPreferredSize(new Dimension(420, 36));
         addTaskButton.setFocusPainted(false);
         addTaskButton.addActionListener(e -> {
