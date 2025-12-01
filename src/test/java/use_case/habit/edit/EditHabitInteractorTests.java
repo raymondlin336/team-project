@@ -9,6 +9,8 @@ import use_case.habit.HabitDataAccessInterface;
 import use_case.habit.delete.DeleteHabitOutputBoundary;
 import use_case.habit.delete.DeleteHabitOutputData;
 
+import java.lang.reflect.Method;
+import java.time.Instant;
 import java.util.*;
 
 import static org.junit.Assert.*;
@@ -29,7 +31,6 @@ public class EditHabitInteractorTests {
         mockEditPresenter = new MockEditHabitPresenter();
         mockDeletePresenter = new MockDeleteHabitPresenter();
 
-        // NOTE: EditHabitInteractor currently expects THREE arguments
         interactor = new EditHabitInteractor(
                 fakeDataAccess,
                 mockEditPresenter,
@@ -37,12 +38,13 @@ public class EditHabitInteractorTests {
         );
     }
 
+    // ========= execute(...) tests =========
+
     @Test
     public void testExecute_withValidInput_updatesHabit_andCallsSuccess() {
-        // Arrange: existing habit stored in the fake DAO
+        // Arrange: existing habit in DAO
         Date due = new Date(1, 1, 2025);
         Habit existingHabit = new Habit("Workout", "Run 20 mins", Freq.Daily, due, 1);
-        // In current Habit implementation id is not set in constructor, so ensure it here:
         existingHabit.id = 1;
         fakeDataAccess.save(existingHabit);
 
@@ -56,7 +58,7 @@ public class EditHabitInteractorTests {
         // Act
         interactor.execute(inputData);
 
-        // Assert: success called, fail not called
+        // Assert success called, fail not
         assertTrue("prepareSuccessView should have been called", mockEditPresenter.wasSuccessCalled);
         assertFalse("prepareFailView should not have been called", mockEditPresenter.wasFailCalled);
         assertNotNull("Success output data should not be null", mockEditPresenter.lastSuccessData);
@@ -66,19 +68,24 @@ public class EditHabitInteractorTests {
         assertEquals("Read textbook", updatedFromPresenter.get_next().desc);
         assertEquals(Freq.Weekly, updatedFromPresenter.get_next().freq);
 
-        // Also verify DAO was updated
         Habit fromDao = fakeDataAccess.findById(1).orElse(null);
-        assertNotNull("Habit should still exist in DAO", fromDao);
+        assertNotNull(fromDao);
         assertEquals("Study", fromDao.get_next().name);
         assertEquals("Read textbook", fromDao.get_next().desc);
         assertEquals(Freq.Weekly, fromDao.get_next().freq);
     }
 
-
+    /**
+     * The real interactor does NOT guard against null input and throws NPE.
+     * We assert that behaviour here.
+     */
+    @Test(expected = NullPointerException.class)
+    public void testExecute_withNullInput_throwsNullPointer() {
+        interactor.execute(null);
+    }
 
     @Test
     public void testExecute_withBlankName_callsFail() {
-        // Habit exists so we don’t hit the “not found” branch
         Date due = new Date(1, 1, 2025);
         Habit existingHabit = new Habit("Workout", "Run", Freq.Daily, due, 1);
         existingHabit.id = 1;
@@ -86,7 +93,7 @@ public class EditHabitInteractorTests {
 
         EditHabitInputData inputData = new EditHabitInputData(
                 1,
-                "   ",        // blank name
+                "   ",       // blank
                 "Some desc",
                 Freq.Daily
         );
@@ -95,6 +102,7 @@ public class EditHabitInteractorTests {
 
         assertFalse(mockEditPresenter.wasSuccessCalled);
         assertTrue(mockEditPresenter.wasFailCalled);
+        assertNotNull(mockEditPresenter.lastFailMessage);
         assertTrue(mockEditPresenter.lastFailMessage.contains("Habit name cannot be blank"));
     }
 
@@ -109,15 +117,155 @@ public class EditHabitInteractorTests {
                 1,
                 "Workout",
                 "Run",
-                null          // null freq
+                null           // null freq
         );
 
         interactor.execute(inputData);
 
         assertFalse(mockEditPresenter.wasSuccessCalled);
         assertTrue(mockEditPresenter.wasFailCalled);
+        assertNotNull(mockEditPresenter.lastFailMessage);
         assertTrue(mockEditPresenter.lastFailMessage.contains("Habit frequency is required"));
     }
+
+    @Test
+    public void testExecute_withInvalidHabitId_callsFail() {
+        // Habit with id 0 so that we bypass the "not found" early return
+        Date due = new Date(1, 1, 2025);
+        Habit existingHabit = new Habit("Workout", "Run", Freq.Daily, due, 0);
+        existingHabit.id = 0;
+        fakeDataAccess.save(existingHabit);
+
+        EditHabitInputData inputData = new EditHabitInputData(
+                0,                // invalid id (<= 0)
+                "Valid name",
+                "Valid desc",
+                Freq.Daily
+        );
+
+        interactor.execute(inputData);
+
+        assertFalse("Success should not be called", mockEditPresenter.wasSuccessCalled);
+        assertTrue("Fail should be called", mockEditPresenter.wasFailCalled);
+        assertTrue(mockEditPresenter.lastFailMessage.contains("A valid habit id must be provided."));
+    }
+
+    @Test
+    public void testExecute_withMultipleErrors_joinsMessages() {
+        Date due = new Date(1, 1, 2025);
+        Habit existingHabit = new Habit("Workout", "Run", Freq.Daily, due, 2);
+        existingHabit.id = 2;
+        fakeDataAccess.save(existingHabit);
+
+        // name blank, desc blank, freq null => multiple validation errors
+        EditHabitInputData inputData = new EditHabitInputData(
+                2,
+                "   ",
+                "   ",
+                null
+        );
+
+        interactor.execute(inputData);
+
+        assertFalse("Success should not be called", mockEditPresenter.wasSuccessCalled);
+        assertTrue("Fail should be called", mockEditPresenter.wasFailCalled);
+
+        String msg = mockEditPresenter.lastFailMessage;
+        assertTrue(msg.contains("Habit name cannot be blank"));
+        assertTrue(msg.contains("Habit description cannot be blank"));
+        assertTrue(msg.contains("Habit frequency is required"));
+        assertTrue("Errors should be joined by ';'", msg.contains(";"));
+    }
+
+    @Test
+    public void testExecute_whenHabitNotFound_callsDeletePresenterFail() {
+        EditHabitInputData inputData = new EditHabitInputData(
+                99, "Name", "Desc", Freq.Daily
+        );
+
+        interactor.execute(inputData);
+
+        assertFalse(mockEditPresenter.wasSuccessCalled);
+        assertFalse(mockEditPresenter.wasFailCalled);
+        assertTrue("Delete presenter fail should be called", mockDeletePresenter.wasFailCalled);
+    }
+
+    // ========= first_execute(...) tests =========
+
+    @Test
+    public void testFirstExecute_withExistingHabit_callsEditSuccess() {
+        Date due = new Date(1, 1, 2025);
+        Habit habit = new Habit("Workout", "Run", Freq.Daily, due, 10);
+        habit.id = 10;
+        fakeDataAccess.save(habit);
+
+        interactor.first_execute(10);
+
+        assertTrue(mockEditPresenter.wasSuccessCalled);
+        assertFalse(mockEditPresenter.wasFailCalled);
+    }
+
+    @Test(expected = NoSuchElementException.class)
+    public void testFirstExecute_withMissingHabit_throwsNoSuchElement() {
+        // No habit with id 123 stored
+        interactor.first_execute(123);
+    }
+
+    // ========= validate(...) via reflection =========
+
+    @Test
+    @SuppressWarnings("unchecked")
+    public void testValidate_withNullInput_returnsErrorList() throws Exception {
+        Method validate = EditHabitInteractor.class
+                .getDeclaredMethod("validate", EditHabitInputData.class);
+        validate.setAccessible(true);
+
+        List<String> errors = (List<String>) validate.invoke(interactor, new Object[]{null});
+        assertEquals(1, errors.size());
+        assertEquals("Request cannot be null.", errors.get(0));
+    }
+    @Test
+    public void testExecute_withNullName_callsFail() {
+        Date due = new Date(1, 1, 2025);
+        Habit existingHabit = new Habit("Workout", "Run", Freq.Daily, due, 1);
+        existingHabit.id = 1;
+        fakeDataAccess.save(existingHabit);
+
+        EditHabitInputData inputData = new EditHabitInputData(
+                1,
+                null,                // <- null name
+                "Some desc",
+                Freq.Daily
+        );
+
+        interactor.execute(inputData);
+
+        assertFalse(mockEditPresenter.wasSuccessCalled);
+        assertTrue(mockEditPresenter.wasFailCalled);
+        assertTrue(mockEditPresenter.lastFailMessage.contains("Habit name cannot be blank"));
+    }
+
+    @Test
+    public void testExecute_withNullDescription_callsFail() {
+        Date due = new Date(1, 1, 2025);
+        Habit existingHabit = new Habit("Workout", "Run", Freq.Daily, due, 1);
+        existingHabit.id = 1;
+        fakeDataAccess.save(existingHabit);
+
+        EditHabitInputData inputData = new EditHabitInputData(
+                1,
+                "Workout",
+                null,                // <- null description
+                Freq.Daily
+        );
+
+        interactor.execute(inputData);
+
+        assertFalse(mockEditPresenter.wasSuccessCalled);
+        assertTrue(mockEditPresenter.wasFailCalled);
+        assertTrue(mockEditPresenter.lastFailMessage.contains("Habit description cannot be blank"));
+    }
+
 
     // ===================== Fakes & Mocks =====================
 
@@ -185,8 +333,7 @@ public class EditHabitInteractorTests {
     }
 
     /**
-     * Mock presenter for DeleteHabit output boundary calls.
-     * (Interactor expects this dependency but we don't assert on it here.)
+     * Mock presenter for delete habit output boundary.
      */
     private static class MockDeleteHabitPresenter implements DeleteHabitOutputBoundary {
         boolean wasSuccessCalled = false;
