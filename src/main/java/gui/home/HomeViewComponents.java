@@ -10,9 +10,7 @@ import java.awt.geom.RoundRectangle2D;
  */
 public final class HomeViewComponents {
 
-    private HomeViewComponents() {
-        // Utility class – no instances.
-    }
+    private HomeViewComponents() {}
 
     /** Simple panel with rounded corners. */
     public static class RoundedPanel extends JPanel {
@@ -54,14 +52,14 @@ public final class HomeViewComponents {
             g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
                     RenderingHints.VALUE_ANTIALIAS_ON);
 
-            g2.setColor(new Color(0xD4D4E0));
+            g2.setColor(new Color(0x4B5563)); // darker border
             g2.drawRoundRect(x, y, width - 1, height - 1, radius, radius);
             g2.dispose();
         }
 
         @Override
         public Insets getBorderInsets(Component c) {
-            return new Insets(16, 24, 16, 24);
+            return new Insets(8, 12, 8, 12);
         }
 
         @Override
@@ -74,11 +72,6 @@ public final class HomeViewComponents {
 
     /** Wide pill-shaped button (used for "Add task"). */
     public static class PillButton extends JButton {
-
-        /** Base fill colour for the pill (can be customised). */
-        private Color baseColor = new Color(0xFFB574); // soft orange by default
-        private Color borderColor = new Color(0xE49A55);
-
         public PillButton(String text) {
             super(text);
             setContentAreaFilled(false);
@@ -86,17 +79,8 @@ public final class HomeViewComponents {
             setFocusPainted(false);
             setOpaque(false);
             setBorder(new RoundedBorder(68));
+            setBackground(new Color(0xF97316)); // default orange
             setForeground(Color.WHITE);
-        }
-
-        public void setBaseColor(Color c) {
-            this.baseColor = c;
-            repaint();
-        }
-
-        public void setBorderColor(Color c) {
-            this.borderColor = c;
-            repaint();
         }
 
         @Override
@@ -105,27 +89,28 @@ public final class HomeViewComponents {
             g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
                     RenderingHints.VALUE_ANTIALIAS_ON);
 
-            Color fill = baseColor;
-            if (getModel().isPressed()) {
-                fill = baseColor.darker();
-            }
+            Color bg = getBackground() != null ? getBackground() : new Color(0xF97316);
+            Color border = bg.darker();
 
-            g2.setColor(fill);
+            if (getModel().isPressed()) {
+                g2.setColor(bg.darker());
+            } else {
+                g2.setColor(bg);
+            }
             g2.fillRoundRect(0, 0, getWidth(), getHeight(), 40, 40);
 
-            g2.setColor(borderColor);
+            g2.setColor(border);
             g2.drawRoundRect(0, 0, getWidth() - 1, getHeight() - 1, 40, 40);
 
             g2.dispose();
-
             super.paintComponent(g);
         }
     }
 
     /** Small circular buttons used for "[ ]" and "..." actions. */
     public static class CircleButton extends JButton {
-        private Color fillColor = Color.WHITE;
-        private Color borderColor = new Color(0xD4D4E0);
+        private Color idleColor = Color.WHITE;
+        private Color pressedColor = new Color(0xE5E7EB);
 
         public CircleButton(String text) {
             super(text);
@@ -136,13 +121,13 @@ public final class HomeViewComponents {
             setBorderPainted(false);
         }
 
-        public void setFillColor(Color c) {
-            this.fillColor = c;
+        public void setIdleColor(Color idleColor) {
+            this.idleColor = idleColor;
             repaint();
         }
 
-        public void setBorderColor(Color c) {
-            this.borderColor = c;
+        public void setPressedColor(Color pressedColor) {
+            this.pressedColor = pressedColor;
             repaint();
         }
 
@@ -160,20 +145,18 @@ public final class HomeViewComponents {
             g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
                     RenderingHints.VALUE_ANTIALIAS_ON);
 
-            Color base = fillColor;
-            if (getModel().isPressed()) {
-                base = fillColor.darker();
-            }
+            Color fill = (getModel().isArmed() || getModel().isPressed())
+                    ? pressedColor
+                    : idleColor;
 
             int size = Math.min(getWidth(), getHeight());
-            g2.setColor(base);
+            g2.setColor(fill);
             g2.fillOval(0, 0, size - 1, size - 1);
 
-            g2.setColor(borderColor);
+            g2.setColor(fill.darker());
             g2.drawOval(0, 0, size - 1, size - 1);
 
             g2.dispose();
-
             super.paintComponent(g);
         }
     }
