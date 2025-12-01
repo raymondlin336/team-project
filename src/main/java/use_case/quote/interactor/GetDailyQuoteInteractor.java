@@ -22,7 +22,9 @@ public class GetDailyQuoteInteractor implements GetDailyQuoteInputBoundary {
     @Override
     public void execute(GetDailyQuoteInputData inputData) {
         try {
-            Quote quote = quoteDataAccess.fetchQuote();
+            // Pass the forceUpdate flag from inputData to the DAO
+            Quote quote = quoteDataAccess.fetchQuote(inputData.isForceUpdate());
+
             GetDailyQuoteOutputData outputData =
                     new GetDailyQuoteOutputData(quote.getText(), quote.getAuthor());
             presenter.presentSuccess(outputData);
