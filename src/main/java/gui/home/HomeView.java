@@ -6,26 +6,44 @@ import entity.Habit;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.TemporalAdjusters;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 
 import gui.home.HomeViewComponents.RoundedPanel;
 import gui.home.HomeViewComponents.RoundedBorder;
 import gui.home.HomeViewComponents.PillButton;
 import gui.home.HomeViewComponents.CircleButton;
-///  Date-time stuff
-import java.time.LocalDate;
-import java.time.DayOfWeek;
-import java.time.format.DateTimeFormatter;
-import java.time.temporal.TemporalAdjusters;
-import java.util.Locale;
-
-/// Skibidi
 
 public class HomeView implements PropertyChangeListener {
+
+    // ********* PALETTE (roughly matching your screenshot) *********
+    private static final Color APP_BACKGROUND   = new Color(0xE6E9FF); // soft periwinkle
+    private static final Color CARD_BACKGROUND  = Color.WHITE;
+
+    private static final Color TAB_SELECTED     = new Color(0x7C82FF); // purple
+    private static final Color TAB_UNSELECTED   = new Color(0xF3F3F7);
+
+    private static final Color STAT_GREEN       = new Color(0x7ED7A6); // Stat button
+    private static final Color STAT_GREEN_DARK  = new Color(0x20553B);
+
+    private static final Color CHECK_GREEN      = new Color(0x7ED7A6); // checkbox filled
+    private static final Color CHECK_GREEN_BORDER = new Color(0x4E9A6B);
+
+    // Card-style row colours (cycle through)
+    private static final Color[] ROW_COLORS = new Color[]{
+            new Color(0xFFF5C7), // pastel yellow
+            new Color(0xE7F2FF), // pastel blue
+            new Color(0xF2E9FF), // pastel lavender
+            new Color(0xFFE6F0), // pastel pink
+            new Color(0xE4F7E5)  // pastel green
+    };
 
     private HomeViewModel homeViewModel;
     private HomePresenter homePresenter;
@@ -36,7 +54,6 @@ public class HomeView implements PropertyChangeListener {
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         refreshAll();
-        System.out.println("Property change fired.");
     }
 
     public enum FrequencyTab {
@@ -44,8 +61,6 @@ public class HomeView implements PropertyChangeListener {
     }
 
     private JFrame mainFrame;
-
-    // *** NEW: root panel that contains everything ***
     private JPanel mainPanel;
 
     // Header – frequency selector
@@ -55,14 +70,12 @@ public class HomeView implements PropertyChangeListener {
 
     // Container where task rows are rendered
     private JPanel tasksContainer;
-    // Scroll pane that wraps the tasksContainer
     private JScrollPane tasksScrollPane;
 
-    //  Date-time
     private JLabel dateDisplayLabel;
 
-    // "Add task" button at the bottom of the card (exposed for controller)
-    private JButton addTaskButton;
+    // "Add task" pill
+    private PillButton addTaskButton;
 
     public HomeView(HomeViewModel vm,
                     HomePresenter presenter,
@@ -80,26 +93,24 @@ public class HomeView implements PropertyChangeListener {
         return mainFrame;
     }
 
-    // Show the window.
     public void show() {
         mainFrame.setVisible(true);
     }
 
-    private void createUIComponents(int width,int height) {
+    private void createUIComponents(int width, int height) {
         mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         mainFrame.setSize(width, height);
         mainFrame.setLocationRelativeTo(null);
 
-        // Background/root panel – now stored in field mainPanel
         mainPanel = new JPanel(new GridBagLayout());
         mainPanel.setBorder(new EmptyBorder(30, 30, 30, 30));
+        mainPanel.setBackground(APP_BACKGROUND);
         mainFrame.setContentPane(mainPanel);
 
-        // Rounded JPanel containing all the elements in HomeView
         JPanel card = new RoundedPanel(24);
-        card.setBackground(new Color(0xEDEDED));
+        card.setBackground(CARD_BACKGROUND);
         card.setLayout(new BorderLayout(20, 20));
-        card.setBorder(new EmptyBorder(12, 16, 12, 16));
+        card.setBorder(new EmptyBorder(18, 20, 18, 20));
 
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx = 0;
@@ -109,7 +120,6 @@ public class HomeView implements PropertyChangeListener {
         gbc.fill = GridBagConstraints.BOTH;
         mainPanel.add(card, gbc);
 
-        // Header: frequency tabs on the left, small chips on the right ──
         JPanel header = new JPanel(new BorderLayout());
         header.setOpaque(false);
 
@@ -123,44 +133,34 @@ public class HomeView implements PropertyChangeListener {
         tasksContainer.setOpaque(false);
         tasksContainer.setLayout(new BoxLayout(tasksContainer, BoxLayout.Y_AXIS));
 
-        // Wrap the tasks container in a scroll pane
         tasksScrollPane = new JScrollPane(tasksContainer);
-        tasksScrollPane.setBorder(null); // no border so it blends with the card
+        tasksScrollPane.setBorder(null);
         tasksScrollPane.setOpaque(false);
         tasksScrollPane.getViewport().setOpaque(false);
-
-        // Only vertical scroll, no horizontal
         tasksScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         tasksScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
 
         card.add(tasksScrollPane, BorderLayout.CENTER);
 
-        // "Add task" pill button at the bottom
+        // "Add task" pill
         JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
         bottomPanel.setOpaque(false);
 
         addTaskButton = new PillButton("Add task");
         addTaskButton.setPreferredSize(new Dimension(420, 36));
+        addTaskButton.setBaseColor(new Color(0xFFB574));       // orange
+        addTaskButton.setBorderColor(new Color(0xE39A54));
         addTaskButton.setFocusPainted(false);
-        addTaskButton.addActionListener(e -> {
-            HomeViewController.showAddTaskWindow();
-        });
+        addTaskButton.addActionListener(e -> HomeViewController.showAddTaskWindow());
 
         bottomPanel.add(addTaskButton);
         card.add(bottomPanel, BorderLayout.SOUTH);
 
-        // Default selection & initial render
-        dailyTab.setSelected(true);
-        updateSegmentLook();
-        showTasks(homeViewModel != null ? homeViewModel.dailyHabits : null);
-        System.out.println(homeViewModel.dailyHabits);
-
-        // Default selection & initial render
+        // Default selection and first render
         dailyTab.setSelected(true);
         updateSegmentLook();
         updateDateLabel(FrequencyTab.DAILY);
         showTasks(homeViewModel != null ? homeViewModel.dailyHabits : null);
-        System.out.println(homeViewModel.dailyHabits);
     }
 
     /**
@@ -184,13 +184,12 @@ public class HomeView implements PropertyChangeListener {
         panel.add(weeklyTab);
         panel.add(monthlyTab);
 
-        //  Date label config
+        // date label
         dateDisplayLabel = new JLabel();
         dateDisplayLabel.setFont(new Font("SansSerif", Font.BOLD, 13));
-        dateDisplayLabel.setForeground(Color.DARK_GRAY);
+        dateDisplayLabel.setForeground(new Color(0x4F4F60));
         panel.add(dateDisplayLabel);
 
-        // Wire up actions to re-render the task list
         dailyTab.addActionListener(e -> {
             currentTab = FrequencyTab.DAILY;
             updateSegmentLook();
@@ -220,13 +219,12 @@ public class HomeView implements PropertyChangeListener {
         panel.setOpaque(false);
 
         JButton statChip = createChipButton("Stat");
+        statChip.setBackground(STAT_GREEN);
+        statChip.setForeground(STAT_GREEN_DARK);
 
-        statChip.addActionListener(e -> {
-            HomeViewController.showStatisticsWindow();
-        });
+        statChip.addActionListener(e -> HomeViewController.showStatisticsWindow());
 
         panel.add(statChip);
-
         return panel;
     }
 
@@ -237,45 +235,43 @@ public class HomeView implements PropertyChangeListener {
         button.setBorderPainted(false);
         button.setContentAreaFilled(false);
         button.setFocusPainted(false);
-        button.setOpaque(false);
-        button.setMargin(new Insets(6, 14, 6, 14));
+        button.setOpaque(true);
+        button.setMargin(new Insets(6, 16, 6, 16));
         return button;
     }
 
-    ///  The two buttons
     private JButton createChipButton(String text) {
         JButton button = new JButton(text);
         button.setFont(button.getFont().deriveFont(Font.PLAIN, 12f));
         button.setBorder(new RoundedBorder(8));
         button.setBackground(Color.WHITE);
         button.setFocusPainted(false);
-        button.setMargin(new Insets(4, 12, 4, 12));
+        button.setMargin(new Insets(4, 14, 4, 14));
         return button;
     }
 
-    /**
-     * Renders the tasks inside the central list according to the selected frequency.
-     */
+    /** Renders tasks according to the current frequency tab. */
     public void showTasks(List<Habit> habits) {
         tasksContainer.removeAll();
 
         List<Habit> safeList = habits != null ? habits : Collections.emptyList();
 
+        int rowIndex = 0;
         for (Habit habit : safeList) {
-            tasksContainer.add(createTaskRow(habit));
+            tasksContainer.add(createTaskRow(habit, rowIndex));
+            rowIndex++;
         }
 
-        // Always show at least one row, padding with empties
         int minRows = 10;
         int currentRows = safeList.size();
         for (int i = currentRows; i < minRows; i++) {
-            tasksContainer.add(createEmptyTaskRow());
+            tasksContainer.add(createEmptyTaskRow(rowIndex));
+            rowIndex++;
         }
 
         tasksContainer.revalidate();
         tasksContainer.repaint();
 
-        // Reset scroll to top whenever tasks are refreshed
         if (tasksScrollPane != null) {
             SwingUtilities.invokeLater(() ->
                     tasksScrollPane.getVerticalScrollBar().setValue(0)
@@ -288,49 +284,49 @@ public class HomeView implements PropertyChangeListener {
             showTasks(homeViewModel.dailyHabits);
         } else if (currentTab == FrequencyTab.WEEKLY) {
             showTasks(homeViewModel.weeklyHabits);
-        } else if (currentTab == FrequencyTab.MONTHLY) {
+        } else {
             showTasks(homeViewModel.monthlyHabits);
         }
     }
 
-    private JPanel createTaskRow(Habit habit) {
+    private Color getRowBackground(int rowIndex) {
+        return ROW_COLORS[rowIndex % ROW_COLORS.length];
+    }
+
+    private JPanel createTaskRow(Habit habit, int rowIndex) {
         String habitLabel = habit.get_next().name;
         String desc = habit.get_next().desc;
 
-        ///  Container for entire row
         JPanel row = new JPanel();
         row.setLayout(new BoxLayout(row, BoxLayout.X_AXIS));
-        row.setOpaque(false);
-        row.setBorder(new EmptyBorder(6, 0, 6, 0));
-        row.setMaximumSize(new Dimension(520, 72)); // fixed height, flexible width
+        row.setOpaque(true);
+        row.setBackground(getRowBackground(rowIndex));
+        row.setBorder(new EmptyBorder(8, 16, 8, 16));
+        row.setMaximumSize(new Dimension(520, 72));
         row.setPreferredSize(new Dimension(520, 72));
 
-        ///  Text: Habit Name
         JLabel label = new JLabel(habitLabel);
         label.setBorder(new RoundedBorder(8));
         label.setBackground(Color.WHITE);
         label.setOpaque(true);
         label.setPreferredSize(new Dimension(160, 42));
-        label.setMaximumSize(label.getPreferredSize()); // stops vertical stretching
+        label.setMaximumSize(label.getPreferredSize());
         label.setHorizontalAlignment(SwingConstants.CENTER);
 
-        ///  Text: Description
         JLabel description = new JLabel(desc);
         description.setBorder(new RoundedBorder(8));
         description.setBackground(Color.WHITE);
         description.setOpaque(true);
         description.setPreferredSize(new Dimension(300, 42));
-        description.setMaximumSize(label.getPreferredSize()); // stops vertical stretching
+        description.setMaximumSize(description.getPreferredSize());
         description.setHorizontalAlignment(SwingConstants.CENTER);
 
-        ///  The Buttons
         JButton checklistButton = createChecklistButton(habit);
 
-        JButton menuButton = new CircleButton("...");
-        menuButton.addActionListener(e -> {
-            HomeViewController.showEditTaskWindow(habit.id);
-        });
-
+        CircleButton menuButton = new CircleButton("...");
+        menuButton.setFillColor(Color.WHITE);
+        menuButton.setBorderColor(new Color(0xD4C7FF)); // soft lilac
+        menuButton.addActionListener(e -> HomeViewController.showEditTaskWindow(habit.id));
 
         JPanel actions = new JPanel(new FlowLayout(FlowLayout.RIGHT, 8, 0));
         actions.setOpaque(false);
@@ -339,7 +335,7 @@ public class HomeView implements PropertyChangeListener {
         actions.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         row.add(label);
-        row.add(Box.createHorizontalStrut(12));  // spacing
+        row.add(Box.createHorizontalStrut(12));
         row.add(description);
         row.add(Box.createHorizontalStrut(12));
         row.add(actions);
@@ -347,36 +343,38 @@ public class HomeView implements PropertyChangeListener {
         return row;
     }
 
-    private JPanel createEmptyTaskRow() {
-        ///  Container for entire row
+    private JPanel createEmptyTaskRow(int rowIndex) {
         JPanel row = new JPanel();
         row.setLayout(new BoxLayout(row, BoxLayout.X_AXIS));
-        row.setOpaque(false);
-        row.setBorder(new EmptyBorder(6, 0, 6, 0));
-        row.setMaximumSize(new Dimension(520, 72)); // fixed height, flexible width
+        row.setOpaque(true);
+        row.setBackground(getRowBackground(rowIndex));
+        row.setBorder(new EmptyBorder(8, 16, 8, 16));
+        row.setMaximumSize(new Dimension(520, 72));
         row.setPreferredSize(new Dimension(520, 72));
 
-        ///  Text: Habit Name
         JLabel label = new JLabel();
         label.setBorder(new RoundedBorder(8));
         label.setBackground(Color.WHITE);
         label.setOpaque(true);
         label.setPreferredSize(new Dimension(160, 42));
-        label.setMaximumSize(label.getPreferredSize()); // stops vertical stretching
+        label.setMaximumSize(label.getPreferredSize());
         label.setHorizontalAlignment(SwingConstants.CENTER);
 
-        ///  Text: Description
         JLabel description = new JLabel();
         description.setBorder(new RoundedBorder(8));
         description.setBackground(Color.WHITE);
         description.setOpaque(true);
         description.setPreferredSize(new Dimension(300, 42));
-        description.setMaximumSize(label.getPreferredSize()); // stops vertical stretching
+        description.setMaximumSize(description.getPreferredSize());
         description.setHorizontalAlignment(SwingConstants.CENTER);
 
-        ///  The Buttons
-        JButton checklistButton = new CircleButton("[  ]");
-        JButton menuButton = new CircleButton("...");
+        CircleButton checklistButton = new CircleButton("[ ]");
+        checklistButton.setFillColor(Color.WHITE);
+        checklistButton.setBorderColor(new Color(0xD4D4E0));
+
+        CircleButton menuButton = new CircleButton("...");
+        menuButton.setFillColor(Color.WHITE);
+        menuButton.setBorderColor(new Color(0xD4D4E0));
 
         JPanel actions = new JPanel(new FlowLayout(FlowLayout.RIGHT, 8, 0));
         actions.setOpaque(false);
@@ -385,7 +383,7 @@ public class HomeView implements PropertyChangeListener {
         actions.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         row.add(label);
-        row.add(Box.createHorizontalStrut(12));  // spacing
+        row.add(Box.createHorizontalStrut(12));
         row.add(description);
         row.add(Box.createHorizontalStrut(12));
         row.add(actions);
@@ -404,77 +402,86 @@ public class HomeView implements PropertyChangeListener {
 
         if (button.isSelected()) {
             button.setForeground(Color.WHITE);
-            button.setBackground(Color.BLACK);
-            button.setOpaque(true);
-        }
-        else {
-            button.setForeground(Color.DARK_GRAY);
-            button.setBackground(Color.WHITE);
-            button.setOpaque(true);
+            button.setBackground(TAB_SELECTED);
+        } else {
+            button.setForeground(new Color(0x505065));
+            button.setBackground(TAB_UNSELECTED);
         }
     }
 
     /**
      * Creates the circular checklist button for a habit.
-     * The button has two states: [ ] (not done) and [✓] (done).
+     * Empty = white, Checked = pastel green.
      */
     private CircleButton createChecklistButton(Habit habit) {
         LocalDate now = LocalDate.now();
         Date today = new Date(now.getDayOfMonth(), now.getMonthValue() - 1, now.getYear());
 
         boolean isCompleted = habit.get_task_by_date(today).completed;
-        String initialText = isCompleted ? "[✓]" : "[  ]";
+        String initialText = isCompleted ? "[✓]" : "[ ]";
 
         CircleButton checkButton = new CircleButton(initialText);
+        checkButton.setBorderColor(CHECK_GREEN_BORDER);
+        if (isCompleted) {
+            checkButton.setFillColor(CHECK_GREEN);
+            checkButton.setForeground(new Color(0x1E3B28));
+        } else {
+            checkButton.setFillColor(Color.WHITE);
+            checkButton.setForeground(new Color(0x444444));
+        }
+
         checkButton.setFocusPainted(false);
 
         checkButton.addActionListener(e -> {
-            // 1. Optimistic UI update (makes UI feel fast)
             String currentText = checkButton.getText();
-            if ("[  ]".equals(currentText)) {
+            boolean nowCompleted;
+            if ("[ ]".equals(currentText)) {
                 checkButton.setText("[✓]");
+                checkButton.setFillColor(CHECK_GREEN);
+                checkButton.setForeground(new Color(0x1E3B28));
+                nowCompleted = true;
             } else {
-                checkButton.setText("[  ]"); // Note: Unchecking logic not implemented in backend yet
+                checkButton.setText("[ ]");
+                checkButton.setFillColor(Color.WHITE);
+                checkButton.setForeground(new Color(0x444444));
+                nowCompleted = false;
             }
 
-            // 2. Call the controller
             if (homeViewController != null) {
                 homeViewController.onHabitCheckboxClicked(habit);
             }
         });
-
 
         return checkButton;
     }
 
     private void updateDateLabel(FrequencyTab tab) {
         LocalDate today = LocalDate.now();
-        String text = "";
+        String text;
 
         switch (tab) {
             case DAILY:
-                // Format: "Monday, January 15th 2025"
-                String dayName = today.format(DateTimeFormatter.ofPattern("EEEE"));
-                String month = today.format(DateTimeFormatter.ofPattern("MMMM"));
+                String dayName = today.format(DateTimeFormatter.ofPattern("EEEE", Locale.ENGLISH));
+                String month = today.format(DateTimeFormatter.ofPattern("MMMM", Locale.ENGLISH));
                 int day = today.getDayOfMonth();
                 int year = today.getYear();
-                text = String.format("%s, %s %d%s %d", dayName, month, day, getDayNumberSuffix(day), year);
+                text = String.format("%s, %s %d%s %d",
+                        dayName, month, day, getDayNumberSuffix(day), year);
                 break;
 
             case WEEKLY:
-                // Format: "Week of Jan 15 - Jan 21"
-                // Assuming week starts on Monday
                 LocalDate startOfWeek = today.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
                 LocalDate endOfWeek = startOfWeek.plusDays(6);
-
-                DateTimeFormatter shortFmt = DateTimeFormatter.ofPattern("MMM d");
+                DateTimeFormatter shortFmt = DateTimeFormatter.ofPattern("MMM d", Locale.ENGLISH);
                 text = "Week of " + startOfWeek.format(shortFmt) + " - " + endOfWeek.format(shortFmt);
                 break;
 
             case MONTHLY:
-                // Format: "January 2025"
-                text = today.format(DateTimeFormatter.ofPattern("MMMM yyyy"));
+                text = today.format(DateTimeFormatter.ofPattern("MMMM yyyy", Locale.ENGLISH));
                 break;
+
+            default:
+                text = "";
         }
 
         if (dateDisplayLabel != null) {
@@ -482,11 +489,8 @@ public class HomeView implements PropertyChangeListener {
         }
     }
 
-    // Helper to get 'st', 'nd', 'rd', 'th'
     private String getDayNumberSuffix(int day) {
-        if (day >= 11 && day <= 13) {
-            return "th";
-        }
+        if (day >= 11 && day <= 13) return "th";
         switch (day % 10) {
             case 1:  return "st";
             case 2:  return "nd";
@@ -495,9 +499,7 @@ public class HomeView implements PropertyChangeListener {
         }
     }
 
-    // *** Changed: now returns the root panel containing EVERYTHING ***
-    public JPanel getPanel(){
+    public JPanel getPanel() {
         return mainPanel;
     }
-
 }
