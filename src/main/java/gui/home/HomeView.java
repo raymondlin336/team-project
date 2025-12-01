@@ -93,6 +93,7 @@ public class HomeView implements PropertyChangeListener {
         // Background/root panel – now stored in field mainPanel
         mainPanel = new JPanel(new GridBagLayout());
         mainPanel.setBorder(new EmptyBorder(30, 30, 30, 30));
+        mainPanel.setBackground(new Color(0x6FAAD8));
         mainFrame.setContentPane(mainPanel);
 
         // Rounded JPanel containing all the elements in HomeView
